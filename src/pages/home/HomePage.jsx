@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import { ArrowUpRight } from 'lucide-react';
-import Header from '../../components/layout/Header';
+import TopBar from '../../components/layout/TopBar';
+import Header from '../../components/layout/header/Header';
 import Navbar from '../../components/layout/Navbar';
 import Footer from '../../components/layout/Footer';
 import ProductSection from '../../components/products/ProductSection';
@@ -88,10 +89,12 @@ export default function HomePage() {
         Pular para o conteúdo
       </a>
 
+      <TopBar />
       <Header
         query={query}
         onQueryChange={setQuery}
         onSearch={scrollToOffers}
+        onAccount={() => toast.showToast('Conceito demonstrativo: área do cliente indisponível.')}
         isFavoriteOnly={isFavoriteOnly}
         onToggleFavorites={toggleFavoriteOnly}
         cartCount={cart.itemCount}

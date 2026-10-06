@@ -51,9 +51,10 @@
     scroll-padding-top: 150px;
   }
 
-  @media (width >= 601px) {
+  /* Compensa a barra flutuante: duas linhas até 1000px, uma linha acima disso. */
+  @media (width >= 1001px) {
     html {
-      scroll-padding-top: 120px;
+      scroll-padding-top: 110px;
     }
   }
 
@@ -179,6 +180,101 @@
 
   .button {
     @apply inline-flex items-center justify-center gap-3 rounded-[5px] bg-brand px-3.5 py-3 text-[11px] font-bold text-white transition-[transform,background-color] duration-150 hover:-translate-y-0.5 hover:bg-[#bf001e] sm:gap-6 sm:px-[22px] sm:py-3.5 sm:text-[13px];
+  }
+
+  /*
+    O recorte fica nos pseudo-elementos (::before = borda, ::after = preenchimento)
+    e não no elemento, para que menus e sugestões filhos não sejam cortados.
+  */
+  .chamfer {
+    --cut: 8px;
+    --chamfer-border: #34363d;
+    --chamfer-fill: #0b0c0f;
+    position: relative;
+    isolation: isolate;
+  }
+
+  .chamfer::before,
+  .chamfer::after {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    clip-path: polygon(
+      var(--cut) 0,
+      calc(100% - var(--cut)) 0,
+      100% var(--cut),
+      100% calc(100% - var(--cut)),
+      calc(100% - var(--cut)) 100%,
+      var(--cut) 100%,
+      0 calc(100% - var(--cut)),
+      0 var(--cut)
+    );
+  }
+
+  .chamfer::before {
+    inset: 0;
+    background: var(--chamfer-border);
+  }
+
+  .chamfer::after {
+    inset: 1px;
+    background: var(--chamfer-fill);
+  }
+
+  .chamfer-field:hover,
+  .chamfer-field:focus-within,
+  .chamfer-field.is-active {
+    --chamfer-border: var(--color-brand);
+  }
+
+  .chamfer-field:focus-within {
+    --chamfer-fill: #121318;
+  }
+
+  .chamfer-accent {
+    --chamfer-border: #ff4d63;
+    --chamfer-fill: linear-gradient(180deg, #f2122f, #a3001a);
+  }
+
+  .chamfer-accent:hover {
+    --chamfer-fill: linear-gradient(180deg, #ff2a44, #bf001e);
+  }
+
+  .header-bar {
+    --cut: 12px;
+    --chamfer-border: linear-gradient(90deg, var(--color-brand) 0 3%, #3a3c44 10% 90%, var(--color-brand) 97%);
+    --chamfer-fill: linear-gradient(180deg, #1c1d22, #0b0c0f);
+  }
+
+  /* Sombra num elemento sem recorte, já que o clip-path também cortaria o box-shadow. */
+  .header-glow {
+    position: absolute;
+    inset: 30% 3% 0;
+    z-index: -2;
+    border-radius: 50%;
+    box-shadow:
+      0 10px 28px #ed00244d,
+      0 14px 32px #0000004d;
+  }
+
+  .header-slash {
+    display: none;
+    width: 3px;
+    height: 30px;
+    flex-shrink: 0;
+    background: var(--color-brand);
+    box-shadow: 0 0 10px #ed0024aa;
+    transform: skewX(-20deg);
+  }
+
+  @media (width >= 1001px) {
+    .header-bar {
+      --cut: 16px;
+    }
+
+    .header-slash {
+      display: block;
+    }
   }
 
   .eyebrow {

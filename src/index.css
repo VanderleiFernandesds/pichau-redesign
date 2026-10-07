@@ -29,6 +29,11 @@
   --container-max: 1920px;
   --container-gutter: 16px;
   --container-start: max(0px, (100vw - var(--container-max)) / 2) + var(--container-gutter);
+  /*
+    Espaço ocupado pelo painel flutuante (16px do topo + altura do painel + folga):
+    logo/ações, busca e botão de menu até 1000px; duas linhas acima disso.
+  */
+  --header-offset: 148px;
 }
 
 @media (width >= 601px) {
@@ -40,6 +45,7 @@
 @media (width >= 1001px) {
   :root {
     --container-gutter: clamp(24px, 36.67vw - 343px, 185px);
+    --header-offset: 150px;
   }
 }
 
@@ -48,14 +54,7 @@
   html {
     line-height: normal;
     scroll-behavior: smooth;
-    scroll-padding-top: 200px;
-  }
-
-  /* Compensa o painel flutuante: logo/ações, busca e botão de menu até 1000px; duas linhas acima disso. */
-  @media (width >= 1001px) {
-    html {
-      scroll-padding-top: 160px;
-    }
+    scroll-padding-top: var(--header-offset);
   }
 
   body {
@@ -99,15 +98,16 @@
 }
 
 /*
-  Hero: o fundo decorativo e o computador compartilham a mesma escala
-  (--hero-unit = px de tela por px da foto original de 2172x724) e são
-  posicionados a partir do centro da seção, que coincide com o centro do .wrap.
-  O teto da escala impede que o computador cresça com a viewport em telas
-  ultralargas ou com zoom reduzido.
+  Hero: o fundo decorativo usa a escala --hero-unit (px de tela por px da arte
+  original de 2172x724) e é posicionado a partir do centro da seção, que coincide
+  com o centro do .wrap. O teto da escala impede que a arte cresça com a viewport
+  em telas ultralargas ou com zoom reduzido.
 */
 .hero {
   --hero-unit: 0.47px;
   --hero-shift: -192;
+  /* Espaço vertical do hero acompanha a altura da tela para o conteúdo caber em notebooks baixos. */
+  --hero-gap: clamp(12px, 3.5svh, 32px);
 }
 
 @media (width >= 601px) {
@@ -135,9 +135,9 @@
   left: -50%;
   right: -50%;
   transform: translateX(calc(var(--hero-shift) * var(--hero-unit)));
+  /* A base esmaece até a cor da seção para emendar com os cards abaixo. */
   background:
-    radial-gradient(calc(300 * var(--hero-unit)) calc(50 * var(--hero-unit)) at calc(50% - 40 * var(--hero-unit)) calc(50% + 215 * var(--hero-unit)), #ed002440, transparent),
-    linear-gradient(transparent calc(50% + 203 * var(--hero-unit)), #0c0b0d calc(50% + 203 * var(--hero-unit)), #050506),
+    linear-gradient(transparent 60%, #050506),
     radial-gradient(calc(300 * var(--hero-unit)) calc(160 * var(--hero-unit)) at calc(50% - 190 * var(--hero-unit)) calc(50% + 140 * var(--hero-unit)), #be001473, transparent),
     linear-gradient(
       54deg,
@@ -156,21 +156,6 @@
     radial-gradient(calc(520 * var(--hero-unit)) calc(460 * var(--hero-unit)) at calc(50% + 160 * var(--hero-unit)) calc(50% - 160 * var(--hero-unit)), #aa00128c, transparent),
     radial-gradient(calc(320 * var(--hero-unit)) calc(420 * var(--hero-unit)) at calc(50% + 900 * var(--hero-unit)) calc(50% - 60 * var(--hero-unit)), #96000f66, transparent),
     #080607;
-}
-
-.hero-computer {
-  position: absolute;
-  top: 50%;
-  left: calc(50% + (64 + var(--hero-shift)) * var(--hero-unit));
-  width: calc(950 * var(--hero-unit));
-  max-width: none;
-  height: auto;
-  translate: 0 -50%;
-  /* As bordas do recorte se dissolvem no fundo decorativo. */
-  mask-image:
-    linear-gradient(90deg, transparent, #000 14%, #000 82%, transparent),
-    linear-gradient(transparent, #000 4%, #000 96%, transparent);
-  mask-composite: intersect;
 }
 
 @layer components {
@@ -278,6 +263,76 @@
     .header-slash {
       display: block;
     }
+  }
+
+  .purpose-card {
+    --cut: 16px;
+    --chamfer-border: #34363d;
+    --chamfer-fill: radial-gradient(120% 90% at 80% 85%, #1c1c21, #0c0c0f 70%);
+    /* drop-shadow segue o contorno chanfrado; box-shadow ficaria retangular. */
+    transition: filter 200ms;
+  }
+
+  .purpose-card.is-highlighted {
+    --chamfer-fill: radial-gradient(120% 90% at 80% 85%, #2a0a10, #0d0b0d 70%);
+  }
+
+  .purpose-card:hover,
+  .purpose-card:focus-visible,
+  .purpose-card.is-highlighted {
+    --chamfer-border: var(--color-brand);
+    filter: drop-shadow(0 0 10px #ed002459);
+  }
+
+  /* Traços vermelhos sobre as diagonais dos cantos superior direito e inferior esquerdo. */
+  .purpose-card-corners {
+    --accent-length: calc(var(--cut) * 1.1);
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .purpose-card-corners::before,
+  .purpose-card-corners::after {
+    content: '';
+    position: absolute;
+    width: var(--accent-length);
+    height: 3px;
+    background: var(--color-brand);
+    transform: rotate(45deg);
+  }
+
+  .purpose-card-corners::before {
+    top: calc(var(--cut) / 2 - 1.5px);
+    right: calc(var(--cut) / 2 - var(--accent-length) / 2);
+  }
+
+  .purpose-card-corners::after {
+    bottom: calc(var(--cut) / 2 - 1.5px);
+    left: calc(var(--cut) / 2 - var(--accent-length) / 2);
+  }
+
+  .purpose-card-arrow {
+    --cut: 6px;
+    --chamfer-border: #4a4c54;
+    --chamfer-fill: #101114;
+  }
+
+  .purpose-card:hover .purpose-card-arrow,
+  .purpose-card:focus-visible .purpose-card-arrow,
+  .purpose-card.is-highlighted .purpose-card-arrow {
+    --chamfer-border: var(--color-brand);
+  }
+
+  .purpose-card-icon {
+    color: #3c3e46;
+    transition: color 200ms;
+  }
+
+  .purpose-card:hover .purpose-card-icon,
+  .purpose-card:focus-visible .purpose-card-icon,
+  .purpose-card.is-highlighted .purpose-card-icon {
+    color: var(--color-brand);
   }
 
   .eyebrow {

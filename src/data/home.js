@@ -1,14 +1,12 @@
-import { Gamepad2, Headset, House, ListChecks, PcCase, Settings } from 'lucide-react';
-import gpuImage from '../assets/images/products/rtx-5080-aorus.jpg';
-import cpuImage from '../assets/images/products/ryzen-5-7600x3d.jpg';
-import monitorImage from '../assets/images/products/monitor-athen.jpg';
-import motherboardImage from '../assets/images/products/placa-mae-orion.jpg';
+import { Cpu, Gamepad2, Headset, House, ListChecks, Monitor, Palette, PcCase, Settings } from 'lucide-react';
 
+// Cada card aceita `image` (PNG/WebP com fundo transparente) e `alt`; sem imagem, o `icon`
+// ocupa o lugar. As fotos de produto atuais têm fundo branco e não servem para o fundo escuro.
 export const PURPOSES = [
-  { title: 'PC Gamer', description: ['Desempenho máximo', 'para seus jogos.'], href: '#offers', category: 'Hardware', image: gpuImage, alt: 'Placa de vídeo gamer', isHighlighted: true },
-  { title: 'Trabalho e criação', description: ['Potência para', 'suas ideias.'], href: '#offers', category: 'Hardware', image: cpuImage, alt: 'Processador AMD' },
-  { title: 'Casa e escritório', description: ['Tecnologia para', 'o seu dia a dia.'], href: '#offers', category: 'Monitores', image: monitorImage, alt: 'Monitor' },
-  { title: 'Monte seu PC', description: ['Escolha cada peça', 'do seu jeito.'], href: '#builder', image: motherboardImage, alt: 'Placa-mãe' },
+  { title: 'PC Gamer', description: ['Desempenho máximo', 'para seus jogos.'], href: '#offers', category: 'Hardware', icon: Gamepad2, isHighlighted: true },
+  { title: 'Trabalho e criação', description: ['Potência para', 'suas ideias.'], href: '#offers', category: 'Hardware', icon: Palette },
+  { title: 'Casa e escritório', description: ['Tecnologia para', 'o seu dia a dia.'], href: '#offers', category: 'Monitores', icon: Monitor },
+  { title: 'Monte seu PC', description: ['Escolha cada peça', 'do seu jeito.'], href: '#builder', icon: Cpu },
 ];
 
 export const BUILDER_GOALS = [

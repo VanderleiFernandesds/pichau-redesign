@@ -1,25 +1,25 @@
 import { ArrowUpRight, Settings } from 'lucide-react';
-import heroComputer from '../../assets/images/hero-computer.webp';
 
 export default function Hero({ children }) {
   return (
-    <section className="hero relative overflow-hidden bg-[#050506] text-white">
+    // A seção ocupa a tela inteira: o painel flutua no topo, os cards ficam na base
+    // e o bloco do texto cresce para preencher o espaço entre eles.
+    <section className="hero relative flex min-h-svh flex-col overflow-hidden bg-[#050506] text-white">
       {/* O fundo decorativo é posicionado pelo centro deste bloco; manter os cards fora dele evita
-          que a arte se desloque em relação ao computador. A seção usa a mesma cor em que o fundo termina. */}
-      <div className="relative">
+          que a arte se desloque. A seção usa a mesma cor em que o fundo termina. */}
+      <div className="relative flex flex-1">
         <div aria-hidden="true" className="hero-decor" />
 
-        <div className="wrap relative flex min-h-[340px] items-center sm:min-h-[400px] 2xl:min-h-[460px]">
-          <img src={heroComputer} alt="" width="950" height="724" fetchPriority="high" className="hero-computer" />
-          {/* No mobile o computador fica atrás do texto; o gradiente garante o contraste. */}
+        <div className="wrap relative flex w-full items-center pt-(--header-offset)">
+          {/* Abaixo de 1001px as faixas vermelhas passam por trás do título; o gradiente garante o contraste. */}
           <div
             aria-hidden="true"
-            className="absolute inset-0 bg-[linear-gradient(90deg,#08090bea_5%,#08090b9c_58%,transparent)] sm:hidden"
+            className="absolute inset-0 bg-[linear-gradient(90deg,#08090bea_5%,#08090b9c_58%,transparent)] lg:hidden"
           />
 
-          <div className="relative z-[1] max-w-[590px] py-7 sm:py-10">
+          <div className="relative z-[1] max-w-[590px] py-(--hero-gap)">
             <span className="eyebrow text-[#e7a3ae]">O SEU SETUP. O SEU PRÓXIMO NÍVEL.</span>
-            <h1 className="my-5 text-[37px] leading-[1.04] font-bold tracking-[-1.3px] sm:text-[45px] sm:tracking-[-2px] lg:text-[54px]">
+            <h1 className="my-4 text-[37px] leading-[1.04] font-bold tracking-[-1.3px] sm:my-5 sm:text-[45px] sm:tracking-[-2px] lg:text-[clamp(44px,7svh,54px)]">
               Seu próximo nível
               <br />
               <em className="text-brand not-italic">começa aqui.</em>
@@ -29,7 +29,7 @@ export default function Hero({ children }) {
               <br />
               para o seu setup.
             </p>
-            <div className="mt-7 flex gap-[9px] sm:gap-3.5">
+            <div className="mt-(--hero-gap) flex gap-[9px] sm:gap-3.5">
               <a className="button" href="#offers">
                 Explorar ofertas <ArrowUpRight aria-hidden="true" className="size-4" />
               </a>
@@ -44,7 +44,7 @@ export default function Hero({ children }) {
         </div>
       </div>
 
-      <div className="wrap relative pb-7 sm:pb-10">{children}</div>
+      <div className="wrap relative w-full pb-(--hero-gap)">{children}</div>
     </section>
   );
 }

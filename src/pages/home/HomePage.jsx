@@ -29,6 +29,7 @@ export default function HomePage() {
   const [category, setCategory] = useState(ALL_CATEGORIES);
   const [isFavoriteOnly, setIsFavoriteOnly] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isNavOpen, setIsNavOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isConfigOpen, setIsConfigOpen] = useState(false);
   const offersRef = useRef(null);
@@ -93,6 +94,8 @@ export default function HomePage() {
           query={query}
           onQueryChange={setQuery}
           onSearch={scrollToOffers}
+          isNavOpen={isNavOpen}
+          onNavOpenChange={setIsNavOpen}
           onAccount={() => toast.showToast('Conceito demonstrativo: área do cliente indisponível.')}
           isFavoriteOnly={isFavoriteOnly}
           onToggleFavorites={toggleFavoriteOnly}
@@ -102,6 +105,8 @@ export default function HomePage() {
         <Navbar
           isMenuOpen={isMenuOpen}
           onMenuOpenChange={setIsMenuOpen}
+          isNavOpen={isNavOpen}
+          onNavOpenChange={setIsNavOpen}
           onFilter={filterByCategory}
           onCoupon={() => toast.showToast('Conceito demonstrativo: nenhum cupom real disponível.')}
         />

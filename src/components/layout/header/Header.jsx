@@ -19,7 +19,7 @@ export default function Header({
       <a
         href="./"
         aria-label="Pichau início"
-        className="text-[28px] leading-none font-black tracking-[-2px] text-brand [text-shadow:0_0_18px_#ed002466] sm:text-[32px] sm:tracking-[-2.5px] lg:text-[40px] lg:tracking-[-3px]"
+        className="font-logo text-[28px] leading-none font-black tracking-[-2px] text-white [text-shadow:0_0_18px_#ed002466] sm:text-[32px] sm:tracking-[-2.5px] lg:text-[40px] lg:tracking-[-3px]"
       >
         Pichau
       </a>

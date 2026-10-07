@@ -20,7 +20,7 @@ export default function ProductSection({
       <div className="mb-4 flex flex-col items-start justify-between gap-[15px] sm:mb-[22px] lg:flex-row lg:items-end">
         <div>
           <span className="eyebrow">{eyebrow}</span>
-          <h2 className="mt-2 text-[24px] font-bold tracking-[-1px] sm:text-[29px]">{title}</h2>
+          <h2 className="mt-2 font-display text-[26px] leading-tight font-bold sm:text-[32px]">{title}</h2>
         </div>
         {action}
       </div>

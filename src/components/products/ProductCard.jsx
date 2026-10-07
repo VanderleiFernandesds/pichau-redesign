@@ -33,7 +33,7 @@ export default function ProductCard({ product, isFavorite, onToggleFavorite, onA
           height="190"
           className="mt-[23px] mb-3 h-[135px] w-full object-contain @min-[220px]:mt-4 @min-[220px]:h-[190px]"
         />
-        <h3 className="mb-[9px] min-h-[35px] text-[12px] leading-[1.4] font-bold @min-[220px]:min-h-[39px] @min-[220px]:text-[14px]">
+        <h3 className="mb-[9px] min-h-[35px] font-display text-[14px] leading-[1.25] font-semibold @min-[220px]:min-h-[40px] @min-[220px]:text-[16px]">
           {product.name}
         </h3>
         <p className="mb-3.5 text-[10px] leading-[1.5] text-muted @min-[220px]:mb-[22px] @min-[220px]:text-[11px]">{product.spec}</p>

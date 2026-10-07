@@ -9,7 +9,7 @@ export default function BuilderBanner({ onStart }) {
     >
       <div className="relative z-[1]">
         <span className="eyebrow">CADA PEÇA FAZ A DIFERENÇA</span>
-        <h2 className="mt-2 max-w-[230px] text-[26px] font-bold tracking-[-1px] sm:max-w-none sm:text-[28px] lg:text-[34px]">
+        <h2 className="mt-2 max-w-[230px] font-display text-[28px] leading-tight font-bold sm:max-w-none sm:text-[31px] lg:text-[34px]">
           Monte um PC <em className="text-brand not-italic">do seu jeito</em>
         </h2>
         <p className="my-[1em] text-[12px] leading-[1.7] text-[#c7c7cc] sm:text-[14px]">

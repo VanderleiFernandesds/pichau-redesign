@@ -12,7 +12,7 @@ export default function Hero({ children }) {
         <div className="wrap grid w-full content-center items-center gap-x-10 pt-(--header-offset) lg:grid-cols-[auto_minmax(0,1fr)]">
           <div className="max-w-[590px] py-(--hero-gap)">
             <span className="eyebrow text-[#e7a3ae]">O SEU SETUP. O SEU PRÓXIMO NÍVEL.</span>
-            <h1 className="my-4 text-[37px] leading-[1.04] font-bold tracking-[-1.3px] sm:my-5 sm:text-[45px] sm:tracking-[-2px] lg:text-[clamp(44px,7svh,54px)]">
+            <h1 className="my-4 font-display text-[clamp(32px,10.5vw,40px)] leading-[1] font-bold sm:my-5 sm:text-[50px] lg:text-[clamp(46px,7.2svh,60px)]">
               Seu próximo nível
               <br />
               <em className="text-brand not-italic">começa aqui.</em>
@@ -22,7 +22,7 @@ export default function Hero({ children }) {
               <br />
               para o seu setup.
             </p>
-            <div className="mt-(--hero-gap) flex gap-[9px] sm:gap-3.5">
+            <div className="mt-(--hero-gap) flex flex-wrap gap-[9px] sm:gap-3.5">
               <a className="button" href="#offers">
                 Explorar ofertas <ArrowUpRight aria-hidden="true" className="size-4" />
               </a>

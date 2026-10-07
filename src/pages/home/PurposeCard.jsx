@@ -12,7 +12,7 @@ export default function PurposeCard({ purpose, onFilter }) {
     >
       <span aria-hidden="true" className="purpose-card-corners" />
 
-      <h2 className="text-[19px] leading-tight font-bold tracking-[-0.5px] lg:text-[clamp(18px,1.6vw,26px)]">{title}</h2>
+      <h2 className="font-display text-[21px] leading-tight font-bold lg:text-[clamp(20px,1.75vw,28px)]">{title}</h2>
 
       {/* A coluna do texto ocupa só o necessário; a imagem fica com o restante da largura. */}
       <div className="grid flex-1 grid-cols-[max-content_minmax(0,1fr)] gap-3">

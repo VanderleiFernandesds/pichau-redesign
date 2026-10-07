@@ -35,7 +35,7 @@ export default function Modal({ isOpen, onClose, title, closeLabel, children }) 
       className="m-auto max-h-[85vh] w-[min(520px,calc(100%-30px))] rounded-xl border-0 p-7 text-ink backdrop:bg-[#080911a6] backdrop:backdrop-blur-[4px]"
     >
       <div className="flex items-center justify-between">
-        <h2 id={titleId} className="text-[25px] font-bold tracking-[-1px]">
+        <h2 id={titleId} className="font-display text-[27px] leading-tight font-bold">
           {title}
         </h2>
         <button type="button" onClick={onClose} aria-label={closeLabel} className="grid size-8 place-items-center rounded-sm">

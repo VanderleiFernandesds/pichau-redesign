@@ -6,7 +6,7 @@ const EXPLORE_LINKS = [
   { href: '#builder', label: 'Monte seu setup' },
 ];
 
-const headingClass = 'mb-3 text-[14px] font-bold text-white';
+const headingClass = 'mb-3 font-display text-[16px] font-bold text-white';
 const linkClass = 'inline-flex items-center gap-1 py-1.5 text-[14px] underline-offset-4 transition-colors hover:text-white hover:underline';
 
 export default function Footer() {
@@ -14,7 +14,7 @@ export default function Footer() {
     <footer id="support" className="bg-ink text-[#c3c5cd]">
       <div className="wrap grid gap-10 pt-12 pb-10 sm:grid-cols-2 sm:gap-x-12 sm:pt-14 lg:grid-cols-[minmax(0,1fr)_auto_auto] lg:gap-x-20">
         <div className="sm:col-span-2 lg:col-span-1">
-          <a href="./" className="text-[36px] font-black tracking-[-3px] text-white" aria-label="Pichau início">
+          <a href="./" className="font-logo text-[36px] font-black tracking-[-3px] text-white" aria-label="Pichau início">
             Pichau
           </a>
           <p className="mt-3 max-w-[34ch] text-[14px] leading-relaxed">Seu próximo nível começa aqui.</p>

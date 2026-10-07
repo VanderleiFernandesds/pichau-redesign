@@ -107,6 +107,106 @@
   min-height: min(100svh, 1000px);
 }
 
+/*
+  Moldura do carrossel do hero. Parâmetros:
+  --frame-width    largura máxima de cada moldura (encolhe se o grupo não couber)
+  --frame-height   altura; no desktop, o termo 100svh - 430px reserva espaço para o painel e os cards
+  --frame-slant    inclinação: deslocamento horizontal do topo por px de altura (0 = retângulo)
+  --frame-line     espessura do contorno
+  --frame-cut      tamanho do chanfro dos cantos, o mesmo do painel e dos cards do hero
+*/
+.hero-frame {
+  --frame-width: 160px;
+  --frame-height: clamp(220px, 40svh, 340px);
+  --frame-slant: 0;
+  --frame-line: 1px;
+  --frame-cut: 12px;
+  --frame-accent: var(--color-brand);
+  --frame-fill: #050506;
+  --frame-glow: #ed002459;
+
+  position: relative;
+  width: min(100%, var(--frame-width));
+  height: var(--frame-height);
+  container-type: size;
+  /* drop-shadow acompanha o recorte das camadas; box-shadow seria retangular. */
+  filter: drop-shadow(0 0 14px var(--frame-glow));
+}
+
+@media (width >= 1001px) {
+  .hero-frame {
+    --frame-height: clamp(300px, min(55svh, 100svh - 430px), 640px);
+    --frame-cut: 16px;
+  }
+}
+
+/*
+  Grupo de molduras lado a lado. Com inclinação, cada moldura recua sobre a anterior o
+  deslocamento do topo, ficando separada só por --frame-gap. A largura encolhe apenas o
+  necessário para as --frames-count caberem na linha.
+*/
+.hero-frames {
+  --frame-gap: 14px;
+  display: flex;
+  width: 100%;
+  container-type: inline-size;
+}
+
+/* No desktop o grupo encosta à direita, longe do texto; abaixo disso segue o alinhamento do texto. */
+@media (width >= 1001px) {
+  .hero-frames {
+    justify-content: flex-end;
+  }
+}
+
+.hero-frames .hero-frame {
+  flex: none;
+  width: min(
+    var(--frame-width),
+    (100cqw - (var(--frames-count) - 1) * (var(--frame-gap) - var(--frame-slant) * var(--frame-height))) /
+      var(--frames-count)
+  );
+}
+
+.hero-frames .hero-frame + .hero-frame {
+  margin-left: calc(var(--frame-gap) - var(--frame-slant) * var(--frame-height));
+}
+
+/*
+  Cada camada é o mesmo paralelogramo chanfrado, recuado por --layer-inset. O recuo horizontal é
+  maior que o vertical para o contorno ter a mesma espessura nas laterais inclinadas e no topo/base,
+  e o chanfro interno diminui para a diagonal do contorno também manter a espessura.
+  Nos lados inclinados o corte desce --cut na vertical e anda --slant * --cut na horizontal.
+*/
+.hero-frame-layer {
+  --layer-inset: 0px;
+  --inset-x: calc(var(--layer-inset) * (sqrt(1 + var(--frame-slant) * var(--frame-slant)) + var(--frame-slant)));
+  --offset: calc(var(--frame-slant) * (100cqh - 2 * var(--layer-inset)));
+  --cut: calc(var(--frame-cut) - var(--layer-inset) * 0.4142);
+  --cut-x: calc(var(--frame-slant) * var(--cut));
+  position: absolute;
+  inset: var(--layer-inset) var(--inset-x);
+  clip-path: polygon(
+    calc(var(--offset) + var(--cut)) 0,
+    calc(100% - var(--cut)) 0,
+    calc(100% - var(--cut-x)) var(--cut),
+    calc(100% - var(--offset) + var(--cut-x)) calc(100% - var(--cut)),
+    calc(100% - var(--offset) - var(--cut)) 100%,
+    var(--cut) 100%,
+    var(--cut-x) calc(100% - var(--cut)),
+    calc(var(--offset) - var(--cut-x)) var(--cut)
+  );
+}
+
+.hero-frame-line {
+  background: var(--frame-accent);
+}
+
+.hero-frame-content {
+  --layer-inset: var(--frame-line);
+  background: var(--frame-fill);
+}
+
 @layer components {
   .wrap {
     @apply mx-auto max-w-(--container-max) px-(--container-gutter);

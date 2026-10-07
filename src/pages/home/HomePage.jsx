@@ -1,6 +1,5 @@
 import { useRef, useState } from 'react';
 import { ArrowUpRight } from 'lucide-react';
-import TopBar from '../../components/layout/TopBar';
 import Header from '../../components/layout/header/Header';
 import Navbar from '../../components/layout/header/Navbar';
 import SiteHeader from '../../components/layout/header/SiteHeader';
@@ -11,7 +10,6 @@ import EmptyState from '../../components/ui/EmptyState';
 import Toast from '../../components/ui/Toast';
 import Hero from './Hero';
 import PurposeCards from './PurposeCards';
-import Categories from './Categories';
 import OfferTabs from './OfferTabs';
 import BuilderBanner from './BuilderBanner';
 import Benefits from './Benefits';
@@ -90,7 +88,6 @@ export default function HomePage() {
         Pular para o conteúdo
       </a>
 
-      <TopBar />
       <SiteHeader>
         <Header
           query={query}
@@ -114,7 +111,6 @@ export default function HomePage() {
         <Hero />
         <div className="wrap">
           <PurposeCards onFilter={filterByCategory} />
-          <Categories onFilter={filterByCategory} />
 
           <ProductSection
             ref={offersRef}

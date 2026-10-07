@@ -3,13 +3,13 @@ import { PURPOSES } from '../../data/home';
 
 export default function PurposeCards({ onFilter }) {
   return (
-    <section id="choose" aria-label="Escolha seu computador" className="mt-3.5 mb-7 grid grid-cols-[repeat(2,1fr)] gap-2.5 sm:mt-5 sm:mb-11 sm:gap-3.5 lg:grid-cols-[repeat(4,1fr)]">
+    <section id="choose" aria-label="Escolha seu computador" className="grid grid-cols-[repeat(2,1fr)] gap-2.5 sm:gap-3.5 lg:grid-cols-[repeat(4,1fr)]">
       {PURPOSES.map((purpose) => (
         <a
           key={purpose.title}
           href={purpose.href}
           onClick={purpose.category ? () => onFilter(purpose.category) : undefined}
-          className={`group relative h-[138px] overflow-hidden rounded-md px-3 py-4 text-white sm:h-[150px] sm:px-[18px] sm:py-[22px] ${
+          className={`group relative h-[138px] overflow-hidden rounded-md border border-white/10 px-3 py-4 text-white sm:h-[150px] sm:px-[18px] sm:py-[22px] ${
             purpose.isHighlighted
               ? 'bg-[linear-gradient(120deg,#51020d,#1c1316)]'
               : 'bg-[linear-gradient(120deg,#15161b,#333640)]'

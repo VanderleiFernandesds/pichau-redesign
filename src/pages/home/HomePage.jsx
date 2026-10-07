@@ -108,9 +108,10 @@ export default function HomePage() {
       </SiteHeader>
 
       <main id="main">
-        <Hero />
-        <div className="wrap">
+        <Hero>
           <PurposeCards onFilter={filterByCategory} />
+        </Hero>
+        <div className="wrap pt-7 sm:pt-11">
 
           <ProductSection
             ref={offersRef}

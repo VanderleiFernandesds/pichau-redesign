@@ -2,7 +2,8 @@ import { useRef, useState } from 'react';
 import { ArrowUpRight } from 'lucide-react';
 import TopBar from '../../components/layout/TopBar';
 import Header from '../../components/layout/header/Header';
-import Navbar from '../../components/layout/Navbar';
+import Navbar from '../../components/layout/header/Navbar';
+import SiteHeader from '../../components/layout/header/SiteHeader';
 import Footer from '../../components/layout/Footer';
 import ProductSection from '../../components/products/ProductSection';
 import CartModal from '../../components/cart/CartModal';
@@ -90,22 +91,24 @@ export default function HomePage() {
       </a>
 
       <TopBar />
-      <Header
-        query={query}
-        onQueryChange={setQuery}
-        onSearch={scrollToOffers}
-        onAccount={() => toast.showToast('Conceito demonstrativo: área do cliente indisponível.')}
-        isFavoriteOnly={isFavoriteOnly}
-        onToggleFavorites={toggleFavoriteOnly}
-        cartCount={cart.itemCount}
-        onOpenCart={() => setIsCartOpen(true)}
-      />
-      <Navbar
-        isMenuOpen={isMenuOpen}
-        onMenuOpenChange={setIsMenuOpen}
-        onFilter={filterByCategory}
-        onCoupon={() => toast.showToast('Conceito demonstrativo: nenhum cupom real disponível.')}
-      />
+      <SiteHeader>
+        <Header
+          query={query}
+          onQueryChange={setQuery}
+          onSearch={scrollToOffers}
+          onAccount={() => toast.showToast('Conceito demonstrativo: área do cliente indisponível.')}
+          isFavoriteOnly={isFavoriteOnly}
+          onToggleFavorites={toggleFavoriteOnly}
+          cartCount={cart.itemCount}
+          onOpenCart={() => setIsCartOpen(true)}
+        />
+        <Navbar
+          isMenuOpen={isMenuOpen}
+          onMenuOpenChange={setIsMenuOpen}
+          onFilter={filterByCategory}
+          onCoupon={() => toast.showToast('Conceito demonstrativo: nenhum cupom real disponível.')}
+        />
+      </SiteHeader>
 
       <main id="main">
         <Hero />

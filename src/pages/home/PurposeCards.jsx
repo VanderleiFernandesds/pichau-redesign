@@ -3,7 +3,7 @@ import { PURPOSES } from '../../data/home';
 
 export default function PurposeCards({ onFilter }) {
   return (
-    <section id="choose" aria-label="Escolha seu computador" className="my-3.5 grid grid-cols-[repeat(2,1fr)] gap-2.5 sm:my-5 sm:gap-3.5 lg:grid-cols-[repeat(4,1fr)]">
+    <section id="choose" aria-label="Escolha seu computador" className="mt-3.5 mb-7 grid grid-cols-[repeat(2,1fr)] gap-2.5 sm:mt-5 sm:mb-11 sm:gap-3.5 lg:grid-cols-[repeat(4,1fr)]">
       {PURPOSES.map((purpose) => (
         <a
           key={purpose.title}

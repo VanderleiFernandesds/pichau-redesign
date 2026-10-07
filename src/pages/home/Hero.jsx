@@ -1,4 +1,7 @@
 import { ArrowUpRight, Settings } from 'lucide-react';
+import HeroCarouselFrame from '../../components/ui/HeroCarouselFrame';
+
+const CAROUSEL_FRAME_COUNT = 3;
 
 export default function Hero({ children }) {
   return (
@@ -6,7 +9,7 @@ export default function Hero({ children }) {
     // ficam na base e o bloco do texto cresce para preencher o espaço entre eles.
     <section className="hero flex flex-col bg-[#050506] text-white">
       <div className="flex flex-1">
-        <div className="wrap flex w-full items-center pt-(--header-offset)">
+        <div className="wrap grid w-full content-center items-center gap-x-10 pt-(--header-offset) lg:grid-cols-[auto_minmax(0,1fr)]">
           <div className="max-w-[590px] py-(--hero-gap)">
             <span className="eyebrow text-[#e7a3ae]">O SEU SETUP. O SEU PRÓXIMO NÍVEL.</span>
             <h1 className="my-4 text-[37px] leading-[1.04] font-bold tracking-[-1.3px] sm:my-5 sm:text-[45px] sm:tracking-[-2px] lg:text-[clamp(44px,7svh,54px)]">
@@ -30,6 +33,13 @@ export default function Hero({ children }) {
                 </span>
               </a>
             </div>
+          </div>
+
+          {/* Área reservada para o carrossel; por enquanto só as molduras. */}
+          <div className="hero-frames mb-(--hero-gap)" style={{ '--frames-count': CAROUSEL_FRAME_COUNT }}>
+            {Array.from({ length: CAROUSEL_FRAME_COUNT }, (_, index) => (
+              <HeroCarouselFrame key={index} />
+            ))}
           </div>
         </div>
       </div>

@@ -9,8 +9,7 @@ const activeClass =
   'text-brand after:absolute after:inset-y-2 after:left-0 after:w-0.5 after:bg-brand lg:after:inset-x-0 lg:after:top-auto lg:after:bottom-0 lg:after:h-0.5 lg:after:w-auto';
 const iconClass = 'size-5';
 
-export default function Navbar({ isMenuOpen, onMenuOpenChange, onFilter, onCoupon }) {
-  const [isListOpen, setIsListOpen] = useState(false);
+export default function Navbar({ isMenuOpen, onMenuOpenChange, isNavOpen, onNavOpenChange, onFilter, onCoupon }) {
   const [currentHash, setCurrentHash] = useState(() => window.location.hash);
 
   useEffect(() => {
@@ -23,20 +22,20 @@ export default function Navbar({ isMenuOpen, onMenuOpenChange, onFilter, onCoupo
   }, []);
 
   useEffect(() => {
-    if (!isMenuOpen && !isListOpen) return;
+    if (!isMenuOpen && !isNavOpen) return;
 
     function handleKeyDown(event) {
       if (event.key !== 'Escape') return;
       onMenuOpenChange(false);
-      setIsListOpen(false);
+      onNavOpenChange(false);
     }
 
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [isMenuOpen, isListOpen, onMenuOpenChange]);
+  }, [isMenuOpen, isNavOpen, onMenuOpenChange, onNavOpenChange]);
 
   function closeList() {
-    setIsListOpen(false);
+    onNavOpenChange(false);
   }
 
   function renderSectionLink(href, label, Icon) {
@@ -85,23 +84,12 @@ export default function Navbar({ isMenuOpen, onMenuOpenChange, onFilter, onCoupo
   ];
 
   return (
-    <nav aria-label="Navegação principal" className="relative mx-3 border-t border-white/10 sm:mx-4 lg:mx-6">
-      <button
-        type="button"
-        aria-expanded={isListOpen}
-        aria-controls="main-nav-list"
-        onClick={() => setIsListOpen(!isListOpen)}
-        className="flex h-11 w-full items-center gap-2 text-[13px] font-bold text-white transition-colors hover:text-brand focus-visible:-outline-offset-3 lg:hidden"
-      >
-        <Menu aria-hidden="true" className={iconClass} />
-        Menu
-        <ChevronDown aria-hidden="true" className={`ml-auto size-4 transition-transform ${isListOpen ? 'rotate-180' : ''}`} />
-      </button>
-
+    // Abaixo de 1001px a lista abre pelo botão de menu do Header, ao lado da busca.
+    <nav aria-label="Navegação principal" className="relative mx-3 sm:mx-4 lg:mx-6 lg:border-t lg:border-white/10">
       {/* A altura máxima impede que o painel sticky passe da tela em celulares na horizontal. */}
       <ul
         id="main-nav-list"
-        className={`${isListOpen ? 'flex' : 'hidden'} max-h-[calc(100dvh-260px)] flex-col overflow-y-auto border-t border-white/10 py-1 lg:flex lg:max-h-none lg:flex-row lg:items-center lg:justify-between lg:overflow-visible lg:border-0 lg:py-0`}
+        className={`${isNavOpen ? 'flex' : 'hidden'} max-h-[calc(100dvh-170px)] flex-col overflow-y-auto border-t border-white/10 py-1 lg:flex lg:max-h-none lg:flex-row lg:items-center lg:justify-between lg:overflow-visible lg:border-0 lg:py-0`}
       >
         {navItems.map((navItem, index) => (
           <Fragment key={index}>

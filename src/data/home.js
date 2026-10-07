@@ -1,12 +1,49 @@
-import { Cpu, Gamepad2, Headset, House, ListChecks, Monitor, Palette, PcCase, Settings } from 'lucide-react';
+import { Gamepad2, Headset, House, ListChecks, PcCase, Settings } from 'lucide-react';
+import pcGamerImage from '../assets/pc-gamer.png';
+import workstationImage from '../assets/workstation.png';
+import homeOfficeImage from '../assets/casa-escritorio.png';
+import buildPcImage from '../assets/monte-seu-pc.png';
 
-// Cada card aceita `image` (PNG/WebP com fundo transparente) e `alt`; sem imagem, o `icon`
-// ocupa o lugar. As fotos de produto atuais têm fundo branco e não servem para o fundo escuro.
+/*
+  Os PNGs têm 1536x1024 com bastante margem transparente. `imageFrame` marca a área ocupada
+  pelo produto (em px da imagem original) para o card enquadrar o produto, não a tela inteira.
+  Se uma imagem for trocada, essa área precisa ser medida de novo.
+*/
+const IMAGE_SOURCE = { sourceWidth: 1536, sourceHeight: 1024 };
+
 export const PURPOSES = [
-  { title: 'PC Gamer', description: ['Desempenho máximo', 'para seus jogos.'], href: '#offers', category: 'Hardware', icon: Gamepad2, isHighlighted: true },
-  { title: 'Trabalho e criação', description: ['Potência para', 'suas ideias.'], href: '#offers', category: 'Hardware', icon: Palette },
-  { title: 'Casa e escritório', description: ['Tecnologia para', 'o seu dia a dia.'], href: '#offers', category: 'Monitores', icon: Monitor },
-  { title: 'Monte seu PC', description: ['Escolha cada peça', 'do seu jeito.'], href: '#builder', icon: Cpu },
+  {
+    title: 'PC Gamer',
+    description: ['Desempenho máximo', 'para seus jogos.'],
+    href: '#offers',
+    category: 'Hardware',
+    image: pcGamerImage,
+    imageFrame: { ...IMAGE_SOURCE, x: 318, y: 18, width: 909, height: 954 },
+    isHighlighted: true,
+  },
+  {
+    title: 'Trabalho e criação',
+    description: ['Potência para', 'suas ideias.'],
+    href: '#offers',
+    category: 'Hardware',
+    image: workstationImage,
+    imageFrame: { ...IMAGE_SOURCE, x: 337, y: 10, width: 861, height: 987 },
+  },
+  {
+    title: 'Casa e escritório',
+    description: ['Tecnologia para', 'o seu dia a dia.'],
+    href: '#offers',
+    category: 'Monitores',
+    image: homeOfficeImage,
+    imageFrame: { ...IMAGE_SOURCE, x: 86, y: 30, width: 1406, height: 920 },
+  },
+  {
+    title: 'Monte seu PC',
+    description: ['Escolha cada peça', 'do seu jeito.'],
+    href: '#builder',
+    image: buildPcImage,
+    imageFrame: { ...IMAGE_SOURCE, x: 12, y: 40, width: 1521, height: 957 },
+  },
 ];
 
 export const BUILDER_GOALS = [

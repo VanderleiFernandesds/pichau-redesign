@@ -2,22 +2,12 @@ import { ArrowUpRight, Settings } from 'lucide-react';
 
 export default function Hero({ children }) {
   return (
-    // A seção ocupa a tela inteira: o painel flutua no topo, os cards ficam na base
-    // e o bloco do texto cresce para preencher o espaço entre eles.
-    <section className="hero relative flex min-h-svh flex-col overflow-hidden bg-[#050506] text-white">
-      {/* O fundo decorativo é posicionado pelo centro deste bloco; manter os cards fora dele evita
-          que a arte se desloque. A seção usa a mesma cor em que o fundo termina. */}
-      <div className="relative flex flex-1">
-        <div aria-hidden="true" className="hero-decor" />
-
-        <div className="wrap relative flex w-full items-center pt-(--header-offset)">
-          {/* Abaixo de 1001px as faixas vermelhas passam por trás do título; o gradiente garante o contraste. */}
-          <div
-            aria-hidden="true"
-            className="absolute inset-0 bg-[linear-gradient(90deg,#08090bea_5%,#08090b9c_58%,transparent)] lg:hidden"
-          />
-
-          <div className="relative z-[1] max-w-[590px] py-(--hero-gap)">
+    // A seção ocupa a tela (com teto definido em .hero): o painel flutua no topo, os cards
+    // ficam na base e o bloco do texto cresce para preencher o espaço entre eles.
+    <section className="hero flex flex-col bg-[#050506] text-white">
+      <div className="flex flex-1">
+        <div className="wrap flex w-full items-center pt-(--header-offset)">
+          <div className="max-w-[590px] py-(--hero-gap)">
             <span className="eyebrow text-[#e7a3ae]">O SEU SETUP. O SEU PRÓXIMO NÍVEL.</span>
             <h1 className="my-4 text-[37px] leading-[1.04] font-bold tracking-[-1.3px] sm:my-5 sm:text-[45px] sm:tracking-[-2px] lg:text-[clamp(44px,7svh,54px)]">
               Seu próximo nível
@@ -44,7 +34,7 @@ export default function Hero({ children }) {
         </div>
       </div>
 
-      <div className="wrap relative w-full pb-(--hero-gap)">{children}</div>
+      <div className="wrap w-full pb-(--hero-gap)">{children}</div>
     </section>
   );
 }

@@ -113,7 +113,7 @@ export default function HomePage() {
       </SiteHeader>
 
       <main id="main">
-        <Hero>
+        <Hero onFilter={filterByCategory}>
           <PurposeCards onFilter={filterByCategory} />
         </Hero>
         <div className="wrap pt-7 sm:pt-11">

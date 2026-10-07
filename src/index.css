@@ -145,35 +145,154 @@
 }
 
 /*
-  Grupo de molduras lado a lado. Com inclinação, cada moldura recua sobre a anterior o
-  deslocamento do topo, ficando separada só por --frame-gap. A largura encolhe apenas o
-  necessário para as --frames-count caberem na linha.
+  Carrossel do hero. Mobile: texto, painel ativo e controles empilhados. Desktop: texto e
+  controles à esquerda, painéis à direita ocupando as duas linhas.
 */
-.hero-frames {
-  --frame-gap: 14px;
-  display: flex;
-  width: 100%;
-  container-type: inline-size;
+.hero-carousel {
+  grid-template-areas: 'copy' 'panels' 'controls';
 }
 
-/* No desktop o grupo encosta à direita, longe do texto; abaixo disso segue o alinhamento do texto. */
+.hero-copy {
+  grid-area: copy;
+}
+
+.hero-controls {
+  grid-area: controls;
+  padding-block: 12px var(--hero-gap);
+}
+
 @media (width >= 1001px) {
-  .hero-frames {
-    justify-content: flex-end;
+  .hero-carousel {
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas: 'copy panels' 'controls panels';
+  }
+
+  .hero-copy {
+    align-self: end;
+    padding-bottom: 0;
+  }
+
+  .hero-controls {
+    align-self: start;
+    padding-block: 20px 0;
   }
 }
 
-.hero-frames .hero-frame {
-  flex: none;
-  width: min(
-    var(--frame-width),
-    (100cqw - (var(--frames-count) - 1) * (var(--frame-gap) - var(--frame-slant) * var(--frame-height))) /
-      var(--frames-count)
-  );
+.hero-fade {
+  transition:
+    opacity var(--carousel-transition) ease,
+    visibility var(--carousel-transition);
 }
 
-.hero-frames .hero-frame + .hero-frame {
-  margin-left: calc(var(--frame-gap) - var(--frame-slant) * var(--frame-height));
+/*
+  Os painéis dividem a mesma célula do grid, então a célula sempre tem a altura de um painel.
+  Mobile: só o do slide exibido aparece. Desktop: cada um é deslocado conforme a posição na fila.
+*/
+.hero-panels {
+  grid-area: panels;
+  display: grid;
+}
+
+.hero-panel {
+  grid-area: 1 / 1;
+  text-align: left;
+}
+
+.hero-panel:not(.is-shown) {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.hero-panel .hero-frame {
+  width: 100%;
+  transition: filter var(--carousel-transition) ease;
+}
+
+/* Recorte com object-fit: cover; a proporção da imagem nunca é alterada. */
+.hero-panel-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  transition: filter var(--carousel-transition) ease;
+}
+
+/* Funde as bordas da imagem expandida com o fundo do hero quando a moldura some. */
+.hero-panel-blend {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, #050506, transparent 22%, transparent 88%, #050506),
+    linear-gradient(180deg, #050506, transparent 14%, transparent 86%, #050506);
+  opacity: 0;
+  transition: opacity var(--carousel-transition) ease;
+}
+
+/*
+  Desktop: a fila fica encostada à direita. O primeiro da fila é o único que expande e, como fica
+  alinhado pela borda direita, cresce para a esquerda; a largura expandida é o que sobra da coluna
+  depois dos estreitos, então o espaço já fica reservado e nada sobrepõe o texto.
+*/
+@media (width >= 1001px) {
+  .hero-panels {
+    --panel-gap: 14px;
+    --panel-narrow: min(160px, 18cqw);
+    margin-bottom: var(--hero-gap);
+    container-type: inline-size;
+  }
+
+  .hero-panel {
+    justify-self: end;
+    width: var(--panel-narrow);
+    transform: translateX(calc((var(--position) - var(--slide-count) + 1) * (var(--panel-narrow) + var(--panel-gap))));
+    transition:
+      width var(--carousel-transition) ease,
+      transform var(--carousel-transition) ease,
+      opacity var(--carousel-transition) ease;
+  }
+
+  .hero-panel:not(.is-shown) {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  /* Quem vai para o final da fila some antes de andar, para não cruzar por cima dos outros. */
+  .hero-panel.is-moving {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* Recolhidos ficam escurecidos; o expandido (ou o painel sob o mouse) aparece por inteiro. */
+  .hero-panel-image {
+    filter: brightness(0.55) saturate(0.85);
+  }
+
+  .hero-panel:hover .hero-panel-image,
+  .hero-panel.is-expanded .hero-panel-image {
+    filter: none;
+  }
+
+  .hero-panel .hero-frame-line {
+    transition: opacity var(--carousel-transition) ease;
+  }
+
+  .hero-panel.is-expanded {
+    width: max(var(--panel-narrow), 100cqw - (var(--slide-count) - 1) * (var(--panel-narrow) + var(--panel-gap)));
+  }
+
+  .hero-panel.is-expanded .hero-frame {
+    --frame-glow: transparent;
+  }
+
+  .hero-panel.is-expanded .hero-frame-line {
+    opacity: 0;
+  }
+
+  .hero-panel.is-expanded .hero-panel-blend {
+    opacity: 1;
+  }
 }
 
 /*

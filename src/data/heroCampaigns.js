@@ -1,15 +1,15 @@
-import gamerKidsBackground from '../assets/pichau-camadas/gamer-kids/fundo-684x475.png';
-import gamerKidsPc from '../assets/pichau-camadas/gamer-kids/pc.png';
-import gamerKidsCharacter from '../assets/pichau-camadas/gamer-kids/personagem.png';
-import corsairBackground from '../assets/pichau-camadas/corsair/fundo-684x475.png';
-import corsairMemory from '../assets/pichau-camadas/corsair/memorias.png';
-import corsairPowerSupply from '../assets/pichau-camadas/corsair/fonte.png';
-import intelBackground from '../assets/pichau-camadas/intel-gamer-days/fundo-684x475.png';
-import intelTombRaider from '../assets/pichau-camadas/intel-gamer-days/tomb-raider.png';
-import intelGrid from '../assets/pichau-camadas/intel-gamer-days/grid.png';
-import arenaBackground from '../assets/pichau-camadas/pichau-arena/fundo-684x475.png';
-import arenaLogo from '../assets/pichau-camadas/pichau-arena/logo-arena.png';
-import arenaGamerGeek from '../assets/pichau-camadas/pichau-arena/gamer-geek.png';
+import gamerKidsBackground from '../assets/pichau-camadas/gamer-kids/fundo-684x475.avif';
+import gamerKidsPc from '../assets/pichau-camadas/gamer-kids/pc.avif';
+import gamerKidsCharacter from '../assets/pichau-camadas/gamer-kids/personagem.avif';
+import corsairBackground from '../assets/pichau-camadas/corsair/fundo-684x475.avif';
+import corsairMemory from '../assets/pichau-camadas/corsair/memorias.avif';
+import corsairPowerSupply from '../assets/pichau-camadas/corsair/fonte.avif';
+import intelBackground from '../assets/pichau-camadas/intel-gamer-days/fundo-684x475.avif';
+import intelTombRaider from '../assets/pichau-camadas/intel-gamer-days/tomb-raider.avif';
+import intelGrid from '../assets/pichau-camadas/intel-gamer-days/grid.avif';
+import arenaBackground from '../assets/pichau-camadas/pichau-arena/fundo-684x475.avif';
+import arenaLogo from '../assets/pichau-camadas/pichau-arena/logo-arena.avif';
+import arenaGamerGeek from '../assets/pichau-camadas/pichau-arena/gamer-geek.avif';
 
 /*
   Campanhas dos painéis do hero: fundo (684x475), objetos transparentes e textos do card.

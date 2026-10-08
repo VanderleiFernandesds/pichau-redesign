@@ -29,7 +29,7 @@ export default function HeroCarouselControls({ slides, shownId, isPlaying, onSel
             >
               <span
                 aria-hidden="true"
-                className={`h-1 rounded-full transition-[width,background-color] duration-(--carousel-transition) ${
+                className={`h-1 rounded-full transition-[width,background-color] duration-(--carousel-transition) ease-(--carousel-ease) ${
                   isActive ? 'w-8 bg-brand' : 'w-4 bg-[#4a4c54] group-hover:bg-[#8b8d95]'
                 }`}
               />

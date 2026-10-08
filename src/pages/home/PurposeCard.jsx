@@ -14,15 +14,19 @@ export default function PurposeCard({ purpose, onFilter }) {
 
       <h2 className="font-display text-[21px] leading-tight font-bold lg:text-[clamp(20px,1.75vw,28px)]">{title}</h2>
 
-      {/* A coluna do texto ocupa só o necessário; a imagem fica com o restante da largura. */}
-      <div className="grid flex-1 grid-cols-[max-content_minmax(0,1fr)] gap-3">
-        <div className="flex flex-col gap-3">
+      {/*
+        A partir de 601px a coluna do texto ocupa só o necessário e a imagem fica com o restante.
+        Abaixo disso o card é estreito (dois por linha), então tudo empilha: o wrapper do texto vira
+        `contents` e a seta passa para depois da imagem.
+      */}
+      <div className="grid flex-1 grid-cols-1 gap-3 sm:grid-cols-[max-content_minmax(0,1fr)]">
+        <div className="contents sm:flex sm:flex-col sm:gap-3">
           <p className="text-[13px] leading-snug text-[#b8b9bf] lg:text-[12px] min-[1700px]:text-[15px]">
             {description[0]}
             <br />
             {description[1]}
           </p>
-          <span aria-hidden="true" className="chamfer purpose-card-arrow mt-auto grid size-10 place-items-center">
+          <span aria-hidden="true" className="chamfer purpose-card-arrow order-last grid size-10 place-items-center sm:order-none sm:mt-auto">
             <ArrowUpRight className="size-5" />
           </span>
         </div>

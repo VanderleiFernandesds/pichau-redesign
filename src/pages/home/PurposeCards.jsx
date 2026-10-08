@@ -6,7 +6,7 @@ export default function PurposeCards({ onFilter }) {
     <section
       id="choose"
       aria-label="Escolha seu computador"
-      className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-3.5 lg:grid-cols-4"
+      className="grid grid-cols-2 gap-3 sm:gap-3.5 lg:grid-cols-4"
     >
       {PURPOSES.map((purpose) => (
         <PurposeCard key={purpose.title} purpose={purpose} onFilter={onFilter} />

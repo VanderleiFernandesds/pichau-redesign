@@ -126,9 +126,10 @@
   --frame-slant: 0;
   --frame-line: 1px;
   --frame-cut: 12px;
-  --frame-accent: var(--color-brand);
+  /* Em repouso a moldura é neutra, como os cards de escolha; o vermelho fica para o hover e o foco. */
+  --frame-accent: #34363d;
   --frame-fill: var(--color-ink);
-  --frame-glow: #ed002459;
+  --frame-glow: transparent;
 
   position: relative;
   width: min(100%, var(--frame-width));
@@ -287,6 +288,18 @@
   transition: filter var(--carousel-transition) var(--carousel-ease);
 }
 
+/* Sem atraso: o atraso de --frame-return é só para a moldura voltar no fim do fechamento. */
+.hero-panel:hover .hero-frame,
+.hero-panel:has(.hero-panel-select:focus-visible) .hero-frame {
+  --frame-accent: var(--color-brand);
+  --frame-glow: #ed002459;
+  transition-delay: 0s;
+}
+
+.hero-frame .corner-accents {
+  --cut: var(--frame-cut);
+}
+
 /* O clip-path já recorta a moldura; o overflow garante que o fundo acompanhe os limites do card. */
 .hero-panel .hero-frame-content {
   overflow: hidden;
@@ -408,7 +421,8 @@
     object-position: var(--position-expanded);
   }
 
-  .hero-panel .hero-frame-line {
+  .hero-panel .hero-frame-line,
+  .hero-panel .corner-accents {
     transition: opacity var(--frame-fade) var(--carousel-ease) var(--frame-return);
   }
 
@@ -428,7 +442,8 @@
     transition-delay: 0s;
   }
 
-  .hero-panel.is-expanded .hero-frame-line {
+  .hero-panel.is-expanded .hero-frame-line,
+  .hero-panel.is-expanded .corner-accents {
     opacity: 0;
     transition-delay: 0s;
   }
@@ -744,22 +759,31 @@
 
   .purpose-card {
     --cut: 16px;
+    --chamfer-border: #34363d;
+    /* Mais escuro que o preto da página nas bordas, para o card ter profundidade. */
+    --chamfer-fill: radial-gradient(120% 90% at 80% 85%, #1c1c21, #0c0c0f 70%);
+    /* drop-shadow segue o contorno chanfrado; box-shadow ficaria retangular. */
+    transition: filter 200ms;
+  }
+
+  /* No hover o degradê fica avermelhado; o centro dele está atrás da imagem do produto. */
+  .purpose-card:hover,
+  .purpose-card:focus-visible {
     --chamfer-border: var(--color-brand);
     --chamfer-fill: radial-gradient(120% 90% at 80% 85%, #2a0a10, #0d0b0d 70%);
-    /* drop-shadow segue o contorno chanfrado; box-shadow ficaria retangular. */
     filter: drop-shadow(0 0 10px #ed002459);
   }
 
   /* Traços vermelhos sobre as diagonais dos cantos superior direito e inferior esquerdo. */
-  .purpose-card-corners {
+  .corner-accents {
     --accent-length: calc(var(--cut) * 1.1);
     position: absolute;
     inset: 0;
     pointer-events: none;
   }
 
-  .purpose-card-corners::before,
-  .purpose-card-corners::after {
+  .corner-accents::before,
+  .corner-accents::after {
     content: '';
     position: absolute;
     width: var(--accent-length);
@@ -768,20 +792,25 @@
     transform: rotate(45deg);
   }
 
-  .purpose-card-corners::before {
+  .corner-accents::before {
     top: calc(var(--cut) / 2 - 1.5px);
     right: calc(var(--cut) / 2 - var(--accent-length) / 2);
   }
 
-  .purpose-card-corners::after {
+  .corner-accents::after {
     bottom: calc(var(--cut) / 2 - 1.5px);
     left: calc(var(--cut) / 2 - var(--accent-length) / 2);
   }
 
   .purpose-card-arrow {
     --cut: 6px;
-    --chamfer-border: var(--color-brand);
+    --chamfer-border: #4a4c54;
     --chamfer-fill: #101114;
+  }
+
+  .purpose-card:hover .purpose-card-arrow,
+  .purpose-card:focus-visible .purpose-card-arrow {
+    --chamfer-border: var(--color-brand);
   }
 
   /*

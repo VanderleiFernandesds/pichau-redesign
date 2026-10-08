@@ -2,13 +2,13 @@ import { ArrowUpRight } from 'lucide-react';
 
 // O card inteiro é um único link; seta, cantos e imagem são decorativos (o título já nomeia o link).
 export default function PurposeCard({ purpose, onFilter }) {
-  const { title, description, href, category, image, imageFrame, isHighlighted } = purpose;
+  const { title, description, href, category, image, imageFrame } = purpose;
 
   return (
     <a
       href={href}
       onClick={category ? () => onFilter(category) : undefined}
-      className={`chamfer purpose-card flex flex-col gap-2 p-[clamp(14px,2.2svh,24px)] text-white ${isHighlighted ? 'is-highlighted' : ''}`}
+      className="chamfer purpose-card flex flex-col gap-2 p-[clamp(14px,2.2svh,24px)] text-white"
     >
       <span aria-hidden="true" className="purpose-card-corners" />
 

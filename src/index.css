@@ -18,7 +18,8 @@
   --font-logo: Arial, Helvetica, sans-serif;
 
   --color-brand: #ed0024;
-  --color-ink: #17191f;
+  /* Preto da marca: fundos escuros, texto principal e as fusões dos degradês com o fundo do hero. */
+  --color-ink: #191a1f;
   --color-success: #008c35;
   --color-muted: #656a73;
   --color-line: #e8e9ed;
@@ -126,7 +127,7 @@
   --frame-line: 1px;
   --frame-cut: 12px;
   --frame-accent: var(--color-brand);
-  --frame-fill: #0b0c0f;
+  --frame-fill: var(--color-ink);
   --frame-glow: #ed002459;
 
   position: relative;
@@ -453,8 +454,16 @@
     position: absolute;
     inset: 0;
     background:
-      linear-gradient(90deg, #0b0c0f 0%, #0b0c0feb 28%, #0b0c0f8c 50%, transparent 72%, transparent 94%, #0b0c0f),
-      linear-gradient(180deg, #0b0c0f, transparent 12%, transparent 88%, #0b0c0f);
+      linear-gradient(
+        90deg,
+        var(--color-ink) 0%,
+        color-mix(in srgb, var(--color-ink) 92%, transparent) 28%,
+        color-mix(in srgb, var(--color-ink) 55%, transparent) 50%,
+        transparent 72%,
+        transparent 94%,
+        var(--color-ink)
+      ),
+      linear-gradient(180deg, var(--color-ink), transparent 12%, transparent 88%, var(--color-ink));
   }
 
   /*
@@ -641,7 +650,7 @@
   .chamfer {
     --cut: 8px;
     --chamfer-border: #34363d;
-    --chamfer-fill: #0b0c0f;
+    --chamfer-fill: var(--color-ink);
     position: relative;
     isolation: isolate;
   }
@@ -678,8 +687,9 @@
     --chamfer-border: var(--color-brand);
   }
 
+  /* Um pouco mais claro que o preto da marca, para o campo ativo se destacar além da borda. */
   .chamfer-field:focus-within {
-    --chamfer-fill: #121318;
+    --chamfer-fill: #202128;
   }
 
   .chamfer-accent {
@@ -694,7 +704,7 @@
   .header-bar {
     --cut: 12px;
     --chamfer-border: #c8001f;
-    --chamfer-fill: linear-gradient(180deg, #1a1b20, #0b0c0f);
+    --chamfer-fill: linear-gradient(180deg, #1a1b20, var(--color-ink));
   }
 
   .header-bar :focus-visible {
@@ -734,20 +744,9 @@
 
   .purpose-card {
     --cut: 16px;
-    --chamfer-border: #34363d;
-    --chamfer-fill: radial-gradient(120% 90% at 80% 85%, #1c1c21, #0c0c0f 70%);
-    /* drop-shadow segue o contorno chanfrado; box-shadow ficaria retangular. */
-    transition: filter 200ms;
-  }
-
-  .purpose-card.is-highlighted {
-    --chamfer-fill: radial-gradient(120% 90% at 80% 85%, #2a0a10, #0d0b0d 70%);
-  }
-
-  .purpose-card:hover,
-  .purpose-card:focus-visible,
-  .purpose-card.is-highlighted {
     --chamfer-border: var(--color-brand);
+    --chamfer-fill: radial-gradient(120% 90% at 80% 85%, #2a0a10, #0d0b0d 70%);
+    /* drop-shadow segue o contorno chanfrado; box-shadow ficaria retangular. */
     filter: drop-shadow(0 0 10px #ed002459);
   }
 
@@ -781,14 +780,8 @@
 
   .purpose-card-arrow {
     --cut: 6px;
-    --chamfer-border: #4a4c54;
-    --chamfer-fill: #101114;
-  }
-
-  .purpose-card:hover .purpose-card-arrow,
-  .purpose-card:focus-visible .purpose-card-arrow,
-  .purpose-card.is-highlighted .purpose-card-arrow {
     --chamfer-border: var(--color-brand);
+    --chamfer-fill: #101114;
   }
 
   /*

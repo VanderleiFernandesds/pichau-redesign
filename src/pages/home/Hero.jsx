@@ -57,6 +57,9 @@ export default function Hero({ onFilter, children }) {
               slides={HERO_SLIDES}
               shownId={shownId}
               isPlaying={carousel.isPlaying}
+              isProgressShown={carousel.isPlaying && carousel.isReading}
+              isProgressPaused={!carousel.isRunning}
+              readingTime={carousel.readingTime}
               onSelect={carousel.select}
               onTogglePlaying={carousel.togglePlaying}
             />

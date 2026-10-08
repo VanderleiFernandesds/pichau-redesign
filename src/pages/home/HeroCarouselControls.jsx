@@ -1,7 +1,19 @@
 import { Pause, Play } from 'lucide-react';
 
-// O indicador ativo é mais largo, além de vermelho, para não depender só da cor.
-export default function HeroCarouselControls({ slides, shownId, isPlaying, onSelect, onTogglePlaying }) {
+/*
+  O indicador ativo é mais largo, além de vermelho, para não depender só da cor. No automático,
+  ele vira a barra do tempo de leitura: o vermelho preenche o trilho e congela nas pausas.
+*/
+export default function HeroCarouselControls({
+  slides,
+  shownId,
+  isPlaying,
+  isProgressShown,
+  isProgressPaused,
+  readingTime,
+  onSelect,
+  onTogglePlaying,
+}) {
   return (
     <div className="flex items-center gap-3">
       <button
@@ -29,10 +41,17 @@ export default function HeroCarouselControls({ slides, shownId, isPlaying, onSel
             >
               <span
                 aria-hidden="true"
-                className={`h-1 rounded-full transition-[width,background-color] duration-(--carousel-transition) ease-(--carousel-ease) ${
-                  isActive ? 'w-8 bg-brand' : 'w-4 bg-[#4a4c54] group-hover:bg-[#8b8d95]'
+                className={`relative h-1 overflow-hidden rounded-full transition-[width,background-color] duration-(--carousel-transition) ease-(--carousel-ease) ${
+                  isActive ? `w-8 ${isProgressShown ? 'bg-brand/30' : 'bg-brand'}` : 'w-4 bg-[#4a4c54] group-hover:bg-[#8b8d95]'
                 }`}
-              />
+              >
+                {isActive && isProgressShown && (
+                  <span
+                    className={`hero-progress ${isProgressPaused ? 'is-paused' : ''}`}
+                    style={{ '--reading-time': `${readingTime}ms` }}
+                  />
+                )}
+              </span>
             </button>
           );
         })}

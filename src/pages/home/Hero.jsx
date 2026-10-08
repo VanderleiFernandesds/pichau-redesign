@@ -39,6 +39,7 @@ export default function Hero({ onFilter, children }) {
             isExpanded={carousel.isExpanded}
             isJumping={carousel.isJumping}
             hiddenIds={carousel.hiddenIds}
+            objectsHiddenIds={carousel.objectsHiddenIds}
             onSelect={carousel.select}
           />
 

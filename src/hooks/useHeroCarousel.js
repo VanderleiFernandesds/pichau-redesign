@@ -23,11 +23,14 @@ function settleOn(current, targetId) {
 /*
   Fila de slides: só o primeiro expande. Ao fim da leitura a troca passa por etapas, cada uma com
   a duração da transição do CSS:
+    concealing  os objetos do primeiro somem, com o card ainda aberto
     collapsing  o primeiro recolhe e recupera a borda
     leaving     quem vai para o final some no lugar (assim não cruza por cima dos outros)
     shifting    a fila gira: os demais andam para a esquerda e quem saiu vai, invisível, para o final
-    entering    quem saiu reaparece no final
+    entering    quem saiu reaparece no final e os objetos do novo primeiro somem
     expanded    o novo primeiro expande e fica pelo tempo de leitura
+  Na primeira expansão, preparing faz o papel de entering. Os objetos nunca são vistos mudando de
+  posição: trocam de lugar enquanto estão invisíveis e reaparecem com o card já aberto ou fechado.
   Na seleção manual não há etapas: a fila pula direto para o escolhido na frente (jumping, com as
   transições desligadas no CSS) e só a expansão dele é animada.
   Só a espera inicial e a leitura respeitam a pausa; uma troca já iniciada termina e para no
@@ -78,20 +81,25 @@ export function useHeroCarousel(slideIds, { startDelay, readingTime, transitionT
 
   // Sem animação (movimento reduzido) a fila gira direto, sem as etapas intermediárias.
   function startRotation(current, targetId) {
-    return isReducedMotion ? settleOn(current, targetId) : { ...current, phase: 'collapsing', targetId, isQuick: false };
+    return isReducedMotion ? settleOn(current, targetId) : { ...current, phase: 'concealing', targetId, isQuick: false };
   }
 
   // Seleção manual: reordena a fila de uma vez, de qualquer etapa, com o escolhido na frente.
   // isQuick deixa a expansão dele (e a troca do texto) com a duração curta da seleção.
+  // previousId é quem estava na frente: ele fecha de uma vez e os objetos dele precisam sumir junto.
   function jumpTo(current, targetId) {
     const movedCount = current.order.indexOf(targetId);
-    return { ...current, order: rotate(current.order, movedCount), phase: 'jumping', targetId, movedCount, isQuick: true };
+    return { ...current, order: rotate(current.order, movedCount), phase: 'jumping', targetId, movedCount, isQuick: true, previousId: current.order[0] };
   }
 
   function nextStep(current) {
     switch (current.phase) {
       case 'intro':
+        return { ...current, phase: 'preparing' };
+      case 'preparing':
         return { ...current, phase: 'expanded' };
+      case 'concealing':
+        return { ...current, phase: 'collapsing' };
       case 'expanded':
         return startRotation(current, current.order[1]);
       case 'collapsing':
@@ -139,7 +147,8 @@ export function useHeroCarousel(slideIds, { startDelay, readingTime, transitionT
   function togglePlaying() {
     if (isPlaying) {
       setIsPlaying(false);
-      setCycle((current) => (current.phase === 'intro' ? { ...current, phase: 'expanded' } : current));
+      // Pausar na espera inicial abre o primeiro slide, passando pela etapa que esconde os objetos.
+      setCycle((current) => (current.phase === 'intro' ? { ...current, phase: 'preparing' } : current));
       return;
     }
 
@@ -163,14 +172,22 @@ export function useHeroCarousel(slideIds, { startDelay, readingTime, transitionT
   if (cycle.phase === 'leaving') hiddenIds = cycle.order.slice(0, cycle.order.indexOf(cycle.targetId));
   else if (cycle.phase === 'shifting') hiddenIds = cycle.order.slice(cycle.order.length - cycle.movedCount);
 
+  // Cards com os objetos escondidos: o da frente antes de expandir ou recolher, e quem está indo
+  // para o final, que só mostra os objetos de novo ao reaparecer já fechado.
+  const isFrontConcealed = ['preparing', 'entering', 'concealing', 'collapsing'].includes(cycle.phase);
+  let objectsHiddenIds = isFrontConcealed ? [cycle.order[0]] : hiddenIds;
+  if (cycle.phase === 'jumping') objectsHiddenIds = [cycle.order[0], cycle.previousId];
+
   return {
     order: cycle.order,
     shownId: cycle.shownId,
-    isExpanded: cycle.phase === 'expanded',
+    // Em concealing o card continua aberto; só os objetos estão saindo.
+    isExpanded: cycle.phase === 'expanded' || cycle.phase === 'concealing',
     isJumping: cycle.phase === 'jumping',
     // A duração vai para o CSS, para as animações acompanharem o ritmo das etapas.
     transitionTime: cycle.isQuick ? selectTransitionTime : transitionTime,
     hiddenIds,
+    objectsHiddenIds,
     isPlaying,
     isRunning,
     select,

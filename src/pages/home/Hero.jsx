@@ -6,7 +6,7 @@ import { HERO_SLIDES } from '../../data/heroCampaigns';
 import { useHeroCarousel } from '../../hooks/useHeroCarousel';
 
 // Tempos do carrossel em ms; selectTransitionTime é o das trocas feitas por clique ou teclado.
-const CAROUSEL_TIMING = { startDelay: 1500, readingTime: 7000, transitionTime: 500, selectTransitionTime: 450 };
+const CAROUSEL_TIMING = { readingTime: 7000, transitionTime: 500, selectTransitionTime: 450 };
 const SLIDE_IDS = HERO_SLIDES.map((slide) => slide.id);
 
 export default function Hero({ onFilter, children }) {
@@ -45,7 +45,6 @@ export default function Hero({ onFilter, children }) {
             shownId={shownId}
             isExpanded={carousel.isExpanded}
             isJumping={carousel.isJumping}
-            hiddenIds={carousel.hiddenIds}
             objectsHiddenIds={carousel.objectsHiddenIds}
             onSelect={carousel.select}
           />

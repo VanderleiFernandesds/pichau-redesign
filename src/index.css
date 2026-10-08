@@ -505,10 +505,8 @@
     justify-self: end;
     width: var(--panel-narrow);
     transform: translateX(calc((var(--position) - var(--slide-count) + 1) * (var(--panel-narrow) + var(--panel-gap))));
-    transition:
-      width var(--carousel-transition) var(--carousel-ease),
-      transform var(--carousel-transition) var(--carousel-ease),
-      opacity var(--carousel-transition) var(--carousel-ease);
+    /* A fila só muda de ordem no jumping, sem animação; o que anima é a expansão do primeiro. */
+    transition: width var(--carousel-transition) var(--carousel-ease);
   }
 
   .hero-panel:not(.is-shown) {
@@ -519,12 +517,6 @@
   .hero-panel .hero-frame {
     --frame-height: var(--panel-height);
     transition: filter var(--frame-fade) var(--carousel-ease) var(--frame-return);
-  }
-
-  /* Quem vai para o final da fila some antes de andar, para não cruzar por cima dos outros. */
-  .hero-panel.is-moving {
-    opacity: 0;
-    pointer-events: none;
   }
 
   /* Recolhidos ficam escurecidos; o expandido (ou o painel sob o mouse) aparece por inteiro. */

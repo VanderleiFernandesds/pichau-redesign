@@ -13,7 +13,7 @@ export default function HeroCampaignCopy({ campaigns, shownId, isAnnounced, onFi
   }
 
   return (
-    <div className="hero-copy max-w-[590px] py-(--hero-gap)">
+    <div className="hero-copy max-w-[590px]">
       <div className="grid" aria-live={isAnnounced ? 'polite' : 'off'}>
         {campaigns.map(({ id, eyebrow, title, description, highlights, details }) => (
           <div key={id} className={`hero-fade col-start-1 row-start-1 ${visibility(id)}`}>

@@ -15,7 +15,7 @@ export default function Hero({ onFilter, children }) {
   return (
     // A seção ocupa a tela (com teto definido em .hero): o painel flutua no topo, os cards
     // ficam na base e o bloco do texto cresce para preencher o espaço entre eles.
-    <section className="hero flex flex-col bg-[#191A1F] text-white">
+    <section className="hero flex flex-col bg-ink text-white">
       <div className="flex flex-1">
         <div
           role="region"

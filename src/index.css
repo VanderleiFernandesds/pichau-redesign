@@ -255,6 +255,34 @@
 }
 
 /*
+  Preenchimento do indicador ativo durante a leitura. Começa quando o slide abre, como o timer
+  do hook, e para junto com ele; com movimento reduzido fica cheio, sem animar.
+*/
+.hero-progress {
+  position: absolute;
+  inset: 0;
+  background: var(--color-brand);
+  transform-origin: left;
+  animation: hero-progress var(--reading-time) linear forwards;
+}
+
+.hero-progress.is-paused {
+  animation-play-state: paused;
+}
+
+@keyframes hero-progress {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-progress {
+    animation: none;
+  }
+}
+
+/*
   Troca em sequência: o texto que sai some na primeira metade e o novo entra na segunda. Em
   crossfade, os dois ficavam sobrepostos e ilegíveis no meio da transição.
 */

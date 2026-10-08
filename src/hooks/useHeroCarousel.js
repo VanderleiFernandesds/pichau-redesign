@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const REDUCED_MOTION_QUERY = '(prefers-reduced-motion: reduce)';
 
@@ -121,19 +121,36 @@ export function useHeroCarousel(slideIds, { startDelay, readingTime, transitionT
   }
 
   const isWaiting = cycle.phase === 'intro' || cycle.phase === 'expanded';
+  const isReading = cycle.phase === 'expanded';
+
+  /*
+    Tempo de leitura já cumprido no slide atual. Pausas passageiras (hover, foco, aba oculta)
+    retomam de onde pararam, como a barra de progresso do indicador, que só congela. Um novo
+    slide ou a pausa pelo botão zeram: ao dar play, a leitura recomeça junto com a barra.
+  */
+  const readingElapsedRef = useRef(0);
+  const timedCycleRef = useRef(cycle);
 
   useEffect(() => {
+    if (timedCycleRef.current !== cycle || !isPlaying) {
+      readingElapsedRef.current = 0;
+      timedCycleRef.current = cycle;
+    }
     if (isWaiting && !isRunning) return undefined;
 
     let delay = cycle.isQuick ? selectTransitionTime : transitionTime;
     if (cycle.phase === 'jumping') delay = JUMP_FRAME_DELAY;
     else if (cycle.phase === 'intro') delay = startDelay;
-    else if (cycle.phase === 'expanded') delay = readingTime;
+    else if (isReading) delay = readingTime - readingElapsedRef.current;
 
+    const startedAt = performance.now();
     const timer = setTimeout(() => setCycle(nextStep), delay);
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timer);
+      if (isReading) readingElapsedRef.current += performance.now() - startedAt;
+    };
     // Um único timer por etapa, limpo a cada mudança, evita ciclos duplicados.
-  }, [cycle, isWaiting, isRunning, isReducedMotion, startDelay, readingTime, transitionTime, selectTransitionTime]);
+  }, [cycle, isWaiting, isReading, isPlaying, isRunning, isReducedMotion, startDelay, readingTime, transitionTime, selectTransitionTime]);
 
   // Escolher outro slide pausa; clicar no que já está aberto não faz nada (pausar é só no botão).
   function select(slideId) {
@@ -184,6 +201,8 @@ export function useHeroCarousel(slideIds, { startDelay, readingTime, transitionT
     // Em concealing o card continua aberto; só os objetos estão saindo.
     isExpanded: cycle.phase === 'expanded' || cycle.phase === 'concealing',
     isJumping: cycle.phase === 'jumping',
+    isReading,
+    readingTime,
     // A duração vai para o CSS, para as animações acompanharem o ritmo das etapas.
     transitionTime: cycle.isQuick ? selectTransitionTime : transitionTime,
     hiddenIds,

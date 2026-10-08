@@ -148,31 +148,57 @@
   Carrossel do hero. Mobile: texto, painel ativo e controles empilhados. Desktop: texto e
   controles à esquerda, painéis à direita ocupando as duas linhas.
 */
+/* --copy-inset é o recuo comum de texto e controles em relação à borda do fundo. */
 .hero-carousel {
+  --copy-inset: 16px;
   grid-template-areas: 'copy' 'panels' 'controls';
 }
 
 .hero-copy {
   grid-area: copy;
+  padding-left: var(--copy-inset);
 }
 
 .hero-controls {
   grid-area: controls;
   padding-block: 12px var(--hero-gap);
+  padding-left: var(--copy-inset);
 }
 
 @media (width >= 1001px) {
+  /* --copy-width e --copy-gap também posicionam o fundo ampliado (.hero-stage) atrás do texto. */
   .hero-carousel {
+    --copy-inset: 32px;
+    --copy-width: clamp(420px, 37vw, 620px);
+    --copy-gap: 40px;
     grid-template-columns: auto minmax(0, 1fr);
     grid-template-areas: 'copy panels' 'controls panels';
+    column-gap: var(--copy-gap);
   }
 
+  /* Largura fixa, para o card não mudar de tamanho com a campanha. Fica acima do fundo ampliado. */
   .hero-copy {
+    position: relative;
+    z-index: 1;
     align-self: end;
+    width: var(--copy-width);
+    max-width: none;
     padding-bottom: 0;
   }
 
+  /*
+    Título numa linha só. 13% de --copy-width é o maior tamanho em que "Receba dois jogos", o mais
+    longo (7,37em), cabe na coluna. A conta usa a largura total, não a descontada do recuo, para o
+    recuo não diminuir o título; ele pode avançar alguns px no espaço entre o texto e o card.
+  */
+  .hero-copy h1 {
+    font-size: min(var(--copy-width) * 0.13, 84px);
+    white-space: nowrap;
+  }
+
   .hero-controls {
+    position: relative;
+    z-index: 1;
     align-self: start;
     padding-block: 20px 0;
   }
@@ -194,8 +220,21 @@
 }
 
 .hero-panel {
+  position: relative;
   grid-area: 1 / 1;
-  text-align: left;
+}
+
+/* Seleção manual: a fila e o card que estava aberto mudam de uma vez, sem animação. */
+.hero-panels.is-jumping *,
+.hero-panels.is-jumping *::before,
+.hero-panels.is-jumping *::after {
+  transition: none !important;
+}
+
+.hero-panel-select {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
 }
 
 .hero-panel:not(.is-shown) {
@@ -208,7 +247,15 @@
   transition: filter var(--carousel-transition) ease;
 }
 
-/* Recorte com object-fit: cover; a proporção da imagem nunca é alterada. */
+/* O clip-path já recorta a moldura; o overflow garante que o fundo acompanhe os limites do card. */
+.hero-panel .hero-frame-content {
+  overflow: hidden;
+}
+
+/*
+  Fundo da campanha com object-fit: cover, sem deformar. O enquadramento vem do slide
+  (--position-collapsed/--position-expanded); no mobile o painel é largo e usa o do expandido.
+*/
 .hero-panel-image {
   position: absolute;
   inset: 0;
@@ -216,18 +263,47 @@
   height: 100%;
   max-width: none;
   object-fit: cover;
-  transition: filter var(--carousel-transition) ease;
+  object-position: var(--position-expanded);
+  transition:
+    filter var(--carousel-transition) ease,
+    object-position var(--carousel-transition) ease,
+    opacity var(--carousel-transition) ease;
 }
 
-/* Funde as bordas da imagem expandida com o fundo do hero quando a moldura some. */
-.hero-panel-blend {
+/* Fundo ampliado do card expandido: só existe no desktop. */
+.hero-stage {
+  display: none;
+}
+
+/*
+  Objetos transparentes da campanha. O wrapper ocupa o card inteiro, então o translate em % é
+  relativo ao card e acompanha a largura enquanto ela anima; a imagem fica centrada nesse ponto.
+  A largura base usa cqmin (menor lado do card) e height: auto, então a proporção nunca muda.
+  Sem estado (mobile, onde o card é largo) vale a configuração do expandido.
+*/
+.campaign-object {
   position: absolute;
   inset: 0;
-  background:
-    linear-gradient(90deg, #050506, transparent 22%, transparent 88%, #050506),
-    linear-gradient(180deg, #050506, transparent 14%, transparent 86%, #050506);
-  opacity: 0;
-  transition: opacity var(--carousel-transition) ease;
+  z-index: var(--expanded-layer);
+  pointer-events: none;
+  transform: translate(var(--expanded-x), var(--expanded-y));
+  transition: transform var(--carousel-transition) ease;
+}
+
+.campaign-object img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: calc(var(--size) * 1cqmin);
+  max-width: none;
+  height: auto;
+  transform: translate(-50%, -50%) scale(var(--expanded-scale));
+  transition: transform var(--carousel-transition) ease;
+}
+
+/* Título curto do card fechado (só no desktop); o card expandido fica só com fundo e objetos. */
+.campaign-short-title {
+  display: none;
 }
 
 /*
@@ -239,6 +315,7 @@
   .hero-panels {
     --panel-gap: 14px;
     --panel-narrow: min(160px, 18cqw);
+    position: relative;
     margin-bottom: var(--hero-gap);
     container-type: inline-size;
   }
@@ -258,6 +335,11 @@
     opacity: 1;
   }
 
+  /* Altura dos fundos das campanhas (684x475), fixa também durante a expansão. */
+  .hero-panel .hero-frame {
+    --frame-height: 475px;
+  }
+
   /* Quem vai para o final da fila some antes de andar, para não cruzar por cima dos outros. */
   .hero-panel.is-moving {
     opacity: 0;
@@ -266,12 +348,17 @@
 
   /* Recolhidos ficam escurecidos; o expandido (ou o painel sob o mouse) aparece por inteiro. */
   .hero-panel-image {
+    object-position: var(--position-collapsed);
     filter: brightness(0.55) saturate(0.85);
   }
 
   .hero-panel:hover .hero-panel-image,
   .hero-panel.is-expanded .hero-panel-image {
     filter: none;
+  }
+
+  .hero-panel.is-expanded .hero-panel-image {
+    object-position: var(--position-expanded);
   }
 
   .hero-panel .hero-frame-line {
@@ -290,8 +377,116 @@
     opacity: 0;
   }
 
-  .hero-panel.is-expanded .hero-panel-blend {
+  /*
+    Fundo ampliado: vai do início do texto (--copy-width + --copy-gap à esquerda da coluna dos
+    painéis) até a borda direita do card expandido, na altura dos painéis. O degradê preto deixa o
+    texto legível à esquerda e a arte aparece à direita.
+  */
+  .hero-stage {
+    display: block;
+    position: absolute;
+    top: 0;
+    right: calc((var(--slide-count) - 1) * (var(--panel-narrow) + var(--panel-gap)));
+    bottom: 0;
+    left: calc(-1 * (var(--copy-width) + var(--copy-gap)));
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .hero-stage::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(90deg, #050506 0%, #050506eb 28%, #0505068c 50%, transparent 72%, transparent 94%, #050506),
+      linear-gradient(180deg, #050506, transparent 12%, transparent 88%, #050506);
+  }
+
+  .hero-stage-image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity var(--carousel-transition) ease;
+  }
+
+  /*
+    Ao expandir, o fundo ampliado aparece depois que o card termina de crescer e o fundo do card
+    some na sequência, já coberto por ele. Ao recolher, os dois voltam juntos, sem espera.
+  */
+  .hero-stage-image.is-visible {
     opacity: 1;
+    transition-delay: var(--carousel-transition);
+  }
+
+  /*
+    O card expandido começa na borda da coluna dos painéis, então recuar o botão --copy-width +
+    --copy-gap o faz cobrir o fundo ampliado inteiro. Texto e controles continuam acima dele.
+  */
+  .hero-panel.is-expanded .hero-panel-select {
+    left: calc(-1 * (var(--copy-width) + var(--copy-gap)));
+  }
+
+  .hero-panel .hero-frame-content {
+    transition: background-color var(--carousel-transition) ease;
+  }
+
+  .hero-panel.is-expanded .hero-frame-content {
+    background-color: transparent;
+    transition-delay: var(--carousel-transition);
+  }
+
+  .hero-panel.is-expanded .hero-panel-image {
+    opacity: 0;
+    transition:
+      filter var(--carousel-transition) ease,
+      object-position var(--carousel-transition) ease,
+      opacity var(--carousel-transition) ease var(--carousel-transition);
+  }
+
+  .campaign-object {
+    z-index: var(--collapsed-layer);
+    transform: translate(var(--collapsed-x), var(--collapsed-y));
+  }
+
+  .campaign-object img {
+    transform: translate(-50%, -50%) scale(var(--collapsed-scale));
+  }
+
+  .hero-panel.is-expanded .campaign-object {
+    z-index: var(--expanded-layer);
+    transform: translate(var(--expanded-x), var(--expanded-y));
+  }
+
+  .hero-panel.is-expanded .campaign-object img {
+    transform: translate(-50%, -50%) scale(var(--expanded-scale));
+  }
+
+  /* Some logo no início da expansão e só volta no fim do fechamento. */
+  .campaign-short-title {
+    display: block;
+    position: absolute;
+    top: 22px;
+    right: 10px;
+    left: 10px;
+    z-index: 2;
+    color: white;
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    text-shadow: 0 2px 10px #000000b3;
+    pointer-events: none;
+    transition: opacity calc(var(--carousel-transition) * 0.4) ease calc(var(--carousel-transition) * 0.6);
+  }
+
+  .hero-panel.is-expanded .campaign-short-title {
+    opacity: 0;
+    transition: opacity calc(var(--carousel-transition) * 0.4) ease;
   }
 }
 

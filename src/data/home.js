@@ -46,43 +46,6 @@ export const PURPOSES = [
   },
 ];
 
-/*
-  Slides do carrossel do hero: cada um define o texto à esquerda e o painel à direita.
-  `imagePosition` é o object-position do recorte, escolhido para o painel estreito mostrar o produto.
-*/
-export const HERO_SLIDES = [
-  {
-    id: 'pc-gamer',
-    label: 'PC Gamer',
-    eyebrow: 'O SEU SETUP. O SEU PRÓXIMO NÍVEL.',
-    title: ['Seu próximo nível', 'começa aqui.'],
-    description: ['PCs gamers, hardware e upgrades', 'para o seu setup.'],
-    cta: { label: 'Explorar ofertas', href: '#offers' },
-    image: pcGamerImage,
-    imagePosition: '70% 50%',
-  },
-  {
-    id: 'hardware',
-    label: 'Hardware',
-    eyebrow: 'UPGRADE SEM COMPLICAÇÃO.',
-    title: ['Mais desempenho,', 'peça por peça.'],
-    description: ['Placas de vídeo, placas-mãe e', 'memórias para o seu PC.'],
-    cta: { label: 'Ver hardware', href: '#offers', category: 'Hardware' },
-    image: buildPcImage,
-    imagePosition: '30% 50%',
-  },
-  {
-    id: 'casa-escritorio',
-    label: 'Casa e escritório',
-    eyebrow: 'CONFORTO PARA O DIA A DIA.',
-    title: ['Setup completo', 'para trabalhar.'],
-    description: ['Monitores e periféricos para', 'render mais no dia a dia.'],
-    cta: { label: 'Ver monitores', href: '#offers', category: 'Monitores' },
-    image: homeOfficeImage,
-    imagePosition: '45% 50%',
-  },
-];
-
 export const BUILDER_GOALS = [
   { label: 'Jogos e performance', category: 'Hardware', icon: Gamepad2 },
   { label: 'Trabalho e criação', category: 'Hardware', icon: Settings },

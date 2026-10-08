@@ -10,7 +10,7 @@ export default function PurposeCard({ purpose, onFilter }) {
       onClick={category ? () => onFilter(category) : undefined}
       className="chamfer purpose-card flex flex-col gap-2 p-[clamp(14px,2.2svh,24px)] text-white"
     >
-      <span aria-hidden="true" className="purpose-card-corners" />
+      <span aria-hidden="true" className="corner-accents" />
 
       <h2 className="font-display text-[21px] leading-tight font-bold lg:text-[clamp(20px,1.75vw,28px)]">{title}</h2>
 

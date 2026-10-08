@@ -6,6 +6,7 @@ export default function HeroCarouselFrame({ children, className = '' }) {
     <div className={`hero-frame ${className}`}>
       <div aria-hidden="true" className="hero-frame-layer hero-frame-line" />
       <div className="hero-frame-layer hero-frame-content">{children}</div>
+      <span aria-hidden="true" className="corner-accents" />
     </div>
   );
 }

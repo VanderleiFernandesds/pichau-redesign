@@ -8,7 +8,7 @@ import { hideBrokenImage } from '../../utils/image';
   visível é cortada. A posição vem de --position: no desktop vira deslocamento horizontal; no
   mobile os painéis dividem a mesma célula e só o do slide exibido aparece.
 */
-export default function HeroPanels({ slides, order, shownId, isExpanded, isJumping, hiddenIds, onSelect }) {
+export default function HeroPanels({ slides, order, shownId, isExpanded, isJumping, hiddenIds, objectsHiddenIds, onSelect }) {
   return (
     <div className={`hero-panels ${isJumping ? 'is-jumping' : ''}`} style={{ '--slide-count': slides.length }}>
       {/*
@@ -42,6 +42,7 @@ export default function HeroPanels({ slides, order, shownId, isExpanded, isJumpi
               isShown && 'is-shown',
               position === 0 && isExpanded && 'is-expanded',
               hiddenIds.includes(slide.id) && 'is-moving',
+              objectsHiddenIds.includes(slide.id) && 'is-hiding-objects',
             ]}
             isShown={isShown}
             onSelect={() => onSelect(slide.id)}

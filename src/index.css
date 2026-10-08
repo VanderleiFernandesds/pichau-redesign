@@ -316,7 +316,7 @@
 
 /*
   Objetos transparentes da campanha. O wrapper ocupa o card inteiro, então o translate em % é
-  relativo ao card e acompanha a largura enquanto ela anima; a imagem fica centrada nesse ponto.
+  relativo ao card; a imagem fica centrada nesse ponto.
   A largura base usa cqmin (menor lado do card) e height: auto, então a proporção nunca muda.
   Sem estado (mobile, onde o card é largo) vale a configuração do expandido.
 */
@@ -326,7 +326,6 @@
   z-index: var(--expanded-layer);
   pointer-events: none;
   transform: translate(var(--expanded-x), var(--expanded-y));
-  transition: transform var(--carousel-transition) var(--carousel-ease);
 }
 
 .campaign-object img {
@@ -337,7 +336,6 @@
   max-width: none;
   height: auto;
   transform: translate(-50%, -50%) scale(var(--expanded-scale));
-  transition: transform var(--carousel-transition) var(--carousel-ease);
 }
 
 /* Título curto do card fechado (só no desktop); o card expandido fica só com fundo e objetos. */
@@ -535,28 +533,36 @@
       opacity var(--frame-fade) var(--carousel-ease);
   }
 
+  /*
+    Os objetos não animam posição nem tamanho: somem (is-hiding-objects), trocam de lugar enquanto
+    estão invisíveis e reaparecem. Ao reaparecer no card aberto, esperam a expansão terminar; no
+    card fechado, voltam junto com ele. A largura usa as medidas finais do card (--object-unit),
+    então já está certa quando o objeto aparece e a proporção vem do height: auto.
+  */
   .campaign-object {
     z-index: var(--collapsed-layer);
     transform: translate(var(--collapsed-x), var(--collapsed-y));
+    transition: opacity var(--carousel-transition) var(--carousel-ease);
   }
 
-  /*
-    No desktop a escala vai na largura, que anima direto entre os dois tamanhos finais. Com cqmin
-    vezes scale(), o card crescendo e a escala diminuindo se multiplicavam e o objeto inchava no meio.
-  */
   .campaign-object img {
     width: calc(var(--size) * var(--object-unit) * var(--collapsed-scale));
     transform: translate(-50%, -50%);
-    transition: width var(--carousel-transition) var(--carousel-ease);
   }
 
   .hero-panel.is-expanded .campaign-object {
     z-index: var(--expanded-layer);
     transform: translate(var(--expanded-x), var(--expanded-y));
+    transition-delay: var(--carousel-transition);
   }
 
   .hero-panel.is-expanded .campaign-object img {
     width: calc(var(--size) * var(--object-unit) * var(--expanded-scale));
+  }
+
+  .hero-panel.is-hiding-objects .campaign-object {
+    opacity: 0;
+    transition-delay: 0s;
   }
 
   /* Some logo no início da expansão e só volta no fim do fechamento. */

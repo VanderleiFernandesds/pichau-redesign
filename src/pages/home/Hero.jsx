@@ -1,6 +1,7 @@
 import HeroCampaignCopy from './HeroCampaignCopy';
 import HeroPanels from './HeroPanels';
 import HeroCarouselControls from './HeroCarouselControls';
+import HeroCarouselArrows from './HeroCarouselArrows';
 import { HERO_SLIDES } from '../../data/heroCampaigns';
 import { useHeroCarousel } from '../../hooks/useHeroCarousel';
 
@@ -11,6 +12,12 @@ const SLIDE_IDS = HERO_SLIDES.map((slide) => slide.id);
 export default function Hero({ onFilter, children }) {
   const carousel = useHeroCarousel(SLIDE_IDS, CAROUSEL_TIMING);
   const { shownId } = carousel;
+
+  // Segue a ordem das campanhas (a dos indicadores) e dá a volta nas pontas.
+  function selectSibling(step) {
+    const index = SLIDE_IDS.indexOf(shownId);
+    carousel.select(SLIDE_IDS[(index + step + SLIDE_IDS.length) % SLIDE_IDS.length]);
+  }
 
   return (
     // A seção ocupa a tela (com teto definido em .hero): o painel flutua no topo, os cards
@@ -42,6 +49,8 @@ export default function Hero({ onFilter, children }) {
             objectsHiddenIds={carousel.objectsHiddenIds}
             onSelect={carousel.select}
           />
+
+          <HeroCarouselArrows onPrevious={() => selectSibling(-1)} onNext={() => selectSibling(1)} />
 
           <div className="hero-controls">
             <HeroCarouselControls

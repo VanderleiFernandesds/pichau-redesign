@@ -5,7 +5,7 @@ export default function BuilderBanner({ onStart }) {
   return (
     <section
       id="builder"
-      className="relative my-[26px] flex min-h-[245px] items-center justify-between overflow-hidden rounded-[7px] bg-[radial-gradient(ellipse_at_right,#4c0816,#121216_65%)] p-6 text-white sm:mt-8 sm:mb-10 sm:min-h-0 sm:p-[35px]"
+      className="relative my-[26px] flex min-h-[245px] items-center justify-between overflow-hidden rounded-[7px] bg-[radial-gradient(ellipse_at_right,#4c0816,#121216_65%)] px-(--box-padding) py-6 text-white sm:mt-8 sm:mb-10 sm:min-h-0 sm:py-[35px]"
     >
       <div className="relative z-[1]">
         <span className="eyebrow">CADA PEÇA FAZ A DIFERENÇA</span>

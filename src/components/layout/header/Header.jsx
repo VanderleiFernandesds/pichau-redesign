@@ -15,7 +15,7 @@ export default function Header({
   onOpenCart,
 }) {
   return (
-    <div className="flex flex-wrap items-center gap-x-3 gap-y-2.5 px-3 py-2.5 sm:px-4 lg:h-18 lg:flex-nowrap lg:gap-5 lg:px-6 lg:py-0">
+    <div className="flex flex-wrap items-center gap-x-3 gap-y-2.5 px-(--box-padding) py-2.5 lg:h-18 lg:flex-nowrap lg:gap-5 lg:py-0">
       <a
         href="./"
         aria-label="Pichau início"

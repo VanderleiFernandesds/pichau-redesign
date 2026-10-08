@@ -8,7 +8,7 @@ export default function PurposeCard({ purpose, onFilter }) {
     <a
       href={href}
       onClick={category ? () => onFilter(category) : undefined}
-      className="chamfer purpose-card flex flex-col gap-2 p-[clamp(14px,2.2svh,24px)] text-white"
+      className="chamfer purpose-card flex flex-col gap-2 px-(--box-padding) py-[clamp(14px,2.2svh,24px)] text-white"
     >
       <span aria-hidden="true" className="corner-accents" />
 

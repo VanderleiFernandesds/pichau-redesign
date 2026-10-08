@@ -1,6 +1,7 @@
 import { Menu, X } from 'lucide-react';
 import SearchForm from './SearchForm';
 import HeaderActions from './HeaderActions';
+import logo from '../../../assets/logo-pichau.svg';
 
 export default function Header({
   query,
@@ -16,12 +17,14 @@ export default function Header({
 }) {
   return (
     <div className="flex flex-wrap items-center gap-x-3 gap-y-2.5 px-(--box-padding) py-2.5 lg:h-18 lg:flex-nowrap lg:gap-5 lg:py-0">
-      <a
-        href="./"
-        aria-label="Pichau início"
-        className="font-logo text-[28px] leading-none font-black tracking-[-2px] text-white [text-shadow:0_0_18px_#ed002466] sm:text-[32px] sm:tracking-[-2.5px] lg:text-[40px] lg:tracking-[-3px]"
-      >
-        Pichau
+      <a href="./" aria-label="Pichau início" className="shrink-0">
+        <img
+          src={logo}
+          alt=""
+          width="412"
+          height="97"
+          className="h-[22px] w-auto drop-shadow-[0_0_18px_#ed002466] sm:h-[25px] lg:h-[31px]"
+        />
       </a>
 
       <span aria-hidden="true" className="header-slash" />

@@ -14,8 +14,6 @@
   --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
   /* Títulos do hero, das seções e dos cards. */
   --font-display: 'Rajdhani', 'Arial Narrow', Arial, sans-serif;
-  /* O logo em texto continua na fonte original. */
-  --font-logo: Arial, Helvetica, sans-serif;
 
   --color-brand: #ed0024;
   /* Preto da marca: fundos escuros, texto principal e as fusões dos degradês com o fundo do hero. */

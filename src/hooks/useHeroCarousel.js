@@ -4,6 +4,9 @@ function getPrefersReducedMotion() {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
+// Tempo para o navegador pintar a fila já reordenada, sem transições, antes de expandir o novo primeiro.
+const JUMP_FRAME_DELAY = 40;
+
 // Leva os `count` primeiros da fila para o final, mantendo a ordem relativa.
 function rotate(order, count) {
   return [...order.slice(count), ...order.slice(0, count)];
@@ -17,6 +20,8 @@ function rotate(order, count) {
     shifting    a fila gira: os demais andam para a esquerda e quem saiu vai, invisível, para o final
     entering    quem saiu reaparece no final
     expanded    o novo primeiro expande e fica pelo tempo de leitura
+  Na seleção manual não há etapas: a fila pula direto para o escolhido na frente (jumping, com as
+  transições desligadas no CSS) e só a expansão dele é animada.
   Só a espera inicial e a leitura respeitam a pausa; uma troca já iniciada termina e para no
   slide expandido, para nunca ficar presa no meio.
 */
@@ -48,12 +53,18 @@ export function useHeroCarousel(slideIds, { startDelay, readingTime, transitionT
   }, []);
 
   // Sem animação (movimento reduzido) a fila gira direto, sem as etapas intermediárias.
-  // Trocas pedidas pelo usuário (isQuick) usam etapas mais curtas que o avanço automático.
-  function startRotation(current, targetId, isQuick = false) {
-    if (!isReducedMotion) return { ...current, phase: 'collapsing', targetId, isQuick };
+  function startRotation(current, targetId) {
+    if (!isReducedMotion) return { ...current, phase: 'collapsing', targetId, isQuick: false };
 
     const movedCount = current.order.indexOf(targetId);
-    return { order: rotate(current.order, movedCount), phase: 'expanded', targetId, shownId: targetId, movedCount, isQuick };
+    return { order: rotate(current.order, movedCount), phase: 'expanded', targetId, shownId: targetId, movedCount, isQuick: false };
+  }
+
+  // Seleção manual: reordena a fila de uma vez, de qualquer etapa, com o escolhido na frente.
+  // isQuick deixa a expansão dele (e a troca do texto) com a duração curta da seleção.
+  function jumpTo(current, targetId) {
+    const movedCount = current.order.indexOf(targetId);
+    return { ...current, order: rotate(current.order, movedCount), phase: 'jumping', targetId, movedCount, isQuick: true };
   }
 
   function nextStep(current) {
@@ -70,6 +81,8 @@ export function useHeroCarousel(slideIds, { startDelay, readingTime, transitionT
       }
       case 'shifting':
         return { ...current, phase: 'entering' };
+      case 'jumping':
+        return { ...current, phase: 'expanded', shownId: current.targetId };
       default:
         // Uma seleção feita no meio da troca pode pedir outra volta antes de expandir.
         return current.order[0] === current.targetId
@@ -84,7 +97,8 @@ export function useHeroCarousel(slideIds, { startDelay, readingTime, transitionT
     if (isWaiting && !isRunning) return undefined;
 
     let delay = cycle.isQuick ? selectTransitionTime : transitionTime;
-    if (cycle.phase === 'intro') delay = startDelay;
+    if (cycle.phase === 'jumping') delay = JUMP_FRAME_DELAY;
+    else if (cycle.phase === 'intro') delay = startDelay;
     else if (cycle.phase === 'expanded') delay = readingTime;
 
     const timer = setTimeout(() => setCycle(nextStep), delay);
@@ -95,9 +109,8 @@ export function useHeroCarousel(slideIds, { startDelay, readingTime, transitionT
   function select(slideId) {
     setIsPlaying(false);
     setCycle((current) => {
-      if (current.phase !== 'intro' && current.phase !== 'expanded') return { ...current, targetId: slideId, isQuick: true };
-      if (current.order[0] === slideId) return { ...current, phase: 'expanded', targetId: slideId, shownId: slideId };
-      return startRotation(current, slideId, true);
+      const isAlreadyOpen = current.phase === 'expanded' && current.order[0] === slideId;
+      return isAlreadyOpen ? current : jumpTo(current, slideId);
     });
   }
 
@@ -132,6 +145,7 @@ export function useHeroCarousel(slideIds, { startDelay, readingTime, transitionT
     order: cycle.order,
     shownId: cycle.shownId,
     isExpanded: cycle.phase === 'expanded',
+    isJumping: cycle.phase === 'jumping',
     // A duração vai para o CSS, para as animações acompanharem o ritmo das etapas.
     transitionTime: cycle.isQuick ? selectTransitionTime : transitionTime,
     hiddenIds,

@@ -23,7 +23,7 @@ export default function HeroCarouselControls({ slides, shownId, isPlaying, onSel
               key={slide.id}
               type="button"
               onClick={() => onSelect(slide.id)}
-              aria-label={`Destaque ${index + 1} de ${slides.length}: ${slide.label}`}
+              aria-label={`Destaque ${index + 1} de ${slides.length}: ${slide.name}`}
               aria-current={isActive ? 'true' : undefined}
               className="group grid h-10 min-w-10 place-items-center px-1"
             >

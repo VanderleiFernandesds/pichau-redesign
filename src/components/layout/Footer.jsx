@@ -1,4 +1,5 @@
 import { ArrowUpRight } from 'lucide-react';
+import logo from '../../assets/logo-pichau.svg';
 
 const EXPLORE_LINKS = [
   { href: '#offers', label: 'Produtos e ofertas' },
@@ -14,8 +15,8 @@ export default function Footer() {
     <footer id="support" className="bg-ink text-[#c3c5cd]">
       <div className="wrap grid gap-10 pt-12 pb-10 sm:grid-cols-2 sm:gap-x-12 sm:pt-14 lg:grid-cols-[minmax(0,1fr)_auto_auto] lg:gap-x-20">
         <div className="sm:col-span-2 lg:col-span-1">
-          <a href="./" className="font-logo text-[36px] font-black tracking-[-3px] text-white" aria-label="Pichau início">
-            Pichau
+          <a href="./" aria-label="Pichau início" className="inline-block">
+            <img src={logo} alt="" width="412" height="97" className="h-[27px] w-auto" />
           </a>
           <p className="mt-3 max-w-[34ch] text-[14px] leading-relaxed">Seu próximo nível começa aqui.</p>
           <p className="mt-4 max-w-[38ch] text-[13px] leading-relaxed text-[#9296a1]">

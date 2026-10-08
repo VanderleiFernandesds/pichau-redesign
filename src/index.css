@@ -126,7 +126,7 @@
   --frame-line: 1px;
   --frame-cut: 12px;
   --frame-accent: var(--color-brand);
-  --frame-fill: #050506;
+  --frame-fill: #0b0c0f;
   --frame-glow: #ed002459;
 
   position: relative;
@@ -151,6 +151,8 @@
 /* --copy-inset é o recuo comum de texto e controles em relação à borda do fundo. */
 .hero-carousel {
   --copy-inset: 16px;
+  /* Curva comum das animações do carrossel: acelera e desacelera devagar, sem arranques. */
+  --carousel-ease: cubic-bezier(0.65, 0, 0.35, 1);
   grid-template-areas: 'copy' 'panels' 'controls';
 }
 
@@ -204,10 +206,20 @@
   }
 }
 
+/*
+  Troca em sequência: o texto que sai some na primeira metade e o novo entra na segunda. Em
+  crossfade, os dois ficavam sobrepostos e ilegíveis no meio da transição.
+*/
 .hero-fade {
   transition:
-    opacity var(--carousel-transition) ease,
-    visibility var(--carousel-transition);
+    opacity calc(var(--carousel-transition) / 2) var(--carousel-ease) calc(var(--carousel-transition) / 2),
+    visibility 0s calc(var(--carousel-transition) / 2);
+}
+
+.hero-fade.invisible {
+  transition:
+    opacity calc(var(--carousel-transition) / 2) var(--carousel-ease),
+    visibility 0s calc(var(--carousel-transition) / 2);
 }
 
 /*
@@ -219,9 +231,36 @@
   display: grid;
 }
 
+/* No mobile só um painel aparece; o fade evita o corte seco na troca. */
 .hero-panel {
   position: relative;
   grid-area: 1 / 1;
+  transition:
+    opacity var(--carousel-transition) var(--carousel-ease),
+    visibility var(--carousel-transition);
+}
+
+/*
+  Registrada para resolver em px no .hero-panel, onde cqw é o da fila; dentro da moldura, as
+  unidades de container usariam o próprio card, que muda de largura durante a animação.
+*/
+@property --object-unit {
+  syntax: '<length>';
+  inherits: true;
+  initial-value: 0px;
+}
+
+/* Máscara do fundo ampliado: largura revelada a partir da borda direita e largura da borda suave. */
+@property --stage-reveal {
+  syntax: '<length-percentage>';
+  inherits: false;
+  initial-value: 0px;
+}
+
+@property --stage-soft {
+  syntax: '<length-percentage>';
+  inherits: false;
+  initial-value: 0px;
 }
 
 /* Seleção manual: a fila e o card que estava aberto mudam de uma vez, sem animação. */
@@ -244,7 +283,7 @@
 
 .hero-panel .hero-frame {
   width: 100%;
-  transition: filter var(--carousel-transition) ease;
+  transition: filter var(--carousel-transition) var(--carousel-ease);
 }
 
 /* O clip-path já recorta a moldura; o overflow garante que o fundo acompanhe os limites do card. */
@@ -265,9 +304,9 @@
   object-fit: cover;
   object-position: var(--position-expanded);
   transition:
-    filter var(--carousel-transition) ease,
-    object-position var(--carousel-transition) ease,
-    opacity var(--carousel-transition) ease;
+    filter var(--carousel-transition) var(--carousel-ease),
+    object-position var(--carousel-transition) var(--carousel-ease),
+    opacity var(--carousel-transition) var(--carousel-ease);
 }
 
 /* Fundo ampliado do card expandido: só existe no desktop. */
@@ -287,7 +326,7 @@
   z-index: var(--expanded-layer);
   pointer-events: none;
   transform: translate(var(--expanded-x), var(--expanded-y));
-  transition: transform var(--carousel-transition) ease;
+  transition: transform var(--carousel-transition) var(--carousel-ease);
 }
 
 .campaign-object img {
@@ -298,7 +337,7 @@
   max-width: none;
   height: auto;
   transform: translate(-50%, -50%) scale(var(--expanded-scale));
-  transition: transform var(--carousel-transition) ease;
+  transition: transform var(--carousel-transition) var(--carousel-ease);
 }
 
 /* Título curto do card fechado (só no desktop); o card expandido fica só com fundo e objetos. */
@@ -315,6 +354,15 @@
   .hero-panels {
     --panel-gap: 14px;
     --panel-narrow: min(160px, 18cqw);
+    --panel-expanded: max(var(--panel-narrow), 100cqw - (var(--slide-count) - 1) * (var(--panel-narrow) + var(--panel-gap)));
+    /* Altura dos fundos das campanhas (684x475), fixa também durante a expansão. */
+    --panel-height: 475px;
+    /*
+      Moldura e fundo do card: somem no início da expansão (--frame-fade) e só voltam no fim do
+      fechamento (--frame-return), quando o card já está quase estreito.
+    */
+    --frame-fade: calc(var(--carousel-transition) * 0.2);
+    --frame-return: calc(var(--carousel-transition) * 0.8);
     position: relative;
     margin-bottom: var(--hero-gap);
     container-type: inline-size;
@@ -325,9 +373,9 @@
     width: var(--panel-narrow);
     transform: translateX(calc((var(--position) - var(--slide-count) + 1) * (var(--panel-narrow) + var(--panel-gap))));
     transition:
-      width var(--carousel-transition) ease,
-      transform var(--carousel-transition) ease,
-      opacity var(--carousel-transition) ease;
+      width var(--carousel-transition) var(--carousel-ease),
+      transform var(--carousel-transition) var(--carousel-ease),
+      opacity var(--carousel-transition) var(--carousel-ease);
   }
 
   .hero-panel:not(.is-shown) {
@@ -335,9 +383,9 @@
     opacity: 1;
   }
 
-  /* Altura dos fundos das campanhas (684x475), fixa também durante a expansão. */
   .hero-panel .hero-frame {
-    --frame-height: 475px;
+    --frame-height: var(--panel-height);
+    transition: filter var(--frame-fade) var(--carousel-ease) var(--frame-return);
   }
 
   /* Quem vai para o final da fila some antes de andar, para não cruzar por cima dos outros. */
@@ -362,19 +410,28 @@
   }
 
   .hero-panel .hero-frame-line {
-    transition: opacity var(--carousel-transition) ease;
+    transition: opacity var(--frame-fade) var(--carousel-ease) var(--frame-return);
+  }
+
+  /* --object-unit é o 1cqmin do card no estado final; o estreito é sempre mais estreito que alto. */
+  .hero-panel {
+    --object-unit: calc(var(--panel-narrow) / 100);
   }
 
   .hero-panel.is-expanded {
-    width: max(var(--panel-narrow), 100cqw - (var(--slide-count) - 1) * (var(--panel-narrow) + var(--panel-gap)));
+    --object-unit: calc(min(var(--panel-expanded), var(--panel-height)) / 100);
+    width: var(--panel-expanded);
   }
 
+  /* Só a moldura decorativa some; o foco de teclado é o outline do botão e continua visível. */
   .hero-panel.is-expanded .hero-frame {
     --frame-glow: transparent;
+    transition-delay: 0s;
   }
 
   .hero-panel.is-expanded .hero-frame-line {
     opacity: 0;
+    transition-delay: 0s;
   }
 
   /*
@@ -398,11 +455,19 @@
     position: absolute;
     inset: 0;
     background:
-      linear-gradient(90deg, #050506 0%, #050506eb 28%, #0505068c 50%, transparent 72%, transparent 94%, #050506),
-      linear-gradient(180deg, #050506, transparent 12%, transparent 88%, #050506);
+      linear-gradient(90deg, #0b0c0f 0%, #0b0c0feb 28%, #0b0c0f8c 50%, transparent 72%, transparent 94%, #0b0c0f),
+      linear-gradient(180deg, #0b0c0f, transparent 12%, transparent 88%, #0b0c0f);
   }
 
+  /*
+    O fundo ampliado é revelado da direita para a esquerda junto com a expansão. Fechado, a área
+    revelada é exatamente o card (que fica encostado na mesma borda direita) e fica por baixo dele;
+    ao expandir, ela avança para a esquerda e ganha uma borda suave, então nunca há um limite
+    nítido sobre a área do texto nem crossfade entre dois enquadramentos na área inteira.
+  */
   .hero-stage-image {
+    --stage-reveal: var(--panel-narrow);
+    --stage-soft: 0%;
     position: absolute;
     inset: 0;
     width: 100%;
@@ -410,41 +475,64 @@
     max-width: none;
     object-fit: cover;
     opacity: 0;
-    transition: opacity var(--carousel-transition) ease;
+    mask-image: linear-gradient(to left, #000 var(--stage-reveal), transparent calc(var(--stage-reveal) + var(--stage-soft)));
+    /*
+      Ao fechar, a máscara chega ao tamanho do card um pouco antes do fim, quando o fundo do card
+      volta por cima, e o fundo ampliado só some depois disso.
+    */
+    --reveal-return: calc(var(--carousel-transition) - var(--frame-fade) / 2);
+    transition:
+      --stage-reveal var(--reveal-return) var(--carousel-ease),
+      --stage-soft var(--reveal-return) var(--carousel-ease),
+      opacity 0s var(--carousel-transition);
   }
 
   /*
-    Ao expandir, o fundo ampliado aparece depois que o card termina de crescer e o fundo do card
-    some na sequência, já coberto por ele. Ao recolher, os dois voltam juntos, sem espera.
+    Entra opaco na hora, ainda todo sob o fundo do card. A revelação espera metade de --frame-fade
+    para não passar da borda do card enquanto o fundo dele ainda está saindo.
   */
   .hero-stage-image.is-visible {
+    --stage-reveal: 100%;
+    --stage-soft: 30%;
+    --reveal-delay: calc(var(--frame-fade) / 2);
     opacity: 1;
-    transition-delay: var(--carousel-transition);
+    transition:
+      --stage-reveal calc(var(--carousel-transition) - var(--reveal-delay)) var(--carousel-ease) var(--reveal-delay),
+      --stage-soft calc(var(--carousel-transition) - var(--reveal-delay)) var(--carousel-ease) var(--reveal-delay),
+      opacity 0s;
+  }
+
+  /* O card aberto não tem ação: a campanha segue pelo CTA e a pausa pelo botão próprio. */
+  .hero-panel.is-expanded .hero-panel-select {
+    cursor: default;
   }
 
   /*
-    O card expandido começa na borda da coluna dos painéis, então recuar o botão --copy-width +
-    --copy-gap o faz cobrir o fundo ampliado inteiro. Texto e controles continuam acima dele.
+    Fundo local do card (preenchimento e imagem): sai no início da expansão sobre o fundo ampliado
+    já opaco, então a troca não escurece o card; no fechamento volta por cima dele antes de ele sumir.
   */
-  .hero-panel.is-expanded .hero-panel-select {
-    left: calc(-1 * (var(--copy-width) + var(--copy-gap)));
+  .hero-panel .hero-frame-content {
+    transition: background-color var(--frame-fade) var(--carousel-ease) var(--frame-return);
   }
 
-  .hero-panel .hero-frame-content {
-    transition: background-color var(--carousel-transition) ease;
+  .hero-panel .hero-panel-image {
+    transition:
+      filter var(--carousel-transition) var(--carousel-ease),
+      object-position var(--carousel-transition) var(--carousel-ease),
+      opacity var(--frame-fade) var(--carousel-ease) var(--frame-return);
   }
 
   .hero-panel.is-expanded .hero-frame-content {
     background-color: transparent;
-    transition-delay: var(--carousel-transition);
+    transition-delay: 0s;
   }
 
   .hero-panel.is-expanded .hero-panel-image {
     opacity: 0;
     transition:
-      filter var(--carousel-transition) ease,
-      object-position var(--carousel-transition) ease,
-      opacity var(--carousel-transition) ease var(--carousel-transition);
+      filter var(--carousel-transition) var(--carousel-ease),
+      object-position var(--carousel-transition) var(--carousel-ease),
+      opacity var(--frame-fade) var(--carousel-ease);
   }
 
   .campaign-object {
@@ -452,8 +540,14 @@
     transform: translate(var(--collapsed-x), var(--collapsed-y));
   }
 
+  /*
+    No desktop a escala vai na largura, que anima direto entre os dois tamanhos finais. Com cqmin
+    vezes scale(), o card crescendo e a escala diminuindo se multiplicavam e o objeto inchava no meio.
+  */
   .campaign-object img {
-    transform: translate(-50%, -50%) scale(var(--collapsed-scale));
+    width: calc(var(--size) * var(--object-unit) * var(--collapsed-scale));
+    transform: translate(-50%, -50%);
+    transition: width var(--carousel-transition) var(--carousel-ease);
   }
 
   .hero-panel.is-expanded .campaign-object {
@@ -462,7 +556,7 @@
   }
 
   .hero-panel.is-expanded .campaign-object img {
-    transform: translate(-50%, -50%) scale(var(--expanded-scale));
+    width: calc(var(--size) * var(--object-unit) * var(--expanded-scale));
   }
 
   /* Some logo no início da expansão e só volta no fim do fechamento. */
@@ -481,12 +575,12 @@
     text-align: center;
     text-shadow: 0 2px 10px #000000b3;
     pointer-events: none;
-    transition: opacity calc(var(--carousel-transition) * 0.4) ease calc(var(--carousel-transition) * 0.6);
+    transition: opacity calc(var(--carousel-transition) * 0.4) var(--carousel-ease) calc(var(--carousel-transition) * 0.6);
   }
 
   .hero-panel.is-expanded .campaign-short-title {
     opacity: 0;
-    transition: opacity calc(var(--carousel-transition) * 0.4) ease;
+    transition: opacity calc(var(--carousel-transition) * 0.4) var(--carousel-ease);
   }
 }
 

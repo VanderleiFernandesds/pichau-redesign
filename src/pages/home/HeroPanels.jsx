@@ -1,9 +1,12 @@
 import HeroCampaignPanel from './HeroCampaignPanel';
+import { hideBrokenImage } from '../../utils/image';
 
 /*
-  Os painéis ficam sempre na mesma ordem no DOM (key = id do slide) e a posição na fila vem de
-  --position; reordenar os nós interromperia as transições. No desktop a posição vira deslocamento
-  horizontal; no mobile os painéis dividem a mesma célula e só o do slide exibido aparece.
+  Os painéis seguem a ordem da fila no DOM, para o Tab percorrer os cards na ordem visual. Com
+  key = id do slide, o React só move os nós que vão para o final, e isso acontece quando eles
+  estão invisíveis (shifting) ou com as transições desligadas (jumping), então nenhuma animação
+  visível é cortada. A posição vem de --position: no desktop vira deslocamento horizontal; no
+  mobile os painéis dividem a mesma célula e só o do slide exibido aparece.
 */
 export default function HeroPanels({ slides, order, shownId, isExpanded, isJumping, hiddenIds, onSelect }) {
   return (
@@ -21,12 +24,13 @@ export default function HeroPanels({ slides, order, shownId, isExpanded, isJumpi
             className={`hero-stage-image ${id === shownId && isExpanded ? 'is-visible' : ''}`}
             style={{ objectPosition: background.position.stage }}
             decoding="async"
+            onError={hideBrokenImage}
           />
         ))}
       </div>
 
-      {slides.map((slide) => {
-        const position = order.indexOf(slide.id);
+      {order.map((slideId, position) => {
+        const slide = slides.find(({ id }) => id === slideId);
         const isShown = slide.id === shownId;
 
         return (

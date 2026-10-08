@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 
+const REDUCED_MOTION_QUERY = '(prefers-reduced-motion: reduce)';
+
 function getPrefersReducedMotion() {
-  return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  return window.matchMedia(REDUCED_MOTION_QUERY).matches;
 }
 
 // Tempo para o navegador pintar a fila já reordenada, sem transições, antes de expandir o novo primeiro.
@@ -10,6 +12,12 @@ const JUMP_FRAME_DELAY = 40;
 // Leva os `count` primeiros da fila para o final, mantendo a ordem relativa.
 function rotate(order, count) {
   return [...order.slice(count), ...order.slice(0, count)];
+}
+
+// Termina a troca na hora, com o alvo na frente e expandido (usado sem animação).
+function settleOn(current, targetId) {
+  const movedCount = current.order.indexOf(targetId);
+  return { order: rotate(current.order, movedCount), phase: 'expanded', targetId, shownId: targetId, movedCount, isQuick: false };
 }
 
 /*
@@ -26,7 +34,7 @@ function rotate(order, count) {
   slide expandido, para nunca ficar presa no meio.
 */
 export function useHeroCarousel(slideIds, { startDelay, readingTime, transitionTime, selectTransitionTime }) {
-  const [isReducedMotion] = useState(getPrefersReducedMotion);
+  const [isReducedMotion, setIsReducedMotion] = useState(getPrefersReducedMotion);
   // Com movimento reduzido não há avanço automático: o primeiro slide já começa aberto.
   const [cycle, setCycle] = useState(() => ({
     order: slideIds,
@@ -52,12 +60,25 @@ export function useHeroCarousel(slideIds, { startDelay, readingTime, transitionT
     return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
   }, []);
 
+  // Ativar o movimento reduzido com a página aberta tem o mesmo efeito do carregamento: a troca em
+  // andamento termina na hora e o avanço automático para. Desativar não retoma sozinho.
+  useEffect(() => {
+    const query = window.matchMedia(REDUCED_MOTION_QUERY);
+
+    function handleChange() {
+      setIsReducedMotion(query.matches);
+      if (!query.matches) return;
+      setIsPlaying(false);
+      setCycle((current) => (current.phase === 'expanded' ? current : settleOn(current, current.targetId)));
+    }
+
+    query.addEventListener('change', handleChange);
+    return () => query.removeEventListener('change', handleChange);
+  }, []);
+
   // Sem animação (movimento reduzido) a fila gira direto, sem as etapas intermediárias.
   function startRotation(current, targetId) {
-    if (!isReducedMotion) return { ...current, phase: 'collapsing', targetId, isQuick: false };
-
-    const movedCount = current.order.indexOf(targetId);
-    return { order: rotate(current.order, movedCount), phase: 'expanded', targetId, shownId: targetId, movedCount, isQuick: false };
+    return isReducedMotion ? settleOn(current, targetId) : { ...current, phase: 'collapsing', targetId, isQuick: false };
   }
 
   // Seleção manual: reordena a fila de uma vez, de qualquer etapa, com o escolhido na frente.
@@ -104,14 +125,15 @@ export function useHeroCarousel(slideIds, { startDelay, readingTime, transitionT
     const timer = setTimeout(() => setCycle(nextStep), delay);
     return () => clearTimeout(timer);
     // Um único timer por etapa, limpo a cada mudança, evita ciclos duplicados.
-  }, [cycle, isWaiting, isRunning, startDelay, readingTime, transitionTime, selectTransitionTime]);
+  }, [cycle, isWaiting, isRunning, isReducedMotion, startDelay, readingTime, transitionTime, selectTransitionTime]);
 
+  // Escolher outro slide pausa; clicar no que já está aberto não faz nada (pausar é só no botão).
   function select(slideId) {
+    const isAlreadyOpen = cycle.phase === 'expanded' && cycle.order[0] === slideId;
+    if (isAlreadyOpen) return;
+
     setIsPlaying(false);
-    setCycle((current) => {
-      const isAlreadyOpen = current.phase === 'expanded' && current.order[0] === slideId;
-      return isAlreadyOpen ? current : jumpTo(current, slideId);
-    });
+    setCycle((current) => jumpTo(current, slideId));
   }
 
   function togglePlaying() {

@@ -1,4 +1,5 @@
 import HeroCarouselFrame from '../../components/ui/HeroCarouselFrame';
+import { hideBrokenImage } from '../../utils/image';
 
 // Valores de cada estado viram variáveis CSS; o CSS escolhe o conjunto conforme o painel expande.
 function objectStyle({ size, collapsed, expanded }) {
@@ -34,10 +35,18 @@ export default function HeroCampaignPanel({ campaign, position, stateClasses, is
             '--position-expanded': background.position.expanded,
           }}
           decoding="async"
+          onError={hideBrokenImage}
         />
         {objects.map((object) => (
           <span key={object.id} className="campaign-object" style={objectStyle(object)}>
-            <img src={object.src} alt="" width={object.width} height={object.height} decoding="async" />
+            <img
+              src={object.src}
+              alt=""
+              width={object.width}
+              height={object.height}
+              decoding="async"
+              onError={hideBrokenImage}
+            />
           </span>
         ))}
       </HeroCarouselFrame>

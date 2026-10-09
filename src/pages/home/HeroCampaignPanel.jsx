@@ -2,13 +2,15 @@ import HeroCarouselFrame from '../../components/ui/HeroCarouselFrame';
 import { hideBrokenImage } from '../../utils/image';
 
 // Valores de cada estado viram variáveis CSS; o CSS escolhe o conjunto conforme o painel expande.
+// Sem `collapsed`, o objeto usa a posição do expandido e o CSS o esconde no card fechado.
 function objectStyle({ size, collapsed, expanded }) {
+  const collapsedState = collapsed ?? expanded;
   return {
     '--size': size,
-    '--collapsed-x': collapsed.x,
-    '--collapsed-y': collapsed.y,
-    '--collapsed-scale': collapsed.scale,
-    '--collapsed-layer': collapsed.layer,
+    '--collapsed-x': collapsedState.x,
+    '--collapsed-y': collapsedState.y,
+    '--collapsed-scale': collapsedState.scale,
+    '--collapsed-layer': collapsedState.layer,
     '--expanded-x': expanded.x,
     '--expanded-y': expanded.y,
     '--expanded-scale': expanded.scale,
@@ -38,7 +40,11 @@ export default function HeroCampaignPanel({ campaign, position, stateClasses, is
           onError={hideBrokenImage}
         />
         {objects.map((object) => (
-          <span key={object.id} className="campaign-object" style={objectStyle(object)}>
+          <span
+            key={object.id}
+            className={`campaign-object ${object.collapsed ? '' : 'is-expanded-only'}`}
+            style={objectStyle(object)}
+          >
             <img
               src={object.src}
               alt=""

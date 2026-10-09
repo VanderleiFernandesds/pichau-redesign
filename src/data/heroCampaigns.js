@@ -1,6 +1,8 @@
-import gamerKidsBackground from '../assets/pichau-camadas/gamer-kids/fundo-684x475.avif';
-import gamerKidsPc from '../assets/pichau-camadas/gamer-kids/pc.avif';
-import gamerKidsCharacter from '../assets/pichau-camadas/gamer-kids/personagem.avif';
+import energyDrinkBackground from '../assets/pichau-camadas/energy-drink/fundo-1192x475.avif';
+import energyDrinkLogo from '../assets/pichau-camadas/energy-drink/logo.avif';
+import energyDrinkCan from '../assets/pichau-camadas/energy-drink/lata.avif';
+import energyDrinkMascot from '../assets/pichau-camadas/energy-drink/mascote.avif';
+import energyDrinkSamurai from '../assets/pichau-camadas/energy-drink/samurai.avif';
 import corsairBackground from '../assets/pichau-camadas/corsair/fundo-684x475.avif';
 import corsairMemory from '../assets/pichau-camadas/corsair/memorias.avif';
 import corsairPowerSupply from '../assets/pichau-camadas/corsair/fonte.avif';
@@ -12,7 +14,7 @@ import arenaLogo from '../assets/pichau-camadas/pichau-arena/logo-arena.avif';
 import arenaGamerGeek from '../assets/pichau-camadas/pichau-arena/gamer-geek.avif';
 
 /*
-  Campanhas dos painéis do hero: fundo (684x475), objetos transparentes e textos do card.
+  Campanhas dos painéis do hero: fundo (475 de altura; 684 ou 1192 de largura), objetos transparentes e textos do card.
 
   background.position  object-position do fundo no card fechado, no expandido e no fundo ampliado
                        (stage), que cobre o texto e o card expandido no desktop.
@@ -21,6 +23,7 @@ import arenaGamerGeek from '../assets/pichau-camadas/pichau-arena/gamer-geek.avi
     scale  escala sobre `size`, a largura base em cqmin (1% do menor lado do card), então o
            objeto já encolhe no card estreito e cresce junto com a expansão
     layer  z-index entre os objetos
+    collapsed: null  o objeto aparece só no card expandido
   Textos da coluna à esquerda do hero, trocados junto com o card expandido. Só usam informações
   reais dos banners da campanha; sem specs, preços ou benefícios que eles não anunciam.
     description  até três linhas
@@ -29,37 +32,55 @@ import arenaGamerGeek from '../assets/pichau-camadas/pichau-arena/gamer-geek.avi
   shortTitle é o único texto dentro do card, visível quando ele está fechado.
 */
 export const HERO_CAMPAIGNS = {
-  gamerKids: {
-    id: 'gamer-kids',
-    name: 'Gamer Kids',
-    background: { src: gamerKidsBackground, position: { collapsed: '88% 50%', expanded: '50% 50%', stage: '50% 62%' } },
+  energyDrink: {
+    id: 'energy-drink',
+    name: 'Pichau Energy Drink Protein',
+    background: { src: energyDrinkBackground, position: { collapsed: '64% 50%', expanded: '62% 50%', stage: '60% 50%' } },
     objects: [
       {
-        id: 'pc',
-        src: gamerKidsPc,
-        width: 899,
-        height: 862,
-        size: 108,
-        collapsed: { x: '50%', y: '36%', scale: 1, layer: 1 },
-        expanded: { x: '25%', y: '66%', scale: 0.52, layer: 1 },
+        id: 'logo',
+        src: energyDrinkLogo,
+        width: 900,
+        height: 528,
+        size: 100,
+        collapsed: { x: '50%', y: '20%', scale: 0.78, layer: 4 },
+        expanded: { x: '79%', y: '18%', scale: 0.3, layer: 4 },
       },
       {
-        id: 'personagem',
-        src: gamerKidsCharacter,
-        width: 875,
-        height: 871,
-        size: 108,
-        collapsed: { x: '52%', y: '68%', scale: 0.96, layer: 2 },
-        expanded: { x: '73%', y: '64%', scale: 0.54, layer: 2 },
+        id: 'samurai',
+        src: energyDrinkSamurai,
+        width: 856,
+        height: 900,
+        size: 100,
+        collapsed: null,
+        expanded: { x: '14%', y: '71%', scale: 0.5, layer: 1 },
+      },
+      {
+        id: 'lata',
+        src: energyDrinkCan,
+        width: 479,
+        height: 900,
+        size: 100,
+        collapsed: { x: '50%', y: '72%', scale: 0.75, layer: 3 },
+        expanded: { x: '53%', y: '65%', scale: 0.38, layer: 3 },
+      },
+      {
+        id: 'mascote',
+        src: energyDrinkMascot,
+        width: 607,
+        height: 900,
+        size: 100,
+        collapsed: { x: '38%', y: '60%', scale: 1.3, layer: 2 },
+        expanded: { x: '74%', y: '62%', scale: 0.5, layer: 2 },
       },
     ],
-    shortTitle: 'Gamer Kids',
-    eyebrow: 'PROMOÇÃO PICHAU',
-    title: ['Gamer', 'Kids'],
-    description: 'Confira os produtos que fazem parte da promoção Gamer Kids.',
-    highlights: [],
-    details: [{ type: 'offer', text: 'Até 60% OFF' }],
-    cta: { label: 'Ver promoção', href: '#offers' },
+    shortTitle: 'Energy Drink',
+    eyebrow: 'PICHAU ENERGY DRINK',
+    title: ['Energy Drink', 'Protein'],
+    description: 'Energético Pichau sabor Black Cherry, com 12g de proteína em cada lata de 350ml.',
+    highlights: ['12g de proteína', 'Black Cherry'],
+    details: [],
+    cta: { label: 'Ver Energy Drink', href: '#offers' },
   },
   corsair: {
     id: 'corsair',
@@ -164,4 +185,4 @@ export const HERO_CAMPAIGNS = {
 };
 
 // Ordem inicial do carrossel do hero.
-export const HERO_SLIDES = [HERO_CAMPAIGNS.gamerKids, HERO_CAMPAIGNS.corsair, HERO_CAMPAIGNS.intelGamerDays];
+export const HERO_SLIDES = [HERO_CAMPAIGNS.energyDrink, HERO_CAMPAIGNS.corsair, HERO_CAMPAIGNS.intelGamerDays];

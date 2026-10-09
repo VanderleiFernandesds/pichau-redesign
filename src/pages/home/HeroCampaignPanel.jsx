@@ -3,12 +3,19 @@ import { hideBrokenImage } from '../../utils/image';
 
 // Valores de cada estado viram variáveis CSS; o CSS escolhe o conjunto conforme o painel expande.
 // Sem `collapsed`, o objeto usa a posição do expandido e o CSS o esconde no card fechado.
-function objectStyle({ size, collapsed, expanded }) {
+// `scene` vem em px do fundo; a distância até a borda direita é o que o CSS usa.
+function objectStyle({ size, collapsed, expanded, scene }, backgroundWidth) {
   const collapsedState = collapsed ?? expanded;
+  const sceneStyle = scene && {
+    '--scene-right': `${backgroundWidth - scene.x}px`,
+    '--scene-bottom': `${scene.bottom}px`,
+    '--scene-width': `${scene.width}px`,
+  };
   return {
+    ...sceneStyle,
     '--size': size,
     '--collapsed-x': collapsedState.x,
-    '--collapsed-y': collapsedState.y,
+    '--collapsed-y': collapsedState.base ?? collapsedState.y,
     '--collapsed-scale': collapsedState.scale,
     '--collapsed-layer': collapsedState.layer,
     '--expanded-x': expanded.x,
@@ -42,8 +49,15 @@ export default function HeroCampaignPanel({ campaign, position, stateClasses, is
         {objects.map((object) => (
           <span
             key={object.id}
-            className={`campaign-object ${object.collapsed ? '' : 'is-expanded-only'}`}
-            style={objectStyle(object)}
+            className={[
+              'campaign-object',
+              !object.collapsed && 'is-expanded-only',
+              object.collapsed?.base && 'has-collapsed-base',
+              object.scene && 'is-on-scene',
+            ]
+              .filter(Boolean)
+              .join(' ')}
+            style={objectStyle(object, background.width)}
           >
             <img
               src={object.src}

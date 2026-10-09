@@ -180,8 +180,8 @@
   */
   .hero-carousel {
     --copy-inset: var(--box-padding);
-    --copy-width: clamp(420px, 37vw, 620px);
-    --copy-gap: 40px;
+    --copy-width: clamp(340px, 26vw, 460px);
+    --copy-gap: 24px;
     grid-template-columns: auto minmax(0, 1fr);
     grid-template-areas: 'copy panels' 'controls panels';
     column-gap: var(--copy-gap);
@@ -197,13 +197,14 @@
   }
 
   /*
-    Título numa linha só. 13% de --copy-width é o maior tamanho em que "Receba dois jogos", o mais
-    longo (7,37em), cabe na coluna. A conta usa a largura total, não a descontada do recuo, para o
-    recuo não diminuir o título; ele pode avançar alguns px no espaço entre o texto e o card.
+    Título numa linha só, com tamanho próprio (não segue --copy-width): os mais longos passam da
+    coluna e ficam por cima da arte do card aberto, que é mais larga que o texto. A sombra mantém
+    o contraste sobre as partes claras da arte.
   */
   .hero-copy h1 {
-    font-size: min(var(--copy-width) * 0.13, 84px);
+    font-size: clamp(55px, 4.8vw, 80px);
     white-space: nowrap;
+    text-shadow: 0 2px 18px rgb(0 0 0 / 0.6);
   }
 
   .hero-controls {
@@ -685,6 +686,11 @@
     transform: translate(-50%, -50%);
   }
 
+  /* Com base, o ponto de --collapsed-y é onde o objeto encosta, não o centro dele. */
+  .hero-panel:not(.is-expanded) .campaign-object.has-collapsed-base img {
+    transform: translate(-50%, -100%);
+  }
+
   .hero-panel.is-expanded .campaign-object {
     z-index: var(--expanded-layer);
     transform: translate(var(--expanded-x), var(--expanded-y));
@@ -693,6 +699,24 @@
 
   .hero-panel.is-expanded .campaign-object img {
     width: calc(var(--size) * var(--object-unit) * var(--expanded-scale));
+  }
+
+  /*
+    Objetos apoiados nos blocos do fundo (scene): posição e largura em px da arte, contados da
+    borda direita do card, onde o fundo ampliado se alinha. O ponto de apoio é a base do objeto.
+    No card mais estreito a cena é cortada à esquerda, como o próprio fundo; a máscara suaviza o
+    corte dos objetos, que ali já ficam sob o degradê escuro do fundo ampliado.
+  */
+  .hero-panel.is-expanded .campaign-object.is-on-scene {
+    transform: none;
+    mask-image: linear-gradient(to right, transparent, #000 72px);
+  }
+
+  .hero-panel.is-expanded .campaign-object.is-on-scene img {
+    top: var(--scene-bottom);
+    left: calc(100% - var(--scene-right));
+    width: var(--scene-width);
+    transform: translate(-50%, -100%);
   }
 
   .hero-panel.is-hiding-objects .campaign-object,

@@ -3,9 +3,14 @@ import energyDrinkLogo from '../assets/pichau-camadas/energy-drink/logo.avif';
 import energyDrinkCan from '../assets/pichau-camadas/energy-drink/lata.avif';
 import energyDrinkMascot from '../assets/pichau-camadas/energy-drink/mascote.avif';
 import energyDrinkSamurai from '../assets/pichau-camadas/energy-drink/samurai.avif';
-import corsairBackground from '../assets/pichau-camadas/corsair/fundo-684x475.avif';
+import corsairBackground from '../assets/pichau-camadas/corsair/fundo-1192x475.avif';
+import corsairCase from '../assets/pichau-camadas/corsair/gabinete.avif';
 import corsairMemory from '../assets/pichau-camadas/corsair/memorias.avif';
 import corsairPowerSupply from '../assets/pichau-camadas/corsair/fonte.avif';
+import corsairHeadset from '../assets/pichau-camadas/corsair/headset.avif';
+import corsairKeyboard from '../assets/pichau-camadas/corsair/teclado.avif';
+import corsairMouse from '../assets/pichau-camadas/corsair/mouse.avif';
+import corsairLogo from '../assets/pichau-camadas/corsair/logo.avif';
 import intelBackground from '../assets/pichau-camadas/intel-gamer-days/fundo-684x475.avif';
 import intelTombRaider from '../assets/pichau-camadas/intel-gamer-days/tomb-raider.avif';
 import intelGrid from '../assets/pichau-camadas/intel-gamer-days/grid.avif';
@@ -23,7 +28,14 @@ import arenaGamerGeek from '../assets/pichau-camadas/pichau-arena/gamer-geek.avi
     scale  escala sobre `size`, a largura base em cqmin (1% do menor lado do card), então o
            objeto já encolhe no card estreito e cresce junto com a expansão
     layer  z-index entre os objetos
+    base   (só no fechado, no lugar de y) altura onde a base do objeto encosta, para apoiá-lo
+           num bloco do fundo: o card fechado tem a altura da arte, então o ponto não muda
     collapsed: null  o objeto aparece só no card expandido
+    scene  (desktop, card expandido) apoia o objeto num ponto do fundo, em px da imagem: x do
+           centro, bottom (onde a base encosta) e width. Exige background.width e o stage
+           alinhado à direita (100%), que coincide com a borda direita do card. O fundo tem a
+           altura do card e aparece em 1:1, então o objeto fica sobre o mesmo bloco da arte
+           em qualquer largura; o que passa da borda esquerda do card é cortado.
   Textos da coluna à esquerda do hero, trocados junto com o card expandido. Só usam informações
   reais dos banners da campanha; sem specs, preços ou benefícios que eles não anunciam.
     description  até três linhas
@@ -35,7 +47,11 @@ export const HERO_CAMPAIGNS = {
   energyDrink: {
     id: 'energy-drink',
     name: 'Pichau Energy Drink Protein',
-    background: { src: energyDrinkBackground, position: { collapsed: '64% 50%', expanded: '62% 50%', stage: '60% 50%' } },
+    background: {
+      src: energyDrinkBackground,
+      width: 1192,
+      position: { collapsed: '64% 50%', expanded: '62% 50%', stage: '60% 50%' },
+    },
     objects: [
       {
         id: 'logo',
@@ -45,6 +61,8 @@ export const HERO_CAMPAIGNS = {
         size: 100,
         collapsed: { x: '50%', y: '20%', scale: 0.78, layer: 4 },
         expanded: { x: '79%', y: '18%', scale: 0.3, layer: 4 },
+        // Só o canto superior direito do card importa aqui, então não depende do enquadramento do fundo.
+        scene: { x: 1108, bottom: 94, width: 120 },
       },
       {
         id: 'samurai',
@@ -53,7 +71,7 @@ export const HERO_CAMPAIGNS = {
         height: 900,
         size: 100,
         collapsed: null,
-        expanded: { x: '14%', y: '71%', scale: 0.5, layer: 1 },
+        expanded: { x: '25%', y: '66%', scale: 0.42, layer: 1 },
       },
       {
         id: 'lata',
@@ -85,32 +103,88 @@ export const HERO_CAMPAIGNS = {
   corsair: {
     id: 'corsair',
     name: 'Seleção Corsair',
-    background: { src: corsairBackground, position: { collapsed: '82% 50%', expanded: '50% 50%', stage: '50% 60%' } },
+    background: {
+      src: corsairBackground,
+      width: 1192,
+      position: { collapsed: '80% 50%', expanded: '62% 50%', stage: '100% 50%' },
+    },
     objects: [
+      {
+        id: 'gabinete',
+        src: corsairCase,
+        width: 493,
+        height: 539,
+        size: 100,
+        collapsed: { x: '50%', base: '332px', scale: 0.85, layer: 1 },
+        expanded: { x: '60%', y: '52%', scale: 0.42, layer: 1 },
+        scene: { x: 900, bottom: 330, width: 190 },
+      },
       {
         id: 'memorias',
         src: corsairMemory,
-        width: 899,
-        height: 846,
-        size: 108,
-        collapsed: { x: '50%', y: '36%', scale: 1, layer: 2 },
-        expanded: { x: '25%', y: '66%', scale: 0.52, layer: 2 },
+        width: 439,
+        height: 341,
+        size: 100,
+        collapsed: null,
+        expanded: { x: '35%', y: '60%', scale: 0.24, layer: 2 },
+        scene: { x: 700, bottom: 281, width: 110 },
       },
       {
         id: 'fonte',
         src: corsairPowerSupply,
-        width: 862,
-        height: 842,
-        size: 108,
-        collapsed: { x: '50%', y: '69%', scale: 0.92, layer: 1 },
-        expanded: { x: '73%', y: '66%', scale: 0.54, layer: 1 },
+        width: 393,
+        height: 337,
+        size: 100,
+        collapsed: null,
+        expanded: { x: '84%', y: '63%', scale: 0.28, layer: 2 },
+        scene: { x: 1095, bottom: 334, width: 130 },
+      },
+      {
+        id: 'headset',
+        src: corsairHeadset,
+        width: 368,
+        height: 496,
+        size: 100,
+        collapsed: { x: '50%', base: '430px', scale: 0.62, layer: 2 },
+        expanded: { x: '14%', y: '57%', scale: 0.24, layer: 3 },
+        scene: { x: 560, bottom: 304, width: 105 },
+      },
+      {
+        id: 'teclado',
+        src: corsairKeyboard,
+        width: 624,
+        height: 291,
+        size: 100,
+        collapsed: null,
+        expanded: { x: '27%', y: '84%', scale: 0.6, layer: 4 },
+        scene: { x: 700, bottom: 436, width: 300 },
+      },
+      {
+        id: 'mouse',
+        src: corsairMouse,
+        width: 341,
+        height: 271,
+        size: 100,
+        collapsed: null,
+        expanded: { x: '56%', y: '88%', scale: 0.17, layer: 5 },
+        scene: { x: 888, bottom: 436, width: 74 },
+      },
+      {
+        id: 'logo',
+        src: corsairLogo,
+        width: 800,
+        height: 186,
+        size: 100,
+        collapsed: { x: '50%', y: '19%', scale: 0.82, layer: 6 },
+        expanded: { x: '79%', y: '16%', scale: 0.3, layer: 6 },
+        scene: { x: 1104, bottom: 58, width: 128 },
       },
     ],
     shortTitle: 'Seleção Corsair',
     eyebrow: 'SELEÇÃO ESPECIAL',
     title: ['Seleção', 'Corsair'],
     description: 'Uma seleção especial de produtos Corsair na Pichau.',
-    highlights: ['Memórias', 'Fontes'],
+    highlights: ['Hardware', 'Periféricos'],
     details: [],
     cta: { label: 'Ver seleção Corsair', href: '#offers', category: 'Hardware' },
   },

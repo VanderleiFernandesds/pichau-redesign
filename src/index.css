@@ -486,7 +486,7 @@
     --panel-gap: 14px;
     --panel-narrow: min(160px, 18cqw);
     --panel-expanded: max(var(--panel-narrow), 100cqw - (var(--slide-count) - 1) * (var(--panel-narrow) + var(--panel-gap)));
-    /* Altura dos fundos das campanhas (684x475), fixa também durante a expansão. */
+    /* Altura dos fundos das campanhas (475px), fixa também durante a expansão. */
     --panel-height: 475px;
     /*
       Moldura e fundo do card: somem no início da expansão (--frame-fade) e só voltam no fim do
@@ -695,7 +695,8 @@
     width: calc(var(--size) * var(--object-unit) * var(--expanded-scale));
   }
 
-  .hero-panel.is-hiding-objects .campaign-object {
+  .hero-panel.is-hiding-objects .campaign-object,
+  .hero-panel:not(.is-expanded) .campaign-object.is-expanded-only {
     opacity: 0;
     transition-delay: 0s;
   }

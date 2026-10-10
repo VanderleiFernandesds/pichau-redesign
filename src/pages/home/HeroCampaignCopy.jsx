@@ -18,13 +18,15 @@ export default function HeroCampaignCopy({ campaigns, shownId, isAnnounced, onFi
         {campaigns.map(({ id, eyebrow, logo, title, isTitleStacked, description, highlights, details }) => (
           <div key={id} className={`hero-fade col-start-1 row-start-1 ${visibility(id)}`}>
             {logo ? (
-              // O max-width deixa livre o canto das setas do carrossel, que abaixo de 1001px ficam nesta linha.
+              // Largura fixa e altura automática, para a proporção vir sempre da arte; no celular o logo
+              // fica com 73% da largura. O max-width deixa livre o canto das setas (abaixo de 1001px).
               <img
                 src={logo.src}
                 alt={logo.alt}
                 width={logo.width}
                 height={logo.height}
-                className="block h-8 w-auto max-w-[calc(100%-6rem)] object-contain object-left sm:h-11"
+                style={{ '--logo-width': `${logo.displayWidth}px` }}
+                className="block h-auto w-[calc(var(--logo-width)*0.73)] max-w-[calc(100%-6rem)] sm:w-(--logo-width)"
               />
             ) : (
               <span className="eyebrow text-[#e7a3ae]">{eyebrow}</span>

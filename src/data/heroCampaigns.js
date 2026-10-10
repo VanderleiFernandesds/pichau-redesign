@@ -12,7 +12,7 @@ import corsairKeyboard from '../assets/pichau-camadas/corsair/teclado.avif';
 import corsairMouse from '../assets/pichau-camadas/corsair/mouse.avif';
 import corsairLogo from '../assets/pichau-camadas/corsair/logo.avif';
 import rogBackground from '../assets/pichau-camadas/rog/fundo-1192x475.avif';
-import rogLogo from '../assets/pichau-camadas/rog/logo.avif';
+import rogLogo from '../assets/pichau-camadas/rog/logo.svg';
 import rogNotebook from '../assets/pichau-camadas/rog/notebook.avif';
 import rogHandheld from '../assets/pichau-camadas/rog/portatil.avif';
 import rogGraphicsCard from '../assets/pichau-camadas/rog/placa-video.avif';
@@ -51,7 +51,8 @@ import arenaGamerGeek from '../assets/pichau-camadas/pichau-arena/gamer-geek.avi
            para scene (abaixo de ~640px) e mostra só a parte direita da arte, em 1:1.
   Textos da coluna à esquerda do hero, trocados junto com o card expandido. Só usam informações
   reais dos banners da campanha; sem specs, preços ou benefícios que eles não anunciam.
-    logo         logo da marca acima do título, no lugar do eyebrow (texto curto acima do título)
+    logo         logo da marca acima do título, no lugar do eyebrow (texto curto acima do título);
+                 width/height dão a proporção e displayWidth a largura no desktop (altura automática)
     title        partes do título; com isTitleStacked, cada uma ocupa uma linha
     description  até três linhas
     highlights   até três destaques curtos (vazio quando não há o que destacar)
@@ -106,7 +107,7 @@ export const HERO_CAMPAIGNS = {
       },
     ],
     shortTitle: 'Energy Drink',
-    logo: { src: energyDrinkLogo, width: 900, height: 528, alt: 'Pichau Energy Drink' },
+    logo: { src: energyDrinkLogo, width: 900, height: 528, displayWidth: 75, alt: 'Pichau Energy Drink' },
     title: ['Energy Drink', 'Protein'],
     description: 'Energético Pichau sabor Black Cherry, com 12g de proteína em cada lata de 350ml.',
     highlights: ['12g de proteína', 'Black Cherry'],
@@ -200,7 +201,7 @@ export const HERO_CAMPAIGNS = {
       },
     ],
     shortTitle: 'Seleção Corsair',
-    logo: { src: corsairLogo, width: 800, height: 186, alt: 'Corsair' },
+    logo: { src: corsairLogo, width: 800, height: 186, displayWidth: 189, alt: 'Corsair' },
     title: ['Seleção', 'Corsair'],
     description: 'Uma seleção especial de produtos Corsair na Pichau.',
     highlights: ['Hardware', 'Periféricos'],
@@ -295,9 +296,18 @@ export const HERO_CAMPAIGNS = {
         sceneMobile: { x: 1125, bottom: 450, width: 70 },
         sceneNarrow: { x: 1140, bottom: 444, width: 76 },
       },
+      {
+        id: 'logo',
+        src: rogLogo,
+        width: 200,
+        height: 37,
+        size: 100,
+        collapsed: { x: '50%', y: '19%', scale: 0.8, layer: 6 },
+        expanded: null,
+      },
     ],
     shortTitle: 'ASUS ROG',
-    logo: { src: rogLogo, width: 1701, height: 767, alt: 'ASUS Republic of Gamers' },
+    logo: { src: rogLogo, width: 200, height: 37, displayWidth: 220, alt: 'ASUS Republic of Gamers' },
     title: ['PARA AQUELES', 'QUE OUSAM.'],
     isTitleStacked: true,
     description: 'Explore notebooks, componentes e periféricos ROG.',
@@ -331,7 +341,7 @@ export const HERO_CAMPAIGNS = {
       },
     ],
     shortTitle: '10 a 12 de outubro',
-    logo: { src: arenaLogo, width: 903, height: 785, alt: 'Pichau Arena' },
+    logo: { src: arenaLogo, width: 903, height: 785, displayWidth: 51, alt: 'Pichau Arena' },
     title: ['Gamer', '& Geek'],
     description: 'O evento gamer e geek da Pichau Arena em Joinville–SC.',
     highlights: [],

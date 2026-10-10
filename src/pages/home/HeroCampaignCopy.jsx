@@ -15,12 +15,30 @@ export default function HeroCampaignCopy({ campaigns, shownId, isAnnounced, onFi
   return (
     <div className="hero-copy max-w-[590px]">
       <div className="grid" aria-live={isAnnounced ? 'polite' : 'off'}>
-        {campaigns.map(({ id, eyebrow, title, description, highlights, details }) => (
+        {campaigns.map(({ id, eyebrow, logo, title, isTitleStacked, description, highlights, details }) => (
           <div key={id} className={`hero-fade col-start-1 row-start-1 ${visibility(id)}`}>
-            <span className="eyebrow text-[#e7a3ae]">{eyebrow}</span>
+            {logo ? (
+              // O max-width deixa livre o canto das setas do carrossel, que abaixo de 1001px ficam nesta linha.
+              <img
+                src={logo.src}
+                alt={logo.alt}
+                width={logo.width}
+                height={logo.height}
+                className="block h-8 w-auto max-w-[calc(100%-6rem)] object-contain object-left sm:h-11"
+              />
+            ) : (
+              <span className="eyebrow text-[#e7a3ae]">{eyebrow}</span>
+            )}
             {/* No desktop o tamanho e a linha única vêm de .hero-copy h1 (index.css); abaixo disso quebra. */}
-            <h1 className="my-4 font-display text-[clamp(32px,10.5vw,40px)] leading-[1] font-bold sm:my-5 sm:text-[50px]">
-              {title.join(' ')}
+            <h1
+              className={`my-4 font-display text-[clamp(32px,10.5vw,40px)] leading-[1] font-bold sm:my-5 sm:text-[50px] ${isTitleStacked ? 'is-stacked' : ''}`}
+            >
+              {title.map((part, index) => (
+                <span key={part} className="hero-title-part">
+                  {index > 0 && ' '}
+                  {part}
+                </span>
+              ))}
             </h1>
             <p className="line-clamp-3 max-w-[36ch] text-[14px] leading-[1.5] text-[#e1dfe3] sm:text-[16px]">{description}</p>
 
@@ -61,16 +79,24 @@ export default function HeroCampaignCopy({ campaigns, shownId, isAnnounced, onFi
 
       <div className="mt-(--hero-gap) flex">
         <div className="grid">
-          {campaigns.map(({ id, cta }) => (
-            <a
-              key={id}
-              href={cta.href}
-              onClick={cta.category ? () => onFilter(cta.category) : undefined}
-              className={`button hero-fade col-start-1 row-start-1 justify-between ${visibility(id)}`}
-            >
-              {cta.label} <ArrowUpRight aria-hidden="true" className="size-4" />
-            </a>
-          ))}
+          {campaigns.map(({ id, cta }) => {
+            // Links para o site da marca abrem em outra aba, sem tirar o cliente da loja.
+            const isExternal = cta.href.startsWith('http');
+            return (
+              <a
+                key={id}
+                href={cta.href}
+                target={isExternal ? '_blank' : undefined}
+                rel={isExternal ? 'noopener noreferrer' : undefined}
+                onClick={cta.category ? () => onFilter(cta.category) : undefined}
+                className={`button hero-fade col-start-1 row-start-1 justify-between ${visibility(id)}`}
+              >
+                {cta.label}
+                {isExternal && <span className="sr-only"> (abre em nova aba)</span>}
+                <ArrowUpRight aria-hidden="true" className="size-4" />
+              </a>
+            );
+          })}
         </div>
       </div>
     </div>

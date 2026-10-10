@@ -41,10 +41,10 @@ function objectStyle({ size, collapsed, expanded, scene, sceneMobile, sceneNarro
 
 /*
   O card mostra só fundo e objetos; os textos da campanha ficam na coluna à esquerda do hero.
-  O único texto aqui é o título curto do card fechado. O botão de seleção cobre o card inteiro.
+  No card fechado o logo da campanha faz o papel de título. O botão de seleção cobre o card inteiro.
 */
 export default function HeroCampaignPanel({ campaign, position, stateClasses, isShown, onSelect }) {
-  const { name, background, objects, shortTitle } = campaign;
+  const { name, background, objects } = campaign;
   const hasMobileScene = objects.some((object) => object.sceneMobile);
 
   return (
@@ -99,10 +99,6 @@ export default function HeroCampaignPanel({ campaign, position, stateClasses, is
         aria-current={isShown ? 'true' : undefined}
         className="hero-panel-select"
       />
-
-      <p aria-hidden="true" className="campaign-short-title">
-        {shortTitle}
-      </p>
     </div>
   );
 }

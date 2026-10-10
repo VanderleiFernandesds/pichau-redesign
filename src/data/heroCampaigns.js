@@ -1,5 +1,5 @@
 import energyDrinkBackground from '../assets/pichau-camadas/energy-drink/fundo-1192x475.avif';
-import energyDrinkLogo from '../assets/pichau-camadas/energy-drink/logo.avif';
+import energyDrinkLogo from '../assets/pichau-camadas/energy-drink/logo-pichau-drink-protein.svg';
 import energyDrinkCan from '../assets/pichau-camadas/energy-drink/lata.avif';
 import energyDrinkMascot from '../assets/pichau-camadas/energy-drink/mascote.avif';
 import energyDrinkSamurai from '../assets/pichau-camadas/energy-drink/samurai.avif';
@@ -57,7 +57,6 @@ import arenaGamerGeek from '../assets/pichau-camadas/pichau-arena/gamer-geek.avi
     description  até três linhas
     highlights   até três destaques curtos (vazio quando não há o que destacar)
     details      oferta, data ou local; `type` escolhe o ícone (offer, date, location)
-  shortTitle é o único texto dentro do card, visível quando ele está fechado.
 */
 export const HERO_CAMPAIGNS = {
   energyDrink: {
@@ -72,10 +71,10 @@ export const HERO_CAMPAIGNS = {
       {
         id: 'logo',
         src: energyDrinkLogo,
-        width: 900,
-        height: 528,
+        width: 1647,
+        height: 955,
         size: 100,
-        collapsed: { x: '50%', y: '20%', scale: 0.78, layer: 4 },
+        collapsed: { x: '50%', y: '12%', scale: 0.7, layer: 4 },
         expanded: null,
       },
       {
@@ -106,8 +105,7 @@ export const HERO_CAMPAIGNS = {
         expanded: { x: '74%', y: '62%', scale: 0.5, layer: 2 },
       },
     ],
-    shortTitle: 'Energy Drink',
-    logo: { src: energyDrinkLogo, width: 900, height: 528, displayWidth: 75, alt: 'Pichau Energy Drink' },
+    logo: { src: energyDrinkLogo, width: 1647, height: 955, displayWidth: 112, alt: 'Pichau Energy Drink Protein' },
     title: ['Energy Drink', 'Protein'],
     description: 'Energético Pichau sabor Black Cherry, com 12g de proteína em cada lata de 350ml.',
     highlights: ['12g de proteína', 'Black Cherry'],
@@ -196,11 +194,10 @@ export const HERO_CAMPAIGNS = {
         width: 800,
         height: 186,
         size: 100,
-        collapsed: { x: '50%', y: '19%', scale: 0.82, layer: 6 },
+        collapsed: { x: '50%', y: '8%', scale: 0.82, layer: 6 },
         expanded: null,
       },
     ],
-    shortTitle: 'Seleção Corsair',
     logo: { src: corsairLogo, width: 800, height: 186, displayWidth: 189, alt: 'Corsair' },
     title: ['Seleção', 'Corsair'],
     description: 'Uma seleção especial de produtos Corsair na Pichau.',
@@ -302,11 +299,10 @@ export const HERO_CAMPAIGNS = {
         width: 200,
         height: 37,
         size: 100,
-        collapsed: { x: '50%', y: '19%', scale: 0.8, layer: 6 },
+        collapsed: { x: '50%', y: '7.5%', scale: 0.8, layer: 6 },
         expanded: null,
       },
     ],
-    shortTitle: 'ASUS ROG',
     logo: { src: rogLogo, width: 200, height: 37, displayWidth: 220, alt: 'ASUS Republic of Gamers' },
     title: ['PARA AQUELES', 'QUE OUSAM.'],
     isTitleStacked: true,
@@ -340,7 +336,6 @@ export const HERO_CAMPAIGNS = {
         expanded: { x: '74%', y: '76%', scale: 0.48, layer: 1 },
       },
     ],
-    shortTitle: '10 a 12 de outubro',
     logo: { src: arenaLogo, width: 903, height: 785, displayWidth: 51, alt: 'Pichau Arena' },
     title: ['Gamer', '& Geek'],
     description: 'O evento gamer e geek da Pichau Arena em Joinville–SC.',

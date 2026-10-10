@@ -5,7 +5,8 @@ import { DEPARTMENTS } from '../../../data/categories';
 // No mobile a lista rola dentro do painel, então o foco é desenhado para dentro para não ser cortado.
 // No desktop cada item ganha uma moldura chanfrada (nav-frame), que também marca o item ativo.
 const navItemClass =
-  'nav-item relative isolate flex min-h-11 w-full items-center gap-2 px-3 text-[13px] transition-colors hover:text-brand focus-visible:-outline-offset-3 lg:h-16 lg:justify-center lg:px-4 lg:whitespace-nowrap lg:after:hidden lg:focus-visible:outline-offset-4';
+  'nav-item relative isolate flex min-h-11 w-full items-center gap-2 px-3 text-[13px] transition-colors hover:text-brand focus-visible:-outline-offset-3 lg:h-16 lg:whitespace-nowrap lg:after:hidden lg:focus-visible:outline-offset-4';
+const centeredItemClass = 'lg:justify-center lg:px-4';
 const frameClass = 'chamfer nav-frame hidden lg:block';
 const activeClass =
   'text-brand after:absolute after:inset-y-2 after:left-0 after:w-0.5 after:bg-brand lg:after:inset-x-0 lg:after:top-auto lg:after:bottom-0 lg:after:h-0.5 lg:after:w-auto';
@@ -48,7 +49,7 @@ export default function Navbar({ isMenuOpen, onMenuOpenChange, isNavOpen, onNavO
         href={href}
         onClick={closeList}
         aria-current={isActive ? 'location' : undefined}
-        className={`${navItemClass} ${isActive ? activeClass : 'text-white/90'}`}
+        className={`${navItemClass} ${centeredItemClass} ${isActive ? activeClass : 'text-white/90'}`}
       >
         <span aria-hidden="true" className={`${frameClass} chamfer-field`} />
         <Icon aria-hidden="true" className={iconClass} />
@@ -61,8 +62,9 @@ export default function Navbar({ isMenuOpen, onMenuOpenChange, isNavOpen, onNavO
     <button
       type="button"
       // No desktop o botão é vermelho como o carrinho: o texto fica branco em todos os estados e o
-      // menu aberto clareia a moldura.
-      className={`nav-departments ${navItemClass} lg:font-semibold lg:text-white lg:hover:text-white ${isMenuOpen ? activeClass : 'text-white/90'}`}
+      // menu aberto clareia a moldura. O conteúdo fica à esquerda, e o pl-3 soma-se aos 12px da
+      // moldura até o contorno para o ícone alinhar com o logo e o conteúdo da página.
+      className={`nav-departments ${navItemClass} lg:pr-4 lg:pl-3 lg:font-semibold lg:text-white lg:hover:text-white ${isMenuOpen ? activeClass : 'text-white/90'}`}
       aria-expanded={isMenuOpen}
       aria-controls="department-menu"
       onClick={() => onMenuOpenChange(!isMenuOpen)}
@@ -76,7 +78,7 @@ export default function Navbar({ isMenuOpen, onMenuOpenChange, isNavOpen, onNavO
     renderSectionLink('#offers', 'Ofertas', Tag),
     <button
       type="button"
-      className={`${navItemClass} text-white/90`}
+      className={`${navItemClass} ${centeredItemClass} text-white/90`}
       onClick={() => {
         onCoupon();
         closeList();
@@ -101,10 +103,11 @@ export default function Navbar({ isMenuOpen, onMenuOpenChange, isNavOpen, onNavO
         {navItems.map((navItem, index) => (
           <Fragment key={index}>
             {index > 0 && <li aria-hidden="true" className="header-slash" />}
-            {/* No desktop os itens dividem a linha; o primeiro e o último avançam sobre a margem da nav
-                (lg:mx-6) até ficarem com a folga dos cantos do painel. */}
+            {/* No desktop os itens dividem a linha, menos o Departamentos, que fica na largura do
+                conteúdo. O primeiro e o último avançam sobre a margem da nav (lg:mx-6) até ficarem
+                com a folga dos cantos do painel. */}
             <li
-              className={`lg:flex lg:flex-1 ${index === 0 ? 'lg:-ml-3' : ''} ${index === navItems.length - 1 ? 'lg:-mr-3' : ''}`}
+              className={`lg:flex ${index === 0 ? 'lg:-ml-3' : 'lg:flex-1'} ${index === navItems.length - 1 ? 'lg:-mr-3' : ''}`}
             >
               {navItem}
             </li>

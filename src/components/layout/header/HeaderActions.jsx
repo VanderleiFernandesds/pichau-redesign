@@ -1,7 +1,10 @@
 import { Heart, ShoppingCart, User } from 'lucide-react';
 
 // Abaixo de 1001px conta e favoritos ficam só com ícone; o aria-label mantém o nome acessível.
-const actionClass = 'flex h-11 min-w-11 items-center justify-center gap-2 text-[13px] transition-colors hover:text-brand';
+// No desktop ganham a moldura chanfrada da navegação, na altura do carrinho e da busca.
+const actionClass =
+  'header-action relative isolate flex h-11 min-w-11 items-center justify-center gap-2 text-[13px] transition-colors hover:text-brand lg:h-12 lg:px-4 lg:whitespace-nowrap';
+const frame = <span aria-hidden="true" className="chamfer chamfer-field nav-frame hidden lg:block" />;
 
 export default function HeaderActions({ onAccount, isFavoriteOnly, onToggleFavorites, cartCount, onOpenCart, className = '' }) {
   const cartLabel = `${cartCount} ${cartCount === 1 ? 'produto' : 'produtos'}`;
@@ -9,6 +12,7 @@ export default function HeaderActions({ onAccount, isFavoriteOnly, onToggleFavor
   return (
     <div className={`flex items-center gap-1 sm:gap-2 lg:gap-5 ${className}`}>
       <button type="button" onClick={onAccount} aria-label="Minha Conta" className={`${actionClass} text-white`}>
+        {frame}
         <User aria-hidden="true" className="size-5" />
         <span className="hidden lg:inline">Minha Conta</span>
       </button>
@@ -22,6 +26,7 @@ export default function HeaderActions({ onAccount, isFavoriteOnly, onToggleFavor
         aria-label="Favoritos"
         className={`${actionClass} ${isFavoriteOnly ? 'text-brand' : 'text-white'}`}
       >
+        {frame}
         <Heart aria-hidden="true" className={`size-5 ${isFavoriteOnly ? 'fill-brand' : ''}`} />
         <span className="hidden lg:inline">Favoritos</span>
       </button>
@@ -32,7 +37,7 @@ export default function HeaderActions({ onAccount, isFavoriteOnly, onToggleFavor
         type="button"
         onClick={onOpenCart}
         aria-label={`Carrinho, ${cartLabel}`}
-        className="chamfer chamfer-accent ml-1 flex h-11 items-center gap-2.5 px-3 text-white sm:px-4 lg:ml-0 lg:h-12 lg:px-5"
+        className="chamfer chamfer-accent header-cart ml-1 flex h-11 items-center gap-2.5 px-3 text-white sm:px-4 lg:ml-0 lg:h-12 lg:px-5"
       >
         <span className="relative">
           <ShoppingCart aria-hidden="true" className="size-5" />

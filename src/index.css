@@ -51,7 +51,7 @@
 @media (width >= 1001px) {
   :root {
     --container-gutter: clamp(24px, 36.67vw - 343px, 185px);
-    --header-offset: 150px;
+    --header-offset: 166px;
   }
 }
 
@@ -937,14 +937,62 @@
     --chamfer-fill: linear-gradient(180deg, #f2122f, #a3001a);
   }
 
-  .chamfer-accent:hover {
+  /* A moldura do Departamentos responde ao botão inteiro, que é mais alto que ela. */
+  .chamfer-accent:hover,
+  .nav-departments:hover .chamfer-accent,
+  .nav-departments[aria-expanded='true'] .chamfer-accent {
     --chamfer-fill: linear-gradient(180deg, #ff2a44, #bf001e);
   }
 
   .header-bar {
-    --cut: 12px;
+    --bar-cut: 12px;
+    --cut: var(--bar-cut);
     --chamfer-border: #c8001f;
     --chamfer-fill: linear-gradient(180deg, #1a1b20, var(--color-ink));
+  }
+
+  /*
+    Carrinho no canto do painel: a folga até o contorno à direita é a mesma de cima e de baixo
+    (a sobra vertical da linha), e o chanfro fica paralelo ao do painel. Num corte de 45°, recuar
+    g para dentro diminui o chanfro em g * (√2 - 1).
+  */
+  .header-cart {
+    --cart-gap: 10px;
+    --cut: calc(var(--bar-cut) - var(--cart-gap) * 0.4142);
+    margin-right: calc(var(--cart-gap) - var(--box-padding));
+  }
+
+  @media (width >= 1001px) {
+    .header-cart {
+      --cart-gap: 12px;
+    }
+  }
+
+  /*
+    Molduras da navegação (só desktop), com a mesma folga do carrinho. Cada uma ocupa a largura
+    do item e fica com a folga em cima e embaixo (itens de 64px). O primeiro e o último itens
+    avançam sobre a margem da nav (-ml-3/-mr-3 contra lg:mx-6) até a folga dos cantos, onde o
+    chanfro fica paralelo ao do painel; os do meio usam o mesmo chanfro.
+  */
+  .nav-frame {
+    --nav-gap: 12px;
+    --cut: calc(var(--bar-cut) - var(--nav-gap) * 0.4142);
+    position: absolute;
+    inset: var(--nav-gap) 0;
+    z-index: -1;
+  }
+
+  /* Conta e favoritos já têm a altura da moldura (48px, como o carrinho). */
+  .header-action .nav-frame {
+    inset: 0;
+  }
+
+  /* A moldura responde ao item inteiro, que na navegação é mais alto que ela. */
+  .nav-item:hover .nav-frame.chamfer-field,
+  .nav-item[aria-current] .nav-frame.chamfer-field,
+  .header-action:hover .nav-frame.chamfer-field,
+  .header-action[aria-pressed='true'] .nav-frame.chamfer-field {
+    --chamfer-border: var(--color-brand);
   }
 
   .header-bar :focus-visible {

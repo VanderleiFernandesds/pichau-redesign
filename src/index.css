@@ -827,8 +827,8 @@
     position: absolute;
     inset: 0 0 auto;
     z-index: 0;
-    height: 130px;
-    background: linear-gradient(180deg, rgb(0 0 0 / 0.85), rgb(0 0 0 / 0.45) 55%, transparent);
+    height: 200px;
+    background: linear-gradient(180deg, rgb(0 0 0 / 0.9), rgb(0 0 0 / 0.6) 45%, transparent);
     pointer-events: none;
     transition: opacity calc(var(--carousel-transition) * 0.4) var(--carousel-ease) calc(var(--carousel-transition) * 0.6);
   }

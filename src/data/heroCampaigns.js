@@ -11,12 +11,18 @@ import corsairHeadset from '../assets/pichau-camadas/corsair/headset.avif';
 import corsairKeyboard from '../assets/pichau-camadas/corsair/teclado.avif';
 import corsairMouse from '../assets/pichau-camadas/corsair/mouse.avif';
 import corsairLogo from '../assets/pichau-camadas/corsair/logo.avif';
-import intelBackground from '../assets/pichau-camadas/intel-gamer-days/fundo-684x475.avif';
-import intelTombRaider from '../assets/pichau-camadas/intel-gamer-days/tomb-raider.avif';
-import intelGrid from '../assets/pichau-camadas/intel-gamer-days/grid.avif';
+import rogBackground from '../assets/pichau-camadas/rog/fundo-1192x475.avif';
+import rogLogo from '../assets/pichau-camadas/rog/logo.avif';
+import rogNotebook from '../assets/pichau-camadas/rog/notebook.avif';
+import rogHandheld from '../assets/pichau-camadas/rog/portatil.avif';
+import rogGraphicsCard from '../assets/pichau-camadas/rog/placa-video.avif';
+import rogKeyboard from '../assets/pichau-camadas/rog/teclado.avif';
+import rogHeadset from '../assets/pichau-camadas/rog/headset.avif';
+import rogMouse from '../assets/pichau-camadas/rog/mouse.avif';
 import arenaBackground from '../assets/pichau-camadas/pichau-arena/fundo-684x475.avif';
 import arenaLogo from '../assets/pichau-camadas/pichau-arena/logo-arena.avif';
 import arenaGamerGeek from '../assets/pichau-camadas/pichau-arena/gamer-geek.avif';
+
 
 /*
   Campanhas dos painéis do hero: fundo (475 de altura; 684 ou 1192 de largura), objetos transparentes e textos do card.
@@ -31,13 +37,22 @@ import arenaGamerGeek from '../assets/pichau-camadas/pichau-arena/gamer-geek.avi
     base   (só no fechado, no lugar de y) altura onde a base do objeto encosta, para apoiá-lo
            num bloco do fundo: o card fechado tem a altura da arte, então o ponto não muda
     collapsed: null  o objeto aparece só no card expandido
+    expanded: null   só no card fechado do desktop (logos: no aberto e no celular o logo fica acima do título)
     scene  (desktop, card expandido) apoia o objeto num ponto do fundo, em px da imagem: x do
            centro, bottom (onde a base encosta) e width. Exige background.width e o stage
            alinhado à direita (100%), que coincide com a borda direita do card. O fundo tem a
            altura do card e aparece em 1:1, então o objeto fica sobre o mesmo bloco da arte
            em qualquer largura; o que passa da borda esquerda do card é cortado.
+    sceneMobile  o mesmo no celular, onde o texto fica sobre a arte: o fundo passa a ocupar só a
+           faixa dos objetos, na base, alinhado à direita (exige background.height). Até 600px a
+           faixa mostra só a parte direita da arte, então as posições são próprias; acima disso
+           ela mostra a arte quase inteira e usa as de scene.
+    sceneNarrow  (opcional) o mesmo no card expandido do desktop enquanto ele é estreito demais
+           para scene (abaixo de ~640px) e mostra só a parte direita da arte, em 1:1.
   Textos da coluna à esquerda do hero, trocados junto com o card expandido. Só usam informações
   reais dos banners da campanha; sem specs, preços ou benefícios que eles não anunciam.
+    logo         logo da marca acima do título, no lugar do eyebrow (texto curto acima do título)
+    title        partes do título; com isTitleStacked, cada uma ocupa uma linha
     description  até três linhas
     highlights   até três destaques curtos (vazio quando não há o que destacar)
     details      oferta, data ou local; `type` escolhe o ícone (offer, date, location)
@@ -60,9 +75,7 @@ export const HERO_CAMPAIGNS = {
         height: 528,
         size: 100,
         collapsed: { x: '50%', y: '20%', scale: 0.78, layer: 4 },
-        expanded: { x: '79%', y: '18%', scale: 0.3, layer: 4 },
-        // Só o canto superior direito do card importa aqui, então não depende do enquadramento do fundo.
-        scene: { x: 1108, bottom: 94, width: 120 },
+        expanded: null,
       },
       {
         id: 'samurai',
@@ -93,7 +106,7 @@ export const HERO_CAMPAIGNS = {
       },
     ],
     shortTitle: 'Energy Drink',
-    eyebrow: 'PICHAU ENERGY DRINK',
+    logo: { src: energyDrinkLogo, width: 900, height: 528, alt: 'Pichau Energy Drink' },
     title: ['Energy Drink', 'Protein'],
     description: 'Energético Pichau sabor Black Cherry, com 12g de proteína em cada lata de 350ml.',
     highlights: ['12g de proteína', 'Black Cherry'],
@@ -106,6 +119,7 @@ export const HERO_CAMPAIGNS = {
     background: {
       src: corsairBackground,
       width: 1192,
+      height: 475,
       position: { collapsed: '80% 50%', expanded: '62% 50%', stage: '100% 50%' },
     },
     objects: [
@@ -118,6 +132,7 @@ export const HERO_CAMPAIGNS = {
         collapsed: { x: '50%', base: '332px', scale: 0.85, layer: 1 },
         expanded: { x: '60%', y: '52%', scale: 0.42, layer: 1 },
         scene: { x: 900, bottom: 330, width: 190 },
+        sceneMobile: { x: 930, bottom: 332, width: 160 },
       },
       {
         id: 'memorias',
@@ -128,6 +143,7 @@ export const HERO_CAMPAIGNS = {
         collapsed: null,
         expanded: { x: '35%', y: '60%', scale: 0.24, layer: 2 },
         scene: { x: 700, bottom: 281, width: 110 },
+        sceneMobile: { x: 752, bottom: 280, width: 95 },
       },
       {
         id: 'fonte',
@@ -138,6 +154,7 @@ export const HERO_CAMPAIGNS = {
         collapsed: null,
         expanded: { x: '84%', y: '63%', scale: 0.28, layer: 2 },
         scene: { x: 1095, bottom: 334, width: 130 },
+        sceneMobile: { x: 1105, bottom: 334, width: 115 },
       },
       {
         id: 'headset',
@@ -146,8 +163,9 @@ export const HERO_CAMPAIGNS = {
         height: 496,
         size: 100,
         collapsed: { x: '50%', base: '430px', scale: 0.62, layer: 2 },
-        expanded: { x: '14%', y: '57%', scale: 0.24, layer: 3 },
+        expanded: { x: '14%', y: '57%', scale: 0.24, layer: 5 },
         scene: { x: 560, bottom: 304, width: 105 },
+        sceneMobile: { x: 738, bottom: 440, width: 80 },
       },
       {
         id: 'teclado',
@@ -158,6 +176,7 @@ export const HERO_CAMPAIGNS = {
         collapsed: null,
         expanded: { x: '27%', y: '84%', scale: 0.6, layer: 4 },
         scene: { x: 700, bottom: 436, width: 300 },
+        sceneMobile: { x: 850, bottom: 436, width: 290 },
       },
       {
         id: 'mouse',
@@ -168,6 +187,7 @@ export const HERO_CAMPAIGNS = {
         collapsed: null,
         expanded: { x: '56%', y: '88%', scale: 0.17, layer: 5 },
         scene: { x: 888, bottom: 436, width: 74 },
+        sceneMobile: { x: 1015, bottom: 436, width: 58 },
       },
       {
         id: 'logo',
@@ -176,49 +196,114 @@ export const HERO_CAMPAIGNS = {
         height: 186,
         size: 100,
         collapsed: { x: '50%', y: '19%', scale: 0.82, layer: 6 },
-        expanded: { x: '79%', y: '16%', scale: 0.3, layer: 6 },
-        scene: { x: 1104, bottom: 58, width: 128 },
+        expanded: null,
       },
     ],
     shortTitle: 'Seleção Corsair',
-    eyebrow: 'SELEÇÃO ESPECIAL',
+    logo: { src: corsairLogo, width: 800, height: 186, alt: 'Corsair' },
     title: ['Seleção', 'Corsair'],
     description: 'Uma seleção especial de produtos Corsair na Pichau.',
     highlights: ['Hardware', 'Periféricos'],
     details: [],
     cta: { label: 'Ver seleção Corsair', href: '#offers', category: 'Hardware' },
   },
-  intelGamerDays: {
-    id: 'intel-gamer-days',
-    name: 'Intel Gamer Days',
-    background: { src: intelBackground, position: { collapsed: '95% 50%', expanded: '50% 50%', stage: '50% 50%' } },
+  /*
+    scene segue a composição da referência (1192 x 475): placa no bloco alto, fone no degrau,
+    notebook na plataforma e o resto no chão. Ela só cabe no card largo; no card estreito (notebooks,
+    sceneNarrow) e no celular (sceneMobile), que mostram só a parte direita da arte, os produtos
+    ficam juntos ali, sobre os mesmos blocos; no celular, menores e mais espaçados.
+  */
+  asusRog: {
+    id: 'asus-rog',
+    name: 'ASUS ROG',
+    background: {
+      src: rogBackground,
+      width: 1192,
+      height: 475,
+      position: { collapsed: '90% 50%', expanded: '100% 50%', stage: '100% 50%' },
+    },
     objects: [
       {
-        id: 'tomb-raider',
-        src: intelTombRaider,
-        width: 899,
-        height: 874,
-        size: 104,
-        collapsed: { x: '50%', y: '37%', scale: 1, layer: 2 },
-        expanded: { x: '25%', y: '67%', scale: 0.52, layer: 1 },
+        id: 'placa-video',
+        src: rogGraphicsCard,
+        width: 538,
+        height: 273,
+        size: 100,
+        collapsed: { x: '50%', base: '222px', scale: 0.82, layer: 1 },
+        expanded: { x: '72%', y: '30%', scale: 0.46, layer: 1 },
+        scene: { x: 1015, bottom: 226, width: 310 },
+        sceneMobile: { x: 1080, bottom: 222, width: 190 },
+        sceneNarrow: { x: 1065, bottom: 224, width: 220 },
       },
       {
-        id: 'grid',
-        src: intelGrid,
-        width: 876,
-        height: 903,
-        size: 104,
-        collapsed: { x: '50%', y: '69%', scale: 0.94, layer: 1 },
-        expanded: { x: '73%', y: '65%', scale: 0.54, layer: 2 },
+        id: 'notebook',
+        src: rogNotebook,
+        width: 637,
+        height: 412,
+        size: 100,
+        collapsed: { x: '50%', base: '336px', scale: 0.86, layer: 2 },
+        expanded: { x: '40%', y: '45%', scale: 0.56, layer: 2 },
+        scene: { x: 690, bottom: 295, width: 410 },
+        sceneMobile: { x: 848, bottom: 300, width: 230 },
+        sceneNarrow: { x: 925, bottom: 302, width: 270 },
+      },
+      {
+        id: 'headset',
+        src: rogHeadset,
+        width: 337,
+        height: 376,
+        size: 100,
+        collapsed: null,
+        expanded: { x: '85%', y: '62%', scale: 0.21, layer: 3 },
+        scene: { x: 1058, bottom: 347, width: 137 },
+        sceneMobile: { x: 1115, bottom: 336, width: 92 },
+        sceneNarrow: { x: 1122, bottom: 345, width: 100 },
+      },
+      {
+        id: 'teclado',
+        src: rogKeyboard,
+        width: 617,
+        height: 387,
+        size: 100,
+        collapsed: null,
+        expanded: { x: '26%', y: '74%', scale: 0.36, layer: 3 },
+        scene: { x: 590, bottom: 398, width: 280 },
+        sceneMobile: { x: 805, bottom: 410, width: 150 },
+        sceneNarrow: { x: 880, bottom: 404, width: 165 },
+      },
+      {
+        id: 'portatil',
+        src: rogHandheld,
+        width: 533,
+        height: 264,
+        size: 100,
+        collapsed: { x: '50%', base: '440px', scale: 0.82, layer: 3 },
+        expanded: { x: '50%', y: '80%', scale: 0.42, layer: 4 },
+        scene: { x: 855, bottom: 410, width: 300 },
+        sceneMobile: { x: 960, bottom: 440, width: 170 },
+        sceneNarrow: { x: 1000, bottom: 430, width: 190 },
+      },
+      {
+        id: 'mouse',
+        src: rogMouse,
+        width: 392,
+        height: 257,
+        size: 100,
+        collapsed: null,
+        expanded: { x: '86%', y: '86%', scale: 0.17, layer: 4 },
+        scene: { x: 1067, bottom: 428, width: 127 },
+        sceneMobile: { x: 1125, bottom: 450, width: 70 },
+        sceneNarrow: { x: 1140, bottom: 444, width: 76 },
       },
     ],
-    shortTitle: 'Gamer Days',
-    eyebrow: 'INTEL GAMER DAYS',
-    title: ['Receba', 'dois jogos'],
-    description: 'Na compra de produtos elegíveis Intel®, você recebe dois jogos.',
+    shortTitle: 'ASUS ROG',
+    logo: { src: rogLogo, width: 1701, height: 767, alt: 'ASUS Republic of Gamers' },
+    title: ['PARA AQUELES', 'QUE OUSAM.'],
+    isTitleStacked: true,
+    description: 'Explore notebooks, componentes e periféricos ROG.',
     highlights: [],
-    details: [{ type: 'date', text: 'Oferta válida até 11 de outubro de 2026' }],
-    cta: { label: 'Ver produtos Intel', href: '#offers', category: 'Hardware' },
+    details: [],
+    cta: { label: 'EXPLORE A ROG', href: 'https://rog.asus.com/br/' },
   },
   // Configurada para quando a campanha entrar no carrossel; hoje os três slides usam as demais.
   pichauArena: {
@@ -246,7 +331,7 @@ export const HERO_CAMPAIGNS = {
       },
     ],
     shortTitle: '10 a 12 de outubro',
-    eyebrow: 'PICHAU ARENA',
+    logo: { src: arenaLogo, width: 903, height: 785, alt: 'Pichau Arena' },
     title: ['Gamer', '& Geek'],
     description: 'O evento gamer e geek da Pichau Arena em Joinville–SC.',
     highlights: [],
@@ -259,4 +344,4 @@ export const HERO_CAMPAIGNS = {
 };
 
 // Ordem inicial do carrossel do hero.
-export const HERO_SLIDES = [HERO_CAMPAIGNS.energyDrink, HERO_CAMPAIGNS.corsair, HERO_CAMPAIGNS.intelGamerDays];
+export const HERO_SLIDES = [HERO_CAMPAIGNS.energyDrink, HERO_CAMPAIGNS.corsair, HERO_CAMPAIGNS.asusRog];

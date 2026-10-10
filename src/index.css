@@ -168,6 +168,10 @@
   padding: calc(var(--box-padding) * 1.5) var(--box-padding) calc(var(--hero-art-height) * 0.7);
 }
 
+.hero-copy h1.is-stacked .hero-title-part {
+  display: block;
+}
+
 .hero-controls {
   grid-area: controls;
   padding-block: 12px var(--hero-gap);
@@ -205,6 +209,12 @@
     font-size: clamp(55px, 4.8vw, 80px);
     white-space: nowrap;
     text-shadow: 0 2px 18px rgb(0 0 0 / 0.6);
+  }
+
+  /* Em duas linhas o título ganha altura, então fica menor para a linha mais longa caber na coluna. */
+  .hero-copy h1.is-stacked {
+    font-size: clamp(46px, 3.9vw, 64px);
+    line-height: 0.95;
   }
 
   .hero-controls {
@@ -393,8 +403,50 @@
     height: var(--hero-art-height);
   }
 
+  /* No celular o card é sempre o aberto; o logo da campanha já aparece acima do título. */
+  .hero-panel .campaign-object.is-collapsed-only {
+    display: none;
+  }
+
   .hero-panel .campaign-object img {
     width: calc(var(--size) * min(1cqw, var(--hero-art-height) / 100));
+  }
+
+  /*
+    Arte com objetos apoiados nos blocos (sceneMobile): o fundo cobre só a faixa dos objetos,
+    alinhado à direita e pela base, e some para cima no preenchimento do card, sob o texto.
+    --scene-unit é a escala do fundo (px na tela por px da arte); o cover usa a maior entre a
+    da altura da faixa e a da largura do card, e o card (.hero-frame) é o container.
+  */
+  .hero-panel.has-mobile-scene .hero-panel-image {
+    top: auto;
+    height: var(--hero-art-height);
+    object-position: right bottom;
+    mask-image: linear-gradient(to bottom, transparent, #000 35%);
+  }
+
+  .hero-panel .campaign-object.is-on-mobile-scene {
+    --scene-unit: calc(max(100cqw, var(--hero-art-height) * var(--bg-width) / var(--bg-height)) / var(--bg-width));
+    --point-right: var(--mobile-scene-right);
+    --point-lift: var(--mobile-scene-lift);
+    --point-width: var(--mobile-scene-width);
+    transform: none;
+  }
+
+  .hero-panel .campaign-object.is-on-mobile-scene img {
+    top: calc(100% - var(--point-lift) * var(--scene-unit));
+    left: calc(100% - var(--point-right) * var(--scene-unit));
+    width: calc(var(--point-width) * var(--scene-unit));
+    transform: translate(-50%, -100%);
+  }
+}
+
+/* A partir daqui a faixa já mostra a arte quase inteira, e a cena do desktop cabe nela. */
+@media (601px <= width < 1001px) {
+  .hero-panel .campaign-object.is-on-mobile-scene {
+    --point-right: var(--scene-right);
+    --point-lift: var(--scene-lift);
+    --point-width: var(--scene-width);
   }
 }
 
@@ -480,13 +532,17 @@
 /*
   Desktop: a fila fica encostada à direita. O primeiro da fila é o único que expande e, como fica
   alinhado pela borda direita, cresce para a esquerda; a largura expandida é o que sobra da coluna
-  depois dos estreitos, então o espaço já fica reservado e nada sobrepõe o texto.
+  depois dos estreitos, mais --panel-reach, que avança sobre o espaço entre a coluna e o texto.
+  O texto fica acima dos painéis (z-index), então o card nunca cobre o título nem o CTA.
 */
 @media (width >= 1001px) {
   .hero-panels {
     --panel-gap: 14px;
     --panel-narrow: min(160px, 18cqw);
-    --panel-expanded: max(var(--panel-narrow), 100cqw - (var(--slide-count) - 1) * (var(--panel-narrow) + var(--panel-gap)));
+    --panel-reach: 48px;
+    --panel-expanded: calc(
+      max(var(--panel-narrow), 100cqw - (var(--slide-count) - 1) * (var(--panel-narrow) + var(--panel-gap))) + var(--panel-reach)
+    );
     /* Altura dos fundos das campanhas (475px), fixa também durante a expansão. */
     --panel-height: 475px;
     /*
@@ -497,7 +553,7 @@
     --frame-return: calc(var(--carousel-transition) * 0.8);
     position: relative;
     margin-bottom: var(--hero-gap);
-    container-type: inline-size;
+    container: hero-panels / inline-size;
   }
 
   .hero-panel {
@@ -713,14 +769,27 @@
   }
 
   .hero-panel.is-expanded .campaign-object.is-on-scene img {
-    top: var(--scene-bottom);
-    left: calc(100% - var(--scene-right));
-    width: var(--scene-width);
+    top: calc(var(--scene-bottom) * 1px);
+    left: calc(100% - var(--scene-right) * 1px);
+    width: calc(var(--scene-width) * 1px);
     transform: translate(-50%, -100%);
   }
 
+  /*
+    Abaixo de ~640px de card (fila com menos de 942px) a cena larga perde os produtos da esquerda.
+    Objetos com sceneNarrow usam ali posições feitas para a parte direita da arte.
+  */
+  @container hero-panels (width < 942px) {
+    .hero-panel.is-expanded .campaign-object.is-on-narrow-scene img {
+      top: calc(var(--narrow-scene-bottom) * 1px);
+      left: calc(100% - var(--narrow-scene-right) * 1px);
+      width: calc(var(--narrow-scene-width) * 1px);
+    }
+  }
+
   .hero-panel.is-hiding-objects .campaign-object,
-  .hero-panel:not(.is-expanded) .campaign-object.is-expanded-only {
+  .hero-panel:not(.is-expanded) .campaign-object.is-expanded-only,
+  .hero-panel.is-expanded .campaign-object.is-collapsed-only {
     opacity: 0;
     transition-delay: 0s;
   }
@@ -745,6 +814,26 @@
   }
 
   .hero-panel.is-expanded .campaign-short-title {
+    opacity: 0;
+    transition: opacity calc(var(--carousel-transition) * 0.4) var(--carousel-ease);
+  }
+
+  /*
+    Degradê preto atrás do título curto. Fica dentro da moldura, para seguir o chanfro, acima do
+    fundo e abaixo dos objetos (z-index a partir de 1); sai e volta junto com o título.
+  */
+  .hero-panel .hero-frame-content::after {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto;
+    z-index: 0;
+    height: 130px;
+    background: linear-gradient(180deg, rgb(0 0 0 / 0.85), rgb(0 0 0 / 0.45) 55%, transparent);
+    pointer-events: none;
+    transition: opacity calc(var(--carousel-transition) * 0.4) var(--carousel-ease) calc(var(--carousel-transition) * 0.6);
+  }
+
+  .hero-panel.is-expanded .hero-frame-content::after {
     opacity: 0;
     transition: opacity calc(var(--carousel-transition) * 0.4) var(--carousel-ease);
   }

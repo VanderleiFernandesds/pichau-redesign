@@ -1,6 +1,6 @@
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import { ChevronDown, Cpu, Gamepad2, Headset, Menu, Tag, Ticket } from 'lucide-react';
-import { DEPARTMENTS } from '../../../data/categories';
+import DepartmentMenu from './department-menu/DepartmentMenu';
 
 // No mobile a lista rola dentro do painel, então o foco é desenhado para dentro para não ser cortado.
 // No desktop cada item ganha uma moldura chanfrada (nav-frame), que também marca o item ativo.
@@ -12,8 +12,17 @@ const activeClass =
   'text-brand after:absolute after:inset-y-2 after:left-0 after:w-0.5 after:bg-brand lg:after:inset-x-0 lg:after:top-auto lg:after:bottom-0 lg:after:h-0.5 lg:after:w-auto';
 const iconClass = 'size-5';
 
-export default function Navbar({ isMenuOpen, onMenuOpenChange, isNavOpen, onNavOpenChange, onFilter, onCoupon }) {
+export default function Navbar({
+  isMenuOpen,
+  onMenuOpenChange,
+  isNavOpen,
+  onNavOpenChange,
+  onFilter,
+  onCoupon,
+  onDepartmentUnavailable,
+}) {
   const [currentHash, setCurrentHash] = useState(() => window.location.hash);
+  const departmentsButtonRef = useRef(null);
 
   useEffect(() => {
     function handleHashChange() {
@@ -24,21 +33,31 @@ export default function Navbar({ isMenuOpen, onMenuOpenChange, isNavOpen, onNavO
     return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
 
+  // Com o menu de departamentos aberto, o Esc é do <dialog> dele; a lista do mobile continua aberta por baixo.
   useEffect(() => {
-    if (!isMenuOpen && !isNavOpen) return;
+    if (!isNavOpen || isMenuOpen) return;
 
     function handleKeyDown(event) {
-      if (event.key !== 'Escape') return;
-      onMenuOpenChange(false);
-      onNavOpenChange(false);
+      if (event.key === 'Escape') onNavOpenChange(false);
     }
 
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [isMenuOpen, isNavOpen, onMenuOpenChange, onNavOpenChange]);
+  }, [isMenuOpen, isNavOpen, onNavOpenChange]);
 
   function closeList() {
     onNavOpenChange(false);
+  }
+
+  function leaveDepartmentMenu() {
+    onMenuOpenChange(false);
+    closeList();
+  }
+
+  function openDepartment(department) {
+    leaveDepartmentMenu();
+    if (department.productCategory) onFilter(department.productCategory);
+    else onDepartmentUnavailable();
   }
 
   function renderSectionLink(href, label, Icon) {
@@ -65,9 +84,11 @@ export default function Navbar({ isMenuOpen, onMenuOpenChange, isNavOpen, onNavO
       // menu aberto clareia a moldura. O conteúdo fica à esquerda, e o pl-3 soma-se aos 12px da
       // moldura até o contorno para o ícone alinhar com o logo e o conteúdo da página.
       className={`nav-departments ${navItemClass} lg:pr-4 lg:pl-3 lg:font-semibold lg:text-white lg:hover:text-white ${isMenuOpen ? activeClass : 'text-white/90'}`}
+      ref={departmentsButtonRef}
+      aria-haspopup="dialog"
       aria-expanded={isMenuOpen}
       aria-controls="department-menu"
-      onClick={() => onMenuOpenChange(!isMenuOpen)}
+      onClick={() => onMenuOpenChange(true)}
     >
       <span aria-hidden="true" className={`${frameClass} chamfer-accent`} />
       <Menu aria-hidden="true" className={iconClass} />
@@ -115,25 +136,13 @@ export default function Navbar({ isMenuOpen, onMenuOpenChange, isNavOpen, onNavO
         ))}
       </ul>
 
-      <div
-        id="department-menu"
-        hidden={!isMenuOpen}
-        className="absolute top-full left-0 z-10 mt-3 w-full max-w-[320px] lg:-left-3 border border-white/10 bg-[#111216] p-2 text-white shadow-[0_16px_32px_#0008]"
-      >
-        {DEPARTMENTS.map((department) => (
-          <button
-            key={department}
-            type="button"
-            onClick={() => {
-              onFilter(department);
-              closeList();
-            }}
-            className="block min-h-11 w-full px-3 text-left text-[13px] transition-colors hover:bg-white/5 hover:text-brand focus-visible:-outline-offset-3"
-          >
-            {department}
-          </button>
-        ))}
-      </div>
+      <DepartmentMenu
+        isOpen={isMenuOpen}
+        onClose={() => onMenuOpenChange(false)}
+        triggerRef={departmentsButtonRef}
+        onOpenDepartment={openDepartment}
+        onNavigate={leaveDepartmentMenu}
+      />
     </nav>
   );
 }

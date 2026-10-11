@@ -109,6 +109,7 @@ export default function HomePage() {
           onNavOpenChange={setIsNavOpen}
           onFilter={filterByCategory}
           onCoupon={() => toast.showToast('Conceito demonstrativo: nenhum cupom real disponível.')}
+          onDepartmentUnavailable={() => toast.showToast('Conceito demonstrativo: departamento ainda sem produtos.')}
         />
       </SiteHeader>
 

@@ -63,9 +63,13 @@
     scroll-padding-top: var(--header-offset);
   }
 
+  /*
+    O fundo da página é o grafite do header e do rodapé; o branco das seções vem do <main>. Assim
+    o que aparece quando o site se desloca (menu de departamentos) ou no overscroll é escuro.
+  */
   body {
     color: var(--color-ink);
-    background: white;
+    background: var(--color-ink);
   }
 
   button,
@@ -1070,10 +1074,37 @@
     }
   }
 
-  /* Desktop: abre só com a lista e cresce para a direita quando um departamento é escolhido. */
+  /*
+    Desktop: abre só com a lista e cresce para a direita quando um departamento é escolhido. O
+    site inteiro anda para a direita até sair de baixo da lista, para o menu ficar ao lado da página e
+    não por cima; o painel expandido passa por cima do site já deslocado, sob o fundo escurecido.
+    O <dialog> fica na camada superior e não acompanha o deslocamento. O #root corta o que sai
+    pela direita: com clip (e não hidden) não há rolagem horizontal nem por script, e o header
+    sticky continua funcionando.
+  */
   @media (width >= 1001px) {
+    :root {
+      --department-list-width: 340px;
+    }
+
+    #root {
+      overflow-x: clip;
+    }
+
+    #root > * {
+      transition: translate 0.25s var(--carousel-ease, ease);
+    }
+
+    /*
+      O deslocamento desconta a margem lateral do site (--container-start), para o conteúdo
+      começar logo depois da lista, com a folga mínima do desktop (24px), em qualquer largura.
+    */
+    #root:has(.department-menu[open]:not([data-closing])) > * {
+      translate: max(0px, var(--department-list-width) + 24px - (var(--container-start))) 0;
+    }
+
     .department-menu-panel {
-      width: 340px;
+      width: var(--department-list-width);
       transition:
         translate 0.25s var(--carousel-ease, ease),
         width 0.25s var(--carousel-ease, ease);

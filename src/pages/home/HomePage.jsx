@@ -113,7 +113,7 @@ export default function HomePage() {
         />
       </SiteHeader>
 
-      <main id="main">
+      <main id="main" className="bg-white">
         <Hero onFilter={filterByCategory}>
           <PurposeCards onFilter={filterByCategory} />
         </Hero>

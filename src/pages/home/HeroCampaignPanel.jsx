@@ -87,7 +87,20 @@ export default function HeroCampaignPanel({ campaign, position, stateClasses, is
               height={object.height}
               decoding="async"
               onError={hideBrokenImage}
+              className={object.srcOnLight ? 'theme-dark-only' : undefined}
             />
+            {/* Logos com texto branco: a versão escura aparece no tema claro, sobre o degradê branco. */}
+            {object.srcOnLight && (
+              <img
+                src={object.srcOnLight}
+                alt=""
+                width={object.width}
+                height={object.height}
+                decoding="async"
+                onError={hideBrokenImage}
+                className="theme-light-only"
+              />
+            )}
           </span>
         ))}
       </HeroCarouselFrame>

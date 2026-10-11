@@ -10,14 +10,14 @@ export default function DepartmentCard({ department, onOpen }) {
   const Icon = department.icon;
 
   return (
-    <DepartmentLink department={department} onOpen={onOpen} className="chamfer purpose-card department-card">
+    <DepartmentLink department={department} onOpen={onOpen} className="chamfer purpose-card department-card text-heading">
       <span aria-hidden="true" className="corner-accents" />
 
       <span className="flex h-32 w-full items-center justify-center sm:h-36">
         {department.image ? (
           <img src={department.image} alt="" loading="lazy" decoding="async" className="h-full w-full object-contain" />
         ) : (
-          <Icon aria-hidden="true" className="size-14 text-[#6d717a]" strokeWidth={1.25} />
+          <Icon aria-hidden="true" className="size-14 text-muted" strokeWidth={1.25} />
         )}
       </span>
 

@@ -7,7 +7,7 @@ const DETAIL_ICONS = { offer: Tag, date: CalendarDays, location: MapPin };
   então a área reservada é a da maior: trocar de campanha não move o botão nem o resto da página.
   As inativas ficam com visibility: hidden, fora do Tab e da árvore de acessibilidade.
 */
-export default function HeroCampaignCopy({ campaigns, shownId, isAnnounced, onFilter }) {
+export default function HeroCampaignCopy({ campaigns, shownId, isAnnounced, onFilter, theme }) {
   function visibility(campaignId) {
     return campaignId === shownId ? '' : 'invisible opacity-0';
   }
@@ -21,7 +21,7 @@ export default function HeroCampaignCopy({ campaigns, shownId, isAnnounced, onFi
               // Largura fixa e altura automática, para a proporção vir sempre da arte; no celular o logo
               // fica com 73% da largura. O max-width deixa livre o canto das setas (abaixo de 1001px).
               <img
-                src={logo.src}
+                src={theme === 'light' && logo.srcOnLight ? logo.srcOnLight : logo.src}
                 alt={logo.alt}
                 width={logo.width}
                 height={logo.height}
@@ -29,7 +29,7 @@ export default function HeroCampaignCopy({ campaigns, shownId, isAnnounced, onFi
                 className="block h-auto w-[calc(var(--logo-width)*0.73)] max-w-[calc(100%-6rem)] sm:w-(--logo-width)"
               />
             ) : (
-              <span className="eyebrow text-[#e7a3ae]">{eyebrow}</span>
+              <span className="eyebrow text-brand">{eyebrow}</span>
             )}
             {/* No desktop o tamanho e a linha única vêm de .hero-copy h1 (index.css); abaixo disso quebra. */}
             <h1
@@ -42,14 +42,14 @@ export default function HeroCampaignCopy({ campaigns, shownId, isAnnounced, onFi
                 </span>
               ))}
             </h1>
-            <p className="line-clamp-3 max-w-[36ch] text-[14px] leading-[1.5] text-[#e1dfe3] sm:text-[16px]">{description}</p>
+            <p className="line-clamp-3 max-w-[36ch] text-[14px] leading-[1.5] text-text sm:text-[16px]">{description}</p>
 
             {highlights.length > 0 && (
               <ul className="mt-3 flex flex-wrap gap-2" aria-label="Destaques">
                 {highlights.map((highlight) => (
                   <li
                     key={highlight}
-                    className="rounded-[4px] border border-[#ffffff26] bg-[#ffffff0d] px-2.5 py-1 text-[12px] font-semibold text-[#e1dfe3]"
+                    className="rounded-[4px] border border-line bg-fill px-2.5 py-1 text-[12px] font-semibold text-text"
                   >
                     {highlight}
                   </li>
@@ -58,7 +58,7 @@ export default function HeroCampaignCopy({ campaigns, shownId, isAnnounced, onFi
             )}
 
             {details.length > 0 && (
-              <ul className="mt-3 grid gap-1.5 text-[13px] text-[#b8b9bf]">
+              <ul className="mt-3 grid gap-1.5 text-[13px] text-soft">
                 {details.map(({ type, text }) => {
                   const Icon = DETAIL_ICONS[type];
                   // A oferta é a informação principal da lista; data e local ficam discretos.
@@ -66,7 +66,7 @@ export default function HeroCampaignCopy({ campaigns, shownId, isAnnounced, onFi
                   return (
                     <li
                       key={text}
-                      className={`flex items-center gap-2 ${isOffer ? 'text-[18px] font-semibold text-white' : ''}`}
+                      className={`flex items-center gap-2 ${isOffer ? 'text-[18px] font-semibold text-heading' : ''}`}
                     >
                       <Icon aria-hidden="true" className={`shrink-0 text-brand ${isOffer ? 'size-5' : 'size-4'}`} />
                       {text}

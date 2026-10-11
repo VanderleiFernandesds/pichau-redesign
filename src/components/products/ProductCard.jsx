@@ -36,7 +36,7 @@ export default function ProductCard({ product, isFavorite, onToggleFavorite, onA
             className="h-[135px] w-full object-contain @min-[220px]:h-[190px]"
           />
         </div>
-        <h3 className="mb-[9px] min-h-[35px] font-display text-[14px] leading-[1.25] font-semibold text-white @min-[220px]:min-h-[40px] @min-[220px]:text-[16px]">
+        <h3 className="mb-[9px] min-h-[35px] font-display text-[14px] leading-[1.25] font-semibold text-heading @min-[220px]:min-h-[40px] @min-[220px]:text-[16px]">
           {product.name}
         </h3>
         <p className="mb-3.5 text-[10px] leading-[1.5] text-muted @min-[220px]:mb-[22px] @min-[220px]:text-[11px]">{product.spec}</p>

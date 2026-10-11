@@ -9,7 +9,7 @@ import { useHeroCarousel } from '../../hooks/useHeroCarousel';
 const CAROUSEL_TIMING = { readingTime: 7000, transitionTime: 500, selectTransitionTime: 450 };
 const SLIDE_IDS = HERO_SLIDES.map((slide) => slide.id);
 
-export default function Hero({ onFilter, children }) {
+export default function Hero({ onFilter, theme, children }) {
   const carousel = useHeroCarousel(SLIDE_IDS, CAROUSEL_TIMING);
   const { shownId } = carousel;
 
@@ -22,7 +22,7 @@ export default function Hero({ onFilter, children }) {
   return (
     // A seção ocupa a tela (com teto definido em .hero): o painel flutua no topo, os cards
     // ficam na base e o bloco do texto cresce para preencher o espaço entre eles.
-    <section className="hero flex flex-col bg-ink text-white">
+    <section className="hero flex flex-col bg-page text-heading">
       <div className="flex flex-1">
         <div
           role="region"
@@ -37,6 +37,7 @@ export default function Hero({ onFilter, children }) {
             shownId={shownId}
             isAnnounced={!carousel.isRunning}
             onFilter={onFilter}
+            theme={theme}
           />
 
           <HeroPanels

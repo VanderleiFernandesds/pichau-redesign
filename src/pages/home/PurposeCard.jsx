@@ -8,7 +8,7 @@ export default function PurposeCard({ purpose, onFilter }) {
     <a
       href={href}
       onClick={category ? () => onFilter(category) : undefined}
-      className="chamfer purpose-card flex flex-col gap-2 px-(--box-padding) py-[clamp(14px,2.2svh,24px)] text-white"
+      className="chamfer purpose-card flex flex-col gap-2 px-(--box-padding) py-[clamp(14px,2.2svh,24px)] text-heading"
     >
       <span aria-hidden="true" className="corner-accents" />
 
@@ -21,7 +21,7 @@ export default function PurposeCard({ purpose, onFilter }) {
       */}
       <div className="grid flex-1 grid-cols-1 gap-3 sm:grid-cols-[max-content_minmax(0,1fr)]">
         <div className="contents sm:flex sm:flex-col sm:gap-3">
-          <p className="text-[13px] leading-snug text-[#b8b9bf] lg:text-[12px] min-[1700px]:text-[15px]">
+          <p className="text-[13px] leading-snug text-soft lg:text-[12px] min-[1700px]:text-[15px]">
             {description[0]}
             <br />
             {description[1]}

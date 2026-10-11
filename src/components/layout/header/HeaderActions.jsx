@@ -11,7 +11,7 @@ export default function HeaderActions({ onAccount, isFavoriteOnly, onToggleFavor
 
   return (
     <div className={`flex items-center gap-1 sm:gap-2 lg:gap-5 ${className}`}>
-      <button type="button" onClick={onAccount} aria-label="Minha Conta" className={`${actionClass} text-white`}>
+      <button type="button" onClick={onAccount} aria-label="Minha Conta" className={`${actionClass} text-heading`}>
         {frame}
         <User aria-hidden="true" className="size-5" />
         <span className="hidden lg:inline">Minha Conta</span>
@@ -24,7 +24,7 @@ export default function HeaderActions({ onAccount, isFavoriteOnly, onToggleFavor
         onClick={onToggleFavorites}
         aria-pressed={isFavoriteOnly}
         aria-label="Favoritos"
-        className={`${actionClass} ${isFavoriteOnly ? 'text-brand' : 'text-white'}`}
+        className={`${actionClass} ${isFavoriteOnly ? 'text-brand' : 'text-heading'}`}
       >
         {frame}
         <Heart aria-hidden="true" className={`size-5 ${isFavoriteOnly ? 'fill-brand' : ''}`} />

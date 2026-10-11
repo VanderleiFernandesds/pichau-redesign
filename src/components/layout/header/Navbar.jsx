@@ -17,9 +17,8 @@ export default function Navbar({
   onMenuOpenChange,
   isNavOpen,
   onNavOpenChange,
-  onFilter,
   onCoupon,
-  onDepartmentUnavailable,
+  onOpenDepartment,
 }) {
   const departmentsButtonRef = useRef(null);
 
@@ -46,8 +45,7 @@ export default function Navbar({
 
   function openDepartment(department) {
     leaveDepartmentMenu();
-    if (department.productCategory) onFilter(department.productCategory);
-    else onDepartmentUnavailable();
+    onOpenDepartment(department);
   }
 
   /*

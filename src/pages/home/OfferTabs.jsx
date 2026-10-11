@@ -12,7 +12,7 @@ export default function OfferTabs({ activeCategory, onSelect }) {
             onClick={() => onSelect(tab)}
             aria-pressed={isActive}
             className={`rounded-sm px-3 py-[9px] text-[10px] sm:px-[15px] sm:py-2.5 sm:text-[11px] ${
-              isActive ? 'bg-brand text-white' : 'bg-[#f3f4f6]'
+              isActive ? 'bg-brand text-white' : 'bg-white/8 text-white/85 hover:bg-white/12 hover:text-white'
             }`}
           >
             {tab}

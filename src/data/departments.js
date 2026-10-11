@@ -13,11 +13,18 @@ import {
   Wifi,
   Zap,
 } from 'lucide-react';
+import hardwareImage from '../assets/departamentos/hardware.avif';
+import peripheralsImage from '../assets/departamentos/perifericos.avif';
+import computersImage from '../assets/departamentos/computadores.avif';
+import upgradeKitImage from '../assets/departamentos/kit-upgrade.avif';
+import monitorsImage from '../assets/departamentos/monitores.avif';
+import chairsImage from '../assets/departamentos/cadeiras.avif';
 
 /*
   Catálogo do menu de departamentos. `productCategory` liga o departamento ao filtro das ofertas
   (categorias que têm produtos na vitrine); sem ele, a loja conceito ainda não tem página para
-  o departamento e o menu avisa que ele é demonstrativo.
+  o departamento e o menu avisa que ele é demonstrativo. `image` (PNG recortado, em AVIF) aparece no
+  carrossel "Na Pichau Tem!"; os departamentos sem foto usam o ícone.
 */
 export const DEPARTMENT_GROUPS = [
   {
@@ -25,6 +32,7 @@ export const DEPARTMENT_GROUPS = [
     departments: [
       {
         id: 'hardware',
+        image: hardwareImage,
         name: 'Hardware',
         icon: Cpu,
         description: 'Encontre os componentes para o seu PC.',
@@ -39,6 +47,7 @@ export const DEPARTMENT_GROUPS = [
       },
       {
         id: 'computadores',
+        image: computersImage,
         name: 'Computadores',
         icon: PcCase,
         description: 'PCs montados para jogar, trabalhar e criar.',
@@ -61,6 +70,7 @@ export const DEPARTMENT_GROUPS = [
       },
       {
         id: 'kit-upgrade',
+        image: upgradeKitImage,
         name: 'Kit upgrade',
         icon: CircuitBoard,
         description: 'Processador, placa-mãe e memória que já funcionam juntos.',
@@ -76,6 +86,7 @@ export const DEPARTMENT_GROUPS = [
     departments: [
       {
         id: 'perifericos',
+        image: peripheralsImage,
         name: 'Periféricos',
         icon: Mouse,
         description: 'Teclados, mouses, áudio e tudo para o seu setup.',
@@ -88,6 +99,7 @@ export const DEPARTMENT_GROUPS = [
       },
       {
         id: 'monitores',
+        image: monitorsImage,
         name: 'Monitores',
         icon: Monitor,
         description: 'Telas para jogar, trabalhar e criar.',
@@ -99,6 +111,7 @@ export const DEPARTMENT_GROUPS = [
       },
       {
         id: 'cadeiras',
+        image: chairsImage,
         name: 'Cadeiras e mesas',
         icon: Armchair,
         description: 'Conforto para longas sessões.',
@@ -174,4 +187,13 @@ export const DEPARTMENT_GROUPS = [
       },
     ],
   },
+];
+
+// Ordem do carrossel "Na Pichau Tem!": primeiro os departamentos com foto, depois todos os outros.
+const SHOWCASE_FIRST = ['hardware', 'perifericos', 'computadores', 'kit-upgrade', 'monitores', 'cadeiras'];
+const ALL_DEPARTMENTS = DEPARTMENT_GROUPS.flatMap((group) => group.departments);
+
+export const SHOWCASE_DEPARTMENTS = [
+  ...SHOWCASE_FIRST.map((id) => ALL_DEPARTMENTS.find((department) => department.id === id)),
+  ...ALL_DEPARTMENTS.filter(({ id }) => !SHOWCASE_FIRST.includes(id)),
 ];

@@ -116,7 +116,9 @@ html[data-theme='light'] .theme-dark-only {
 @media (width >= 1001px) {
   :root {
     --container-gutter: clamp(24px, 36.67vw - 343px, 185px);
-    --header-offset: 166px;
+    /* Base do painel flutuante: 16px do topo + 137px de altura. */
+    --header-bottom: 153px;
+    --header-offset: calc(var(--header-bottom) + 13px);
   }
 }
 
@@ -263,6 +265,9 @@ html[data-theme='light'] .theme-dark-only {
     grid-template-columns: auto minmax(0, 1fr);
     grid-template-areas: 'copy panels' 'controls panels';
     column-gap: var(--copy-gap);
+    /* Mesmo espaço entre o header e os painéis e entre os painéis e os cards. */
+    --panels-gap: 24px;
+    padding-top: calc(var(--header-bottom) + var(--panels-gap));
   }
 
   /* Largura fixa, para o card não mudar de tamanho com a campanha. Fica acima do fundo ampliado. */
@@ -638,7 +643,7 @@ html[data-theme='light'] .theme-dark-only {
     --frame-fade: calc(var(--carousel-transition) * 0.2);
     --frame-return: calc(var(--carousel-transition) * 0.8);
     position: relative;
-    margin-bottom: var(--hero-gap);
+    margin-bottom: var(--panels-gap);
     container: hero-panels / inline-size;
   }
 

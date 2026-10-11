@@ -52,6 +52,7 @@
   --chip-fill: #101114;
   --banner-fill: radial-gradient(ellipse at right, #4c0816, #121216 65%);
   --scrollbar: #3a3c44;
+  --header-shadow: #00000059;
 }
 
 html[data-theme='light'] {
@@ -78,6 +79,7 @@ html[data-theme='light'] {
   --chip-fill: #ffffff;
   --banner-fill: radial-gradient(ellipse at right, #ffd3da, #f4f5f7 65%);
   --scrollbar: #c9ccd3;
+  --header-shadow: #ffffffd9;
 }
 
 /* Elementos com uma versão para cada tema (logos com texto branco ou escuro). */
@@ -329,14 +331,10 @@ html[data-theme='light'] .theme-dark-only {
   --chamfer-border: var(--color-brand);
 }
 
-/* Botão de pausar/retomar do hero: segue o tema, como o restante do conteúdo do hero. */
+/* Moldura que agrupa pausar/retomar e os indicadores do hero: segue o tema, como o restante do hero. */
 .hero-control {
   --chamfer-fill: var(--color-surface);
   --chamfer-border: var(--color-line);
-}
-
-.hero-control:hover {
-  --chamfer-border: var(--color-brand);
 }
 
 /* Setas do carrossel "Na Pichau Tem!": as mesmas do hero, desabilitadas nas pontas da trilha. */
@@ -1311,6 +1309,26 @@ html[data-theme='light'] .theme-dark-only {
     color: var(--color-brand);
   }
 
+  /* Branco nos dois temas, porque as fotos têm fundo branco. */
+  .product-media {
+    --cut: 10px;
+    --chamfer-border: #ffffff;
+    --chamfer-fill: #ffffff;
+  }
+
+  /* Botão secundário chanfrado (favoritar, carrinho, "mostrar mais"), no estilo das setas dos cards. */
+  .chip-button {
+    --cut: 6px;
+    --chamfer-border: var(--chip-border);
+    --chamfer-fill: var(--chip-fill);
+    transition: color 150ms;
+  }
+
+  .chip-button:hover {
+    --chamfer-border: var(--color-brand);
+    color: var(--color-brand);
+  }
+
   /* Sombra num elemento sem recorte, já que o clip-path também cortaria o box-shadow. */
   .header-glow {
     position: absolute;
@@ -1318,7 +1336,7 @@ html[data-theme='light'] .theme-dark-only {
     z-index: -2;
     border-radius: 50%;
     box-shadow:
-      0 12px 32px #00000059,
+      0 12px 32px var(--header-shadow),
       0 8px 24px #ed002426;
   }
 

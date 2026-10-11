@@ -10,7 +10,9 @@ export default function ProductSection({
   favorites,
   onToggleFavorite,
   onAddToCart,
+  onViewProduct,
   emptyState,
+  footer,
   children,
 }) {
   const hasProducts = products.length > 0;
@@ -28,7 +30,7 @@ export default function ProductSection({
       {children}
 
       {hasProducts ? (
-        <div className="grid grid-cols-[repeat(2,1fr)] gap-2.5 sm:gap-3.5 lg:grid-cols-4 xl:grid-cols-6">
+        <div className="grid grid-cols-2 gap-2.5 sm:gap-4 lg:grid-cols-4 min-[1640px]:grid-cols-5">
           {products.map((product) => (
             <ProductCard
               key={product.id}
@@ -36,12 +38,15 @@ export default function ProductSection({
               isFavorite={favorites.includes(product.id)}
               onToggleFavorite={onToggleFavorite}
               onAddToCart={onAddToCart}
+              onView={onViewProduct}
             />
           ))}
         </div>
       ) : (
         emptyState
       )}
+
+      {footer}
     </section>
   );
 }

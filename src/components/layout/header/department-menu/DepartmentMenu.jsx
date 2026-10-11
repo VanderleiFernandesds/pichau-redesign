@@ -171,7 +171,7 @@ export default function DepartmentMenu({ isOpen, onClose, triggerRef, onOpenDepa
       type="button"
       onClick={onClose}
       aria-label="Fechar departamentos"
-      className="grid size-11 place-items-center text-white/80 transition-colors hover:text-brand"
+      className="grid size-11 place-items-center text-muted transition-colors hover:text-brand"
     >
       <X aria-hidden="true" className="size-6" strokeWidth={1.75} />
     </button>

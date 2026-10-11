@@ -57,7 +57,7 @@ export default function Navbar({
       <a
         href={href}
         onClick={closeList}
-        className={`${navItemClass} ${centeredItemClass} text-white/90`}
+        className={`${navItemClass} ${centeredItemClass} text-text`}
       >
         <span aria-hidden="true" className={`${frameClass} chamfer-field`} />
         <Icon aria-hidden="true" className={iconClass} />
@@ -72,7 +72,7 @@ export default function Navbar({
       // No desktop o botão é vermelho como o carrinho: o texto fica branco em todos os estados e o
       // menu aberto clareia a moldura. O conteúdo fica à esquerda, e o pl-3 soma-se aos 12px da
       // moldura até o contorno para o ícone alinhar com o logo e o conteúdo da página.
-      className={`nav-departments ${navItemClass} lg:pr-4 lg:pl-3 lg:font-semibold lg:text-white lg:hover:text-white ${isMenuOpen ? activeClass : 'text-white/90'}`}
+      className={`nav-departments ${navItemClass} lg:pr-4 lg:pl-3 lg:font-semibold lg:text-white lg:hover:text-white ${isMenuOpen ? activeClass : 'text-text'}`}
       ref={departmentsButtonRef}
       aria-haspopup="dialog"
       aria-expanded={isMenuOpen}
@@ -88,7 +88,7 @@ export default function Navbar({
     renderSectionLink('#offers', 'Ofertas', Tag),
     <button
       type="button"
-      className={`${navItemClass} ${centeredItemClass} text-white/90`}
+      className={`${navItemClass} ${centeredItemClass} text-text`}
       onClick={() => {
         onCoupon();
         closeList();
@@ -104,11 +104,11 @@ export default function Navbar({
 
   return (
     // Abaixo de 1001px a lista abre pelo botão de menu do Header, ao lado da busca.
-    <nav aria-label="Navegação principal" className="relative mx-3 sm:mx-4 lg:mx-6 lg:border-t lg:border-white/10">
+    <nav aria-label="Navegação principal" className="relative mx-3 sm:mx-4 lg:mx-6 lg:border-t lg:border-line">
       {/* A altura máxima impede que o painel sticky passe da tela em celulares na horizontal. */}
       <ul
         id="main-nav-list"
-        className={`${isNavOpen ? 'flex' : 'hidden'} max-h-[calc(100dvh-170px)] flex-col overflow-y-auto border-t border-white/10 py-1 lg:flex lg:max-h-none lg:flex-row lg:items-center lg:gap-2 lg:overflow-visible lg:border-0 lg:py-0`}
+        className={`${isNavOpen ? 'flex' : 'hidden'} max-h-[calc(100dvh-170px)] flex-col overflow-y-auto border-t border-line py-1 lg:flex lg:max-h-none lg:flex-row lg:items-center lg:gap-2 lg:overflow-visible lg:border-0 lg:py-0`}
       >
         {navItems.map((navItem, index) => (
           <Fragment key={index}>

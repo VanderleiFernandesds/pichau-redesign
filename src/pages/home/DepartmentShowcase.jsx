@@ -44,10 +44,10 @@ export default function DepartmentShowcase({ onOpenDepartment, onShowAll }) {
       <div className="mb-4 flex flex-col items-start justify-between gap-[15px] sm:mb-[22px] lg:flex-row lg:items-end">
         <div>
           <span className="eyebrow">DEPARTAMENTOS</span>
-          <h2 id="department-showcase-title" className="mt-2 font-display text-[26px] leading-tight font-bold text-white sm:text-[32px]">
+          <h2 id="department-showcase-title" className="mt-2 font-display text-[26px] leading-tight font-bold text-heading sm:text-[32px]">
             Na Pichau Tem!
           </h2>
-          <p className="mt-1 text-[13px] text-[#b8b9bf] sm:text-[14px]">Encontre o que você precisa para o seu setup</p>
+          <p className="mt-1 text-[13px] text-soft sm:text-[14px]">Encontre o que você precisa para o seu setup</p>
         </div>
 
         <div className="flex items-center gap-5">

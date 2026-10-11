@@ -32,13 +32,13 @@ export default function Modal({ isOpen, onClose, title, closeLabel, children }) 
       aria-labelledby={titleId}
       onClose={onClose}
       onClick={handleBackdropClick}
-      className="m-auto max-h-[85vh] w-[min(520px,calc(100%-30px))] rounded-xl border border-line bg-surface p-7 text-[#e9eaee] backdrop:bg-[#080911a6] backdrop:backdrop-blur-[4px]"
+      className="m-auto max-h-[85vh] w-[min(520px,calc(100%-30px))] rounded-xl border border-line bg-surface p-7 text-text backdrop:bg-[#080911a6] backdrop:backdrop-blur-[4px]"
     >
       <div className="flex items-center justify-between">
-        <h2 id={titleId} className="font-display text-[27px] leading-tight font-bold text-white">
+        <h2 id={titleId} className="font-display text-[27px] leading-tight font-bold text-heading">
           {title}
         </h2>
-        <button type="button" onClick={onClose} aria-label={closeLabel} className="grid size-8 place-items-center rounded-sm text-white/80 hover:text-brand">
+        <button type="button" onClick={onClose} aria-label={closeLabel} className="grid size-8 place-items-center rounded-sm text-muted hover:text-brand">
           <X aria-hidden="true" className="size-6" />
         </button>
       </div>

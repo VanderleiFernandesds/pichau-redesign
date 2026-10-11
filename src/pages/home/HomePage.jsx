@@ -20,6 +20,7 @@ import { ALL_CATEGORIES } from '../../data/categories';
 import { useCart } from '../../hooks/useCart';
 import { useFavorites } from '../../hooks/useFavorites';
 import { useToast } from '../../hooks/useToast';
+import { useTheme } from '../../hooks/useTheme';
 
 const NEW_PRODUCTS = products.slice(4);
 
@@ -38,6 +39,7 @@ export default function HomePage() {
   const cart = useCart();
   const { favorites, toggleFavorite } = useFavorites();
   const toast = useToast();
+  const { theme, toggleTheme } = useTheme();
 
   const normalizedQuery = query.trim().toLocaleLowerCase('pt-BR');
   const filteredProducts = products.filter(
@@ -108,6 +110,8 @@ export default function HomePage() {
           onToggleFavorites={toggleFavoriteOnly}
           cartCount={cart.itemCount}
           onOpenCart={() => setIsCartOpen(true)}
+          theme={theme}
+          onToggleTheme={toggleTheme}
         />
         <Navbar
           isMenuOpen={isMenuOpen}
@@ -119,8 +123,8 @@ export default function HomePage() {
         />
       </SiteHeader>
 
-      <main id="main">
-        <Hero onFilter={filterByCategory}>
+      <main id="main" className="bg-page">
+        <Hero onFilter={filterByCategory} theme={theme}>
           <PurposeCards onFilter={filterByCategory} />
         </Hero>
         <DepartmentShowcase onOpenDepartment={openDepartment} onShowAll={() => setIsMenuOpen(true)} />

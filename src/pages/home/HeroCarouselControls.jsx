@@ -21,7 +21,7 @@ export default function HeroCarouselControls({
         onClick={onTogglePlaying}
         aria-label={isPlaying ? 'Pausar destaques' : 'Retomar destaques'}
         title={isPlaying ? 'Pausar' : 'Retomar'}
-        className="chamfer hero-control grid size-10 place-items-center text-white"
+        className="chamfer hero-control grid size-10 place-items-center text-heading"
       >
         {isPlaying ? <Pause aria-hidden="true" className="size-4" /> : <Play aria-hidden="true" className="size-4" />}
       </button>

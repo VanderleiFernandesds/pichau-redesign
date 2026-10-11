@@ -10,13 +10,13 @@ export default function DepartmentDetail({ department, titleRef, onBack, onOpen,
     <section
       id="department-detail"
       aria-labelledby="department-detail-title"
-      className="department-menu-detail min-h-0 min-w-0 flex-1 lg:border-l lg:border-white/10"
+      className="department-menu-detail min-h-0 min-w-0 flex-1 lg:border-l lg:border-line"
     >
       <div className="flex items-center justify-between px-5 pt-5 lg:hidden">
         <button
           type="button"
           onClick={onBack}
-          className="-ml-2 flex min-h-11 items-center gap-1.5 px-2 text-[14px] text-white/90 hover:text-brand"
+          className="-ml-2 flex min-h-11 items-center gap-1.5 px-2 text-[14px] text-text hover:text-brand"
         >
           <ChevronLeft aria-hidden="true" className="size-5" strokeWidth={1.75} />
           Voltar
@@ -26,9 +26,9 @@ export default function DepartmentDetail({ department, titleRef, onBack, onOpen,
 
       {department && (
         <div className="min-h-0 flex-1 overflow-y-auto px-5 pt-3 pb-8 lg:px-10 lg:pt-12">
-          <p className="hidden text-[12px] tracking-[1.5px] text-white/50 uppercase lg:block">
+          <p className="hidden text-[12px] tracking-[1.5px] text-muted uppercase lg:block">
             Departamentos <span aria-hidden="true" className="px-2">/</span>
-            <span className="text-white/85">{department.name}</span>
+            <span className="text-heading">{department.name}</span>
           </p>
 
           <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-3 lg:mt-4">
@@ -41,7 +41,7 @@ export default function DepartmentDetail({ department, titleRef, onBack, onOpen,
               >
                 {department.name}
               </h2>
-              <p className="mt-1 text-[14px] text-white/65 lg:text-[16px]">{department.description}</p>
+              <p className="mt-1 text-[14px] text-soft lg:text-[16px]">{department.description}</p>
             </div>
             <DepartmentLink
               department={department}
@@ -58,14 +58,14 @@ export default function DepartmentDetail({ department, titleRef, onBack, onOpen,
                 <h3 className="px-2.5 pb-1.5 text-[13px] font-bold tracking-[1px] text-brand uppercase">{section.title}</h3>
                 <ul>
                   {section.items.map((item) => (
-                    <li key={item} className="border-b border-white/10">
+                    <li key={item} className="border-b border-line">
                       <DepartmentLink
                         department={department}
                         onOpen={onOpen}
-                        className="flex min-h-11 w-full items-center justify-between gap-3 px-2.5 text-left text-[14px] text-white/90 transition-colors hover:bg-white/5 hover:text-white focus-visible:-outline-offset-3"
+                        className="flex min-h-11 w-full items-center justify-between gap-3 px-2.5 text-left text-[14px] text-text transition-colors hover:bg-fill hover:text-heading focus-visible:-outline-offset-3"
                       >
                         {item}
-                        <ChevronRight aria-hidden="true" className="size-4 shrink-0 text-white/60" strokeWidth={1.75} />
+                        <ChevronRight aria-hidden="true" className="size-4 shrink-0 text-muted" strokeWidth={1.75} />
                       </DepartmentLink>
                     </li>
                   ))}

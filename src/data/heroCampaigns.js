@@ -11,8 +11,10 @@ import corsairHeadset from '../assets/pichau-camadas/corsair/headset.avif';
 import corsairKeyboard from '../assets/pichau-camadas/corsair/teclado.avif';
 import corsairMouse from '../assets/pichau-camadas/corsair/mouse.avif';
 import corsairLogo from '../assets/pichau-camadas/corsair/logo.avif';
+import corsairLogoDark from '../assets/pichau-camadas/corsair/logo-escuro.avif';
 import rogBackground from '../assets/pichau-camadas/rog/fundo-1192x475.avif';
 import rogLogo from '../assets/pichau-camadas/rog/logo.svg';
+import rogLogoDark from '../assets/pichau-camadas/rog/logo-escuro.svg';
 import rogNotebook from '../assets/pichau-camadas/rog/notebook.avif';
 import rogHandheld from '../assets/pichau-camadas/rog/portatil.avif';
 import rogGraphicsCard from '../assets/pichau-camadas/rog/placa-video.avif';
@@ -52,7 +54,8 @@ import arenaGamerGeek from '../assets/pichau-camadas/pichau-arena/gamer-geek.avi
   Textos da coluna à esquerda do hero, trocados junto com o card expandido. Só usam informações
   reais dos banners da campanha; sem specs, preços ou benefícios que eles não anunciam.
     logo         logo da marca acima do título, no lugar do eyebrow (texto curto acima do título);
-                 width/height dão a proporção e displayWidth a largura no desktop (altura automática)
+                 width/height dão a proporção e displayWidth a largura no desktop (altura automática);
+                 srcOnLight é a versão com texto escuro para o tema claro, quando o logo tem texto branco
     title        partes do título; com isTitleStacked, cada uma ocupa uma linha
     description  até três linhas
     highlights   até três destaques curtos (vazio quando não há o que destacar)
@@ -191,6 +194,7 @@ export const HERO_CAMPAIGNS = {
       {
         id: 'logo',
         src: corsairLogo,
+        srcOnLight: corsairLogoDark,
         width: 800,
         height: 186,
         size: 100,
@@ -198,7 +202,7 @@ export const HERO_CAMPAIGNS = {
         expanded: null,
       },
     ],
-    logo: { src: corsairLogo, width: 800, height: 186, displayWidth: 189, alt: 'Corsair' },
+    logo: { src: corsairLogo, srcOnLight: corsairLogoDark, width: 800, height: 186, displayWidth: 189, alt: 'Corsair' },
     title: ['Seleção', 'Corsair'],
     description: 'Uma seleção especial de produtos Corsair na Pichau.',
     highlights: ['Hardware', 'Periféricos'],
@@ -296,6 +300,7 @@ export const HERO_CAMPAIGNS = {
       {
         id: 'logo',
         src: rogLogo,
+        srcOnLight: rogLogoDark,
         width: 200,
         height: 37,
         size: 100,
@@ -303,7 +308,7 @@ export const HERO_CAMPAIGNS = {
         expanded: null,
       },
     ],
-    logo: { src: rogLogo, width: 200, height: 37, displayWidth: 220, alt: 'ASUS Republic of Gamers' },
+    logo: { src: rogLogo, srcOnLight: rogLogoDark, width: 200, height: 37, displayWidth: 220, alt: 'ASUS Republic of Gamers' },
     title: ['PARA AQUELES', 'QUE OUSAM.'],
     isTitleStacked: true,
     description: 'Explore notebooks, componentes e periféricos ROG.',

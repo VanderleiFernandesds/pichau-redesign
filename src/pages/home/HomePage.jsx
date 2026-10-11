@@ -1,5 +1,4 @@
 import { useRef, useState } from 'react';
-import { ArrowUpRight } from 'lucide-react';
 import Header from '../../components/layout/header/Header';
 import Navbar from '../../components/layout/header/Navbar';
 import SiteHeader from '../../components/layout/header/SiteHeader';
@@ -11,7 +10,6 @@ import Toast from '../../components/ui/Toast';
 import Hero from './Hero';
 import PurposeCards from './PurposeCards';
 import DepartmentShowcase from './DepartmentShowcase';
-import OfferTabs from './OfferTabs';
 import BuilderBanner from './BuilderBanner';
 import Benefits from './Benefits';
 import ConfigModal from './ConfigModal';
@@ -22,7 +20,11 @@ import { useFavorites } from '../../hooks/useFavorites';
 import { useToast } from '../../hooks/useToast';
 import { useTheme } from '../../hooks/useTheme';
 
-const NEW_PRODUCTS = products.slice(4);
+// Sem filtro, as ofertas mostram só os primeiros produtos; os demais aparecem aos poucos na outra vitrine.
+const FEATURED_COUNT = 10;
+const OTHER_PAGE_SIZE = 10;
+const FEATURED_PRODUCTS = products.slice(0, FEATURED_COUNT);
+const OTHER_PRODUCTS = products.slice(FEATURED_COUNT);
 
 // Carrinho e favoritos são instanciados só aqui e repassados por props,
 // garantindo uma única fonte de estado para header, vitrines e modal.
@@ -34,6 +36,7 @@ export default function HomePage() {
   const [isNavOpen, setIsNavOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isConfigOpen, setIsConfigOpen] = useState(false);
+  const [otherVisibleCount, setOtherVisibleCount] = useState(OTHER_PAGE_SIZE);
   const offersRef = useRef(null);
 
   const cart = useCart();
@@ -81,6 +84,10 @@ export default function HomePage() {
   function addToCart(id) {
     cart.addItem(id);
     toast.showToast('Produto adicionado ao carrinho');
+  }
+
+  function viewProduct() {
+    toast.showToast('Conceito demonstrativo: página do produto indisponível.');
   }
 
   function selectGoal(goalCategory) {
@@ -135,11 +142,11 @@ export default function HomePage() {
             id="offers"
             eyebrow="ESCOLHAS PARA O SEU SETUP"
             title={isFavoriteOnly ? 'Seus favoritos' : 'Ofertas em destaque'}
-            action={<OfferTabs activeCategory={category} onSelect={filterByCategory} />}
-            products={filteredProducts}
+            products={hasActiveFilter ? filteredProducts : FEATURED_PRODUCTS}
             favorites={favorites}
             onToggleFavorite={toggleFavorite}
             onAddToCart={addToCart}
+            onViewProduct={viewProduct}
             emptyState={
               <EmptyState
                 title="Nenhum produto encontrado"
@@ -163,16 +170,22 @@ export default function HomePage() {
           <ProductSection
             eyebrow="NOVAS POSSIBILIDADES"
             title="Conheça outros produtos"
-            action={
-              <a href="#offers" onClick={resetFilters} className="inline-flex items-center gap-1 text-[12px] text-brand">
-                Ver todos
-                <ArrowUpRight aria-hidden="true" className="size-3.5" />
-              </a>
-            }
-            products={NEW_PRODUCTS}
+            products={OTHER_PRODUCTS.slice(0, otherVisibleCount)}
             favorites={favorites}
             onToggleFavorite={toggleFavorite}
             onAddToCart={addToCart}
+            onViewProduct={viewProduct}
+            footer={
+              otherVisibleCount < OTHER_PRODUCTS.length && (
+                <button
+                  type="button"
+                  onClick={() => setOtherVisibleCount((count) => count + OTHER_PAGE_SIZE)}
+                  className="chamfer chip-button mx-auto mt-6 flex h-11 items-center px-6 text-[13px] font-semibold"
+                >
+                  Mostrar mais produtos ({OTHER_PRODUCTS.length - otherVisibleCount} restantes)
+                </button>
+              )
+            }
           />
 
           <Benefits />

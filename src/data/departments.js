@@ -51,6 +51,7 @@ export const DEPARTMENT_GROUPS = [
         name: 'Computadores',
         icon: PcCase,
         description: 'PCs montados para jogar, trabalhar e criar.',
+        productCategory: 'Computadores',
         sections: [
           { title: 'PCs prontos', items: ['PCs gamers', 'PCs para trabalho', 'PCs para criação'] },
           { title: 'Alto desempenho', items: ['Workstations', 'Servidores'] },
@@ -74,6 +75,7 @@ export const DEPARTMENT_GROUPS = [
         name: 'Kit upgrade',
         icon: CircuitBoard,
         description: 'Processador, placa-mãe e memória que já funcionam juntos.',
+        productCategory: 'Kit upgrade',
         sections: [
           { title: 'Kits prontos', items: ['Processador e placa-mãe', 'Processador, placa-mãe e memória'] },
           { title: 'Por plataforma', items: ['Kits AMD', 'Kits Intel'] },
@@ -142,6 +144,7 @@ export const DEPARTMENT_GROUPS = [
         name: 'Games e consoles',
         icon: Gamepad2,
         description: 'Consoles, controles e jogos.',
+        productCategory: 'Games',
         sections: [
           { title: 'Consoles', items: ['Consoles de mesa', 'Consoles portáteis'] },
           { title: 'Acessórios', items: ['Controles', 'Volantes e simuladores'] },
@@ -153,6 +156,7 @@ export const DEPARTMENT_GROUPS = [
         name: 'Casa e lazer',
         icon: House,
         description: 'Tecnologia para o dia a dia em casa.',
+        productCategory: 'Casa e lazer',
         sections: [
           { title: 'Casa inteligente', items: ['Lâmpadas inteligentes', 'Câmeras de segurança', 'Assistentes virtuais'] },
           { title: 'Lazer', items: ['Smart TVs', 'Drones', 'Patinetes elétricos'] },
@@ -163,6 +167,7 @@ export const DEPARTMENT_GROUPS = [
         name: 'Vestuário e acessórios',
         icon: Shirt,
         description: 'Roupas e acessórios com a marca Pichau.',
+        productCategory: 'Vestuário',
         sections: [
           { title: 'Vestuário', items: ['Camisetas', 'Moletons', 'Bonés'] },
           { title: 'Acessórios', items: ['Canecas', 'Chaveiros', 'Mochilas'] },
@@ -173,6 +178,7 @@ export const DEPARTMENT_GROUPS = [
         name: 'Energéticos',
         icon: Zap,
         description: 'A linha de energéticos da Pichau.',
+        productCategory: 'Energéticos',
         sections: [
           { title: 'Pichau Energy Drink', items: ['Energy Drink', 'Energy Drink Protein'] },
           { title: 'Kits', items: ['Kits e fardos'] },

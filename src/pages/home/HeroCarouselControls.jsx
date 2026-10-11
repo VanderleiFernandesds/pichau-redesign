@@ -15,13 +15,13 @@ export default function HeroCarouselControls({
   onTogglePlaying,
 }) {
   return (
-    <div className="flex items-center gap-3">
+    <div className="chamfer hero-control flex w-fit items-center pr-2">
       <button
         type="button"
         onClick={onTogglePlaying}
         aria-label={isPlaying ? 'Pausar destaques' : 'Retomar destaques'}
         title={isPlaying ? 'Pausar' : 'Retomar'}
-        className="chamfer hero-control grid size-10 place-items-center text-heading"
+        className="grid size-10 place-items-center text-heading transition-colors hover:text-brand focus-visible:-outline-offset-4"
       >
         {isPlaying ? <Pause aria-hidden="true" className="size-4" /> : <Play aria-hidden="true" className="size-4" />}
       </button>
@@ -41,7 +41,7 @@ export default function HeroCarouselControls({
             >
               <span
                 aria-hidden="true"
-                className={`relative h-1 overflow-hidden rounded-full transition-[width,background-color] duration-(--carousel-transition) ease-(--carousel-ease) ${
+                className={`relative h-1.5 overflow-hidden rounded-full transition-[width,background-color] duration-(--carousel-transition) ease-(--carousel-ease) ${
                   isActive ? `w-8 ${isProgressShown ? 'bg-brand/30' : 'bg-brand'}` : 'w-4 bg-[#4a4c54] group-hover:bg-[#8b8d95]'
                 }`}
               >

@@ -91,7 +91,9 @@ export default function HeroCampaignCopy({ campaigns, shownId, isAnnounced, onFi
                 target={isExternal ? '_blank' : undefined}
                 rel={isExternal ? 'noopener noreferrer' : undefined}
                 onClick={cta.category ? () => onFilter(cta.category) : undefined}
-                className={`button hero-fade col-start-1 row-start-1 justify-between ${visibility(id)}`}
+                // Chanfrado vermelho como o carrinho e o Departamentos. Não usa .button: o fundo dele
+                // apareceria nos cantos recortados.
+                className={`chamfer chamfer-accent hero-fade col-start-1 row-start-1 inline-flex items-center justify-between gap-3 px-3.5 py-3 text-[11px] font-bold whitespace-nowrap text-white sm:gap-6 sm:px-5.5 sm:py-3.5 sm:text-[13px] ${visibility(id)}`}
               >
                 {cta.label}
                 {isExternal && <span className="sr-only"> (abre em nova aba)</span>}

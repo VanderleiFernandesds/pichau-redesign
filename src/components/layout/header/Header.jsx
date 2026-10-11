@@ -22,10 +22,8 @@ export default function Header({
   return (
     <div className="flex flex-wrap items-center gap-x-3 gap-y-2.5 px-(--box-padding) py-2.5 lg:h-18 lg:flex-nowrap lg:gap-5 lg:py-0">
       <a href="./" aria-label="Pichau início" className="shrink-0">
-        <PichauLogo className="h-[22px] w-auto drop-shadow-[0_0_18px_#ed002466] sm:h-[25px] lg:h-[31px]" />
+        <PichauLogo className="h-[22px] w-auto drop-shadow-[0_0_18px_#ed002466] min-[360px]:h-[26px] sm:h-[30px] lg:h-[38px]" />
       </a>
-
-      <span aria-hidden="true" className="header-slash" />
 
       {/* Abaixo de 1001px a busca desce para uma segunda linha, junto do botão que abre a navegação. */}
       <div className="order-last flex min-w-0 basis-full gap-2 lg:order-0 lg:basis-auto lg:flex-1">

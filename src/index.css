@@ -961,7 +961,6 @@
 
   /* A moldura responde ao item inteiro, que na navegação é mais alto que ela. */
   .nav-item:hover .nav-frame.chamfer-field,
-  .nav-item[aria-current] .nav-frame.chamfer-field,
   .header-action:hover .nav-frame.chamfer-field,
   .header-action[aria-pressed='true'] .nav-frame.chamfer-field {
     --chamfer-border: var(--color-brand);

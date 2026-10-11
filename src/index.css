@@ -971,6 +971,133 @@
     outline-color: var(--color-brand);
   }
 
+  /*
+    Menu de departamentos. O <dialog> cobre a tela (o clique fora do painel cai nele) e o painel
+    encosta à esquerda. Só com a lista a página continua rolando; com um departamento escolhido
+    ela trava. O scrollbar-gutter mantém o espaço da barra para o layout não pular.
+  */
+  :root:has(.department-menu[open]:not([data-closing]) [data-has-detail]) {
+    overflow: hidden;
+    scrollbar-gutter: stable;
+  }
+
+  .department-menu {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    max-width: none;
+    height: 100dvh;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: white;
+  }
+
+  /*
+    Só com a lista aberta a página continua visível e a sombra separa o painel dela. Ao escolher um
+    departamento o fundo escurece; na saída ele clareia junto com o painel.
+  */
+  .department-menu::backdrop {
+    background: transparent;
+    backdrop-filter: blur(0);
+    transition:
+      background 0.25s ease,
+      backdrop-filter 0.25s ease;
+  }
+
+  .department-menu:has([data-has-detail]):not([data-closing])::backdrop {
+    background: rgb(8 9 17 / 0.7);
+    backdrop-filter: blur(4px);
+  }
+
+  .department-menu-panel {
+    --cut: 14px;
+    --chamfer-fill: #121317;
+    display: flex;
+    width: min(420px, 100%);
+    height: 100%;
+    /* drop-shadow acompanha o recorte chanfrado; box-shadow seria retangular. */
+    filter: drop-shadow(12px 0 32px rgb(0 0 0 / 0.55));
+    transition: translate 0.25s var(--carousel-ease, ease);
+  }
+
+  /*
+    Entrada pelo @starting-style; na saída o componente marca data-closing, o painel volta para a
+    esquerda e só então o <dialog> fecha. Durante a saída a página já volta a rolar e a receber
+    cliques.
+  */
+  @starting-style {
+    .department-menu[open] .department-menu-panel {
+      translate: -100% 0;
+    }
+  }
+
+  .department-menu[data-closing] {
+    pointer-events: none;
+  }
+
+  .department-menu[data-closing] .department-menu-panel {
+    translate: -100% 0;
+  }
+
+  /* Barras de rolagem finas e escuras nos painéis, com o vermelho da marca no hover. */
+  /* O contain impede que a rolagem passe para a página ao chegar no fim da lista. */
+  .department-menu :is(nav, .department-menu-detail > div) {
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: #3a3c44 transparent;
+  }
+
+  .department-menu :is(nav, .department-menu-detail > div):hover {
+    scrollbar-color: var(--color-brand) transparent;
+  }
+
+  /*
+    Celular: um nível por vez; o desktop mostra lista e subcategorias juntas. O display fica aqui,
+    e não em utilitários do Tailwind, que teriam prioridade sobre o display: none abaixo.
+  */
+  .department-menu-list,
+  .department-menu-detail {
+    display: flex;
+    flex-direction: column;
+  }
+
+  @media (width < 1001px) {
+    .department-menu-panel[data-level='list'] .department-menu-detail,
+    .department-menu-panel[data-level='detail'] .department-menu-list {
+      display: none;
+    }
+  }
+
+  /* Desktop: abre só com a lista e cresce para a direita quando um departamento é escolhido. */
+  @media (width >= 1001px) {
+    .department-menu-panel {
+      width: 340px;
+      transition:
+        translate 0.25s var(--carousel-ease, ease),
+        width 0.25s var(--carousel-ease, ease);
+    }
+
+    .department-menu-panel[data-has-detail] {
+      width: min(1000px, 100% - 48px);
+    }
+
+    .department-menu-panel:not([data-has-detail]) .department-menu-detail {
+      display: none;
+    }
+  }
+
+  .department-menu-cta {
+    --chamfer-border: var(--color-brand);
+    --chamfer-fill: #121317;
+  }
+
+  .department-menu-cta:hover {
+    --chamfer-fill: #2a0a10;
+  }
+
   /* Sombra num elemento sem recorte, já que o clip-path também cortaria o box-shadow. */
   .header-glow {
     position: absolute;

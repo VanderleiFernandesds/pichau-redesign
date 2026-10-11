@@ -13,12 +13,12 @@ import {
   Wifi,
   Zap,
 } from 'lucide-react';
-import hardwareImage from '../assets/departamentos/hardware.avif';
-import peripheralsImage from '../assets/departamentos/perifericos.avif';
-import computersImage from '../assets/departamentos/computadores.avif';
-import upgradeKitImage from '../assets/departamentos/kit-upgrade.avif';
-import monitorsImage from '../assets/departamentos/monitores.avif';
-import chairsImage from '../assets/departamentos/cadeiras.avif';
+import hardwareImage from '../assets/images/categories/hardware.avif';
+import peripheralsImage from '../assets/images/categories/perifericos.avif';
+import computersImage from '../assets/images/categories/computadores.avif';
+import upgradeKitImage from '../assets/images/categories/kit-upgrade.avif';
+import monitorsImage from '../assets/images/categories/monitores.avif';
+import chairsImage from '../assets/images/categories/cadeiras.avif';
 
 /*
   Catálogo do menu de departamentos. `productCategory` liga o departamento ao filtro das ofertas

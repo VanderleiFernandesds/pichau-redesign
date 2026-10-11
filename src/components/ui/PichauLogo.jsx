@@ -1,5 +1,5 @@
-import logoLight from '../../assets/logo-pichau.svg';
-import logoDark from '../../assets/logo-pichau-escuro.svg';
+import logoLight from '../../assets/images/logos/logo-pichau.svg';
+import logoDark from '../../assets/images/logos/logo-pichau-escuro.svg';
 
 // As duas versões ficam no HTML e o CSS mostra a do tema atual (theme-dark-only/theme-light-only),
 // então o logo troca junto com o resto da página, sem depender do estado do React.

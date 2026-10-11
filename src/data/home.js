@@ -1,8 +1,8 @@
 import { Gamepad2, Headset, House, ListChecks, PcCase, Settings } from 'lucide-react';
-import pcGamerImage from '../assets/pc-gamer.png';
-import workstationImage from '../assets/workstation.png';
-import homeOfficeImage from '../assets/casa-escritorio.png';
-import buildPcImage from '../assets/monte-seu-pc.png';
+import pcGamerImage from '../assets/images/purposes/pc-gamer.png';
+import workstationImage from '../assets/images/purposes/workstation.png';
+import homeOfficeImage from '../assets/images/purposes/casa-escritorio.png';
+import buildPcImage from '../assets/images/purposes/monte-seu-pc.png';
 
 /*
   Os PNGs têm bastante margem transparente. `imageFrame` marca a área ocupada pelo produto (em px

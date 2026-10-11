@@ -47,6 +47,7 @@ export default function DepartmentMenu({ isOpen, onClose, triggerRef, onOpenDepa
   const panelRef = useRef(null);
   const titleRef = useRef(null);
   const hoverTimerRef = useRef(null);
+  const leaveTimerRef = useRef(null);
   const [query, setQuery] = useState('');
   // Nenhum departamento começa selecionado; sem seleção, o desktop mostra só a lista.
   const [selectedId, setSelectedId] = useState(null);
@@ -109,6 +110,7 @@ export default function DepartmentMenu({ isOpen, onClose, triggerRef, onOpenDepa
   */
   function handleClose() {
     clearTimeout(hoverTimerRef.current);
+    clearTimeout(leaveTimerRef.current);
     delete dialogRef.current.dataset.closing;
     setQuery('');
     setSelectedId(null);
@@ -141,6 +143,19 @@ export default function DepartmentMenu({ isOpen, onClose, triggerRef, onOpenDepa
     clearTimeout(hoverTimerRef.current);
   }
 
+  /*
+    O cursor no fundo (o próprio <dialog>, fora do painel) desfaz a seleção: o painel volta a ser só
+    a lista e o fundo clareia. Voltar ao painel antes da pausa cancela.
+  */
+  function handleDialogPointerOver(event) {
+    if (event.pointerType !== 'mouse' || window.matchMedia(MOBILE_QUERY).matches) return;
+    clearTimeout(leaveTimerRef.current);
+    if (event.target !== dialogRef.current) return;
+
+    clearTimeout(hoverTimerRef.current);
+    leaveTimerRef.current = setTimeout(() => setSelectedId(null), HOVER_DELAY);
+  }
+
   function goBack() {
     setIsDetailOpen(false);
     requestAnimationFrame(() => dialogRef.current.querySelector('[aria-controls="department-detail"][aria-current]')?.focus());
@@ -170,6 +185,7 @@ export default function DepartmentMenu({ isOpen, onClose, triggerRef, onOpenDepa
       onClose={handleClose}
       onCancel={handleCancel}
       onClick={handleDialogClick}
+      onPointerOver={handleDialogPointerOver}
       className="department-menu"
     >
       <div

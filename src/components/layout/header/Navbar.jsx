@@ -1,9 +1,9 @@
-import { Fragment, useEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useRef } from 'react';
 import { ChevronDown, Cpu, Gamepad2, Headset, Menu, Tag, Ticket } from 'lucide-react';
 import DepartmentMenu from './department-menu/DepartmentMenu';
 
 // No mobile a lista rola dentro do painel, então o foco é desenhado para dentro para não ser cortado.
-// No desktop cada item ganha uma moldura chanfrada (nav-frame), que também marca o item ativo.
+// No desktop cada item ganha uma moldura chanfrada (nav-frame), que fica vermelha no hover.
 const navItemClass =
   'nav-item relative isolate flex min-h-11 w-full items-center gap-2 px-3 text-[13px] transition-colors hover:text-brand focus-visible:-outline-offset-3 lg:h-16 lg:whitespace-nowrap lg:after:hidden lg:focus-visible:outline-offset-4';
 const centeredItemClass = 'lg:justify-center lg:px-4';
@@ -21,17 +21,7 @@ export default function Navbar({
   onCoupon,
   onDepartmentUnavailable,
 }) {
-  const [currentHash, setCurrentHash] = useState(() => window.location.hash);
   const departmentsButtonRef = useRef(null);
-
-  useEffect(() => {
-    function handleHashChange() {
-      setCurrentHash(window.location.hash);
-    }
-
-    window.addEventListener('hashchange', handleHashChange);
-    return () => window.removeEventListener('hashchange', handleHashChange);
-  }, []);
 
   // Com o menu de departamentos aberto, o Esc é do <dialog> dele; a lista do mobile continua aberta por baixo.
   useEffect(() => {
@@ -60,15 +50,16 @@ export default function Navbar({
     else onDepartmentUnavailable();
   }
 
+  /*
+    Os links levam a seções da mesma página, sem estado de "atual": marcar pelo #hash deixava o link
+    vermelho mesmo depois de rolar para outra seção.
+  */
   function renderSectionLink(href, label, Icon) {
-    const isActive = currentHash === href;
-
     return (
       <a
         href={href}
         onClick={closeList}
-        aria-current={isActive ? 'location' : undefined}
-        className={`${navItemClass} ${centeredItemClass} ${isActive ? activeClass : 'text-white/90'}`}
+        className={`${navItemClass} ${centeredItemClass} text-white/90`}
       >
         <span aria-hidden="true" className={`${frameClass} chamfer-field`} />
         <Icon aria-hidden="true" className={iconClass} />

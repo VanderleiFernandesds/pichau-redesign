@@ -12,7 +12,7 @@ const linkClass = 'inline-flex items-center gap-1 py-1.5 text-[14px] underline-o
 
 export default function Footer() {
   return (
-    <footer id="support" className="bg-ink text-[#c3c5cd]">
+    <footer id="support" className="border-t border-line bg-ink text-[#c3c5cd]">
       <div className="wrap grid gap-10 pt-12 pb-10 sm:grid-cols-2 sm:gap-x-12 sm:pt-14 lg:grid-cols-[minmax(0,1fr)_auto_auto] lg:gap-x-20">
         <div className="sm:col-span-2 lg:col-span-1">
           <a href="./" aria-label="Pichau início" className="inline-block">

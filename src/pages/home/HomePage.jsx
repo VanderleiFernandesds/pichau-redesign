@@ -10,6 +10,7 @@ import EmptyState from '../../components/ui/EmptyState';
 import Toast from '../../components/ui/Toast';
 import Hero from './Hero';
 import PurposeCards from './PurposeCards';
+import DepartmentShowcase from './DepartmentShowcase';
 import OfferTabs from './OfferTabs';
 import BuilderBanner from './BuilderBanner';
 import Benefits from './Benefits';
@@ -58,6 +59,12 @@ export default function HomePage() {
     scrollToOffers();
   }
 
+  // Departamentos com produtos filtram as ofertas; os demais ainda não existem na loja conceito.
+  function openDepartment(department) {
+    if (department.productCategory) filterByCategory(department.productCategory);
+    else toast.showToast('Conceito demonstrativo: departamento ainda sem produtos.');
+  }
+
   function resetFilters() {
     setQuery('');
     filterByCategory(ALL_CATEGORIES);
@@ -84,7 +91,7 @@ export default function HomePage() {
     <>
       <a
         href="#main"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-2.5 focus:left-2.5 focus:z-[100] focus:bg-white focus:p-[15px]"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-2.5 focus:left-2.5 focus:z-[100] focus:bg-white focus:p-[15px] focus:text-ink"
       >
         Pular para o conteúdo
       </a>
@@ -107,16 +114,16 @@ export default function HomePage() {
           onMenuOpenChange={setIsMenuOpen}
           isNavOpen={isNavOpen}
           onNavOpenChange={setIsNavOpen}
-          onFilter={filterByCategory}
           onCoupon={() => toast.showToast('Conceito demonstrativo: nenhum cupom real disponível.')}
-          onDepartmentUnavailable={() => toast.showToast('Conceito demonstrativo: departamento ainda sem produtos.')}
+          onOpenDepartment={openDepartment}
         />
       </SiteHeader>
 
-      <main id="main" className="bg-white">
+      <main id="main">
         <Hero onFilter={filterByCategory}>
           <PurposeCards onFilter={filterByCategory} />
         </Hero>
+        <DepartmentShowcase onOpenDepartment={openDepartment} onShowAll={() => setIsMenuOpen(true)} />
         <div className="wrap pt-7 sm:pt-11">
 
           <ProductSection

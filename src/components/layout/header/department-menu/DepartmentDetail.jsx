@@ -1,5 +1,5 @@
 import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
-import DepartmentLink from './DepartmentLink';
+import DepartmentLink from '../../../ui/DepartmentLink';
 
 /*
   Subcategorias do departamento selecionado. No desktop é o painel da direita, ao lado da lista;

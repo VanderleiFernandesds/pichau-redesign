@@ -18,9 +18,12 @@
   --color-brand: #ed0024;
   /* Preto da marca: fundos escuros, texto principal e as fusões dos degradês com o fundo do hero. */
   --color-ink: #191a1f;
-  --color-success: #008c35;
-  --color-muted: #656a73;
-  --color-line: #e8e9ed;
+  /* Tema escuro: verde, cinza e linhas ajustados para contraste sobre o grafite. */
+  --color-success: #2fcf6f;
+  --color-muted: #9ca1aa;
+  --color-line: #2c2e35;
+  /* Superfície dos cards e painéis sobre o fundo da página. */
+  --color-surface: #121317;
 }
 
 /*
@@ -58,17 +61,17 @@
 @layer base {
   /* O preflight usa line-height 1.5; o layout original foi feito com o valor padrão do navegador. */
   html {
+    color-scheme: dark;
     line-height: normal;
     scroll-behavior: smooth;
     scroll-padding-top: var(--header-offset);
   }
 
   /*
-    O fundo da página é o grafite do header e do rodapé; o branco das seções vem do <main>. Assim
-    o que aparece quando o site se desloca (menu de departamentos) ou no overscroll é escuro.
+    Site inteiro no tema escuro: o fundo é o grafite do header e do rodapé, e o texto é claro.
   */
   body {
-    color: var(--color-ink);
+    color: #e9eaee;
     background: var(--color-ink);
   }
 
@@ -259,6 +262,17 @@
 
 .hero-arrow:hover {
   --chamfer-border: var(--color-brand);
+}
+
+/* Setas do carrossel "Na Pichau Tem!": as mesmas do hero, desabilitadas nas pontas da trilha. */
+.showcase-arrow {
+  --arrow-size: 40px;
+}
+
+.showcase-arrow:disabled {
+  --chamfer-border: #34363d;
+  cursor: default;
+  opacity: 0.4;
 }
 
 @media (width >= 1001px) {
@@ -1126,6 +1140,83 @@
 
   .department-menu-cta:hover {
     --chamfer-fill: #2a0a10;
+  }
+
+  /*
+    Carrossel "Na Pichau Tem!". --cards é quantos cabem na largura: fracionado no celular, para o
+    próximo card aparecer cortado e indicar que dá para deslizar; cinco ou seis inteiros no desktop.
+  */
+  .department-showcase-track {
+    --cards: 2.3;
+    --gap: 12px;
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: calc((100% - (var(--cards) - 1) * var(--gap)) / var(--cards));
+    gap: var(--gap);
+    /* Espaço para o brilho do hover, que o overflow cortaria; a margem negativa compensa no layout. */
+    margin-block: -10px;
+    padding-block: 10px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  /* Celulares bem estreitos: menos cards, para "Computadores" caber numa linha. */
+  @media (width < 360px) {
+    .department-showcase-track {
+      --cards: 1.7;
+    }
+  }
+
+  @media (width >= 601px) {
+    .department-showcase-track {
+      --cards: 3.4;
+      --gap: 16px;
+    }
+  }
+
+  @media (width >= 768px) {
+    .department-showcase-track {
+      --cards: 4.4;
+    }
+  }
+
+  /* Seis por vez só a partir de 1280px: abaixo disso o card fica estreito para nome e seta lado a lado. */
+  @media (width >= 1001px) {
+    .department-showcase-track {
+      --cards: 5;
+    }
+  }
+
+  @media (width >= 1280px) {
+    .department-showcase-track {
+      --cards: 6;
+    }
+  }
+
+  .department-showcase-track > li {
+    scroll-snap-align: start;
+  }
+
+  /* Card no padrão do purpose-card (chanfro, cantos e brilho); aqui só o miolo e o foco. */
+  .department-card {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    padding: 16px 12px 14px;
+  }
+
+  /*
+    O foco usa o destaque do próprio purpose-card (borda chanfrada vermelha e brilho), que segue o
+    recorte; o outline padrão seria retangular e, por fora, a trilha o cortaria.
+  */
+  .department-card:focus-visible {
+    outline: none;
+  }
+
+  .department-card:is(:hover, :focus-visible) .purpose-card-arrow {
+    color: var(--color-brand);
   }
 
   /* Sombra num elemento sem recorte, já que o clip-path também cortaria o box-shadow. */

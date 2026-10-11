@@ -13,7 +13,7 @@ export default function ConfigModal({ isOpen, onClose, onSelectGoal }) {
             key={label}
             type="button"
             onClick={() => onSelectGoal(category)}
-            className="flex items-center gap-2.5 rounded-[5px] bg-[#f2f3f5] p-5 text-left hover:bg-[#ffe5e9]"
+            className="flex items-center gap-2.5 rounded-[5px] border border-line bg-white/5 p-5 text-left transition-colors hover:border-brand/60 hover:bg-brand/10"
           >
             <Icon aria-hidden="true" className="size-5" />
             {label}

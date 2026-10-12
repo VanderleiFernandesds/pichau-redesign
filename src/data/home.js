@@ -1,4 +1,4 @@
-import { Gamepad2, Headset, House, ListChecks, PcCase, Settings } from 'lucide-react';
+import { Gamepad2, House, Settings } from 'lucide-react';
 import pcGamerImage from '../assets/images/purposes/pc-gamer.png';
 import workstationImage from '../assets/images/purposes/workstation.png';
 import homeOfficeImage from '../assets/images/purposes/casa-escritorio.png';
@@ -50,10 +50,4 @@ export const BUILDER_GOALS = [
   { label: 'Jogos e performance', category: 'Hardware', icon: Gamepad2 },
   { label: 'Trabalho e criação', category: 'Hardware', icon: Settings },
   { label: 'Casa e escritório', category: 'Monitores', icon: House },
-];
-
-export const BENEFITS = [
-  { icon: PcCase, title: 'Seu setup completo', description: 'Hardware e periféricos em um lugar' },
-  { icon: ListChecks, title: 'Escolha com clareza', description: 'Especificações fáceis de comparar' },
-  { icon: Headset, title: 'Precisa de ajuda?', description: 'Encontre os canais oficiais' },
 ];

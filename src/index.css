@@ -1011,6 +1011,19 @@ html[data-theme='light'] .theme-dark-only {
   }
 
   /* A moldura do Departamentos responde ao botão inteiro, que é mais alto que ela. */
+  /*
+    Carrinho com produtos. Verdes mais escuros que --color-success, para o texto branco manter
+    contraste.
+  */
+  .chamfer-success {
+    --chamfer-border: #3ddc7a;
+    --chamfer-fill: linear-gradient(180deg, #168a3d, #0c652b);
+  }
+
+  .chamfer-success:hover {
+    --chamfer-fill: linear-gradient(180deg, #1a9a45, #0e7331);
+  }
+
   .chamfer-accent:hover,
   .nav-departments:hover .chamfer-accent,
   .nav-departments[aria-expanded='true'] .chamfer-accent {

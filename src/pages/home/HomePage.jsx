@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 import Header from '../../components/layout/header/Header';
 import Navbar from '../../components/layout/header/Navbar';
 import SiteHeader from '../../components/layout/header/SiteHeader';
-import Footer from '../../components/layout/Footer';
+import Footer from '../../components/layout/footer/Footer';
 import ProductSection from '../../components/products/ProductSection';
 import CartDrawer from '../../components/cart/CartDrawer';
 import EmptyState from '../../components/ui/EmptyState';
@@ -13,6 +13,7 @@ import DepartmentShowcase from './DepartmentShowcase';
 import BuilderBanner from './BuilderBanner';
 import Benefits from './Benefits';
 import ConfigModal from './ConfigModal';
+import HelpCenterModal from '../../components/help/HelpCenterModal';
 import { products } from '../../data/products';
 import { ALL_CATEGORIES } from '../../data/categories';
 import { useCart } from '../../hooks/useCart';
@@ -36,6 +37,8 @@ export default function HomePage() {
   const [isNavOpen, setIsNavOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isConfigOpen, setIsConfigOpen] = useState(false);
+  // topicId leva a Central de ajuda direto a um tópico; sem ele, ela abre do começo.
+  const [help, setHelp] = useState({ isOpen: false, topicId: null });
   const [otherVisibleCount, setOtherVisibleCount] = useState(OTHER_PAGE_SIZE);
   const offersRef = useRef(null);
 
@@ -193,7 +196,11 @@ export default function HomePage() {
         </div>
       </main>
 
-      <Footer />
+      <Footer
+        onOpenHelp={(topicId = null) => setHelp({ isOpen: true, topicId })}
+        onOpenDepartment={openDepartment}
+        onShowAllDepartments={() => setIsMenuOpen(true)}
+      />
 
       <CartDrawer
         isOpen={isCartOpen}
@@ -205,6 +212,11 @@ export default function HomePage() {
         onClear={cart.clearCart}
       />
       <ConfigModal isOpen={isConfigOpen} onClose={() => setIsConfigOpen(false)} onSelectGoal={selectGoal} />
+      <HelpCenterModal
+        isOpen={help.isOpen}
+        topicId={help.topicId}
+        onClose={() => setHelp((current) => ({ ...current, isOpen: false }))}
+      />
       <Toast message={toast.message} isVisible={toast.isVisible} />
     </>
   );

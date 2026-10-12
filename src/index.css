@@ -129,6 +129,11 @@ html[data-theme='light'] .theme-dark-only {
     line-height: normal;
     scroll-behavior: smooth;
     scroll-padding-top: var(--header-offset);
+    /*
+      Espaço da barra de rolagem sempre reservado: ao travar a rolagem (menu de departamentos e
+      carrinho) a barra some, e sem isso a página alarga e o layout pula.
+    */
+    scrollbar-gutter: stable;
   }
 
   html[data-theme='light'] {
@@ -1087,11 +1092,10 @@ html[data-theme='light'] .theme-dark-only {
   /*
     Menu de departamentos. O <dialog> cobre a tela (o clique fora do painel cai nele) e o painel
     encosta à esquerda. Só com a lista a página continua rolando; com um departamento escolhido
-    ela trava. O scrollbar-gutter mantém o espaço da barra para o layout não pular.
+    ela trava.
   */
   :root:has(.department-menu[open]:not([data-closing]) [data-has-detail]) {
     overflow: hidden;
-    scrollbar-gutter: stable;
   }
 
   .department-menu {
@@ -1153,6 +1157,85 @@ html[data-theme='light'] .theme-dark-only {
 
   .department-menu[data-closing] .department-menu-panel {
     translate: -100% 0;
+  }
+
+  /*
+    Carrinho: o mesmo painel do menu de departamentos, espelhado (entra pela direita). Com ele
+    aberto a página trava e o fundo escurece.
+  */
+  :root:has(.cart-drawer[open]:not([data-closing])) {
+    overflow: hidden;
+  }
+
+  /*
+    Largura em 100%, e não em vw: conforme o navegador, 100vw inclui o espaço da barra de rolagem
+    e o <dialog> passaria da tela, criando rolagem horizontal. Com a página travada, esse espaço fica
+    só com o fundo escurecido.
+  */
+  .cart-drawer {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    max-width: none;
+    height: 100dvh;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    /* O painel sai pela direita ao abrir e fechar; sem isso o <dialog> ganharia rolagem horizontal. */
+    overflow: hidden;
+    background: transparent;
+    color: var(--color-text);
+  }
+
+  .cart-drawer::backdrop {
+    background: rgb(8 9 17 / 0.7);
+    backdrop-filter: blur(4px);
+    transition:
+      background 0.25s ease,
+      backdrop-filter 0.25s ease;
+  }
+
+  .cart-drawer[data-closing] {
+    pointer-events: none;
+  }
+
+  .cart-drawer[data-closing]::backdrop {
+    background: transparent;
+    backdrop-filter: blur(0);
+  }
+
+  .cart-drawer-panel {
+    --cut: 14px;
+    --chamfer-fill: var(--color-surface);
+    display: flex;
+    flex-direction: column;
+    width: min(420px, 100%);
+    height: 100%;
+    margin-left: auto;
+    filter: drop-shadow(-12px 0 32px rgb(0 0 0 / 0.55));
+    transition: translate 0.25s var(--carousel-ease, ease);
+  }
+
+  @starting-style {
+    .cart-drawer[open] .cart-drawer-panel {
+      translate: 100% 0;
+    }
+
+    .cart-drawer[open]::backdrop {
+      background: transparent;
+      backdrop-filter: blur(0);
+    }
+  }
+
+  .cart-drawer[data-closing] .cart-drawer-panel {
+    translate: 100% 0;
+  }
+
+  .cart-drawer-list {
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar) transparent;
   }
 
   /* Barras de rolagem finas e escuras nos painéis, com o vermelho da marca no hover. */

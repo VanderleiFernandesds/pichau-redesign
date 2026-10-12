@@ -1457,6 +1457,26 @@ html[data-theme='light'] .theme-dark-only {
     --chamfer-fill: var(--color-surface);
   }
 
+  /* Botão secundário com contorno vermelho (ex.: "Ver loja"); o fundo avermelha no hover. */
+  .chamfer-outline {
+    --chamfer-border: var(--color-brand);
+    --chamfer-fill: var(--color-surface);
+    transition: color 150ms;
+  }
+
+  .chamfer-outline:hover {
+    --chamfer-fill: color-mix(in srgb, var(--color-brand) 14%, var(--color-surface));
+  }
+
+  /* Banner Pichau Empresas: brilho vermelho atrás dos equipamentos, à esquerda. */
+  .business-banner {
+    --chamfer-fill: radial-gradient(ellipse 60% 120% at 25% 100%, #4c0816, var(--color-surface) 70%);
+  }
+
+  html[data-theme='light'] .business-banner {
+    --chamfer-fill: radial-gradient(ellipse 60% 120% at 25% 100%, #ffd3da, var(--color-surface) 70%);
+  }
+
   /* Traço diagonal vermelho antes dos títulos do footer. */
   .slash-accent {
     display: inline-block;

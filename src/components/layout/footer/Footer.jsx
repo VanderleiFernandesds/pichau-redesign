@@ -1,11 +1,13 @@
-import { ArrowRight, ArrowUpRight, ChevronUp } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, ChevronUp, Headset, MapPin } from 'lucide-react';
 import PichauLogo from '../../ui/PichauLogo';
 import BrandIcon from '../../ui/BrandIcon';
 import DepartmentLink from '../../ui/DepartmentLink';
 import FooterLinkGroup, { footerHeadingClass } from './FooterLinkGroup';
 import NewsletterForm from './NewsletterForm';
 import PaymentMethods from './PaymentMethods';
-import { AUTHOR, FOOTER_DEPARTMENTS, HELP_TOPICS, SOCIAL_LINKS } from '../../../data/footer';
+import ContactPanel from './ContactPanel';
+import BusinessBanner from './BusinessBanner';
+import { AUTHOR, FOOTER_DEPARTMENTS, HELP_TOPICS, OFFICIAL_SUPPORT, SOCIAL_LINKS } from '../../../data/footer';
 
 const linkBaseClass = 'inline-flex min-h-10 items-center gap-2 text-[15px] underline-offset-4 transition-colors hover:underline';
 const linkClass = `${linkBaseClass} text-soft hover:text-heading`;
@@ -13,8 +15,9 @@ const externalLinkClass =
   'inline-flex min-h-11 items-center gap-1.5 text-[15px] font-semibold text-heading underline-offset-4 transition-colors hover:text-brand hover:underline';
 
 /*
-  Footer em três painéis chanfrados: ajuda, conteúdo principal (marca, links, newsletter e
-  pagamentos) e o aviso do projeto. O id "support" é o destino do "Atendimento" da navegação.
+  Footer: ajuda e atendimento oficial (com o banner Pichau Empresas), o painel principal (marca,
+  links, newsletter e pagamentos) e o aviso do projeto. O id "support" é o destino do
+  "Atendimento" da navegação.
 */
 export default function Footer({ onOpenHelp, onOpenDepartment, onShowAllDepartments }) {
   // Volta ao topo e leva o foco ao logo do header, para o teclado continuar do começo da página.
@@ -26,23 +29,57 @@ export default function Footer({ onOpenHelp, onOpenDepartment, onShowAllDepartme
   return (
     <footer id="support" className="bg-footer pt-8 pb-6 text-soft sm:pt-12 sm:pb-8">
       <div className="wrap flex flex-col gap-3 sm:gap-4">
-        <section
-          aria-labelledby="footer-help"
-          className="chamfer footer-panel flex flex-col gap-4 p-5 sm:p-6 lg:flex-row lg:items-center lg:gap-8 lg:px-8"
-        >
-          <h2 id="footer-help" className={`${footerHeadingClass} text-[22px] sm:text-[26px]`}>
-            <span aria-hidden="true" className="slash-accent" />
-            Precisa de ajuda?
-          </h2>
-          <p className="text-[15px] lg:border-l lg:border-line lg:pl-8">Encontre respostas sobre compras e produtos.</p>
-          <button
-            type="button"
-            onClick={() => onOpenHelp()}
-            className="chamfer chamfer-accent flex h-12 items-center justify-center gap-3 px-6 text-[14px] font-bold tracking-[0.5px] text-white uppercase lg:ml-auto"
-          >
-            Central de ajuda
-            <ArrowRight aria-hidden="true" className="size-4.5" />
-          </button>
+        {/*
+          Ajuda e atendimento numa seção só: os canais oficiais da Pichau e, para o que é simulado
+          aqui, a Central de ajuda do projeto. Evita repetir "Precisa de ajuda?" em dois lugares.
+        */}
+        <section aria-labelledby="footer-help" className="flex flex-col gap-3 sm:gap-4">
+          <div className="flex flex-col gap-4 pb-1 lg:flex-row lg:items-end lg:justify-between lg:gap-8">
+            <div>
+              <h2 id="footer-help" className={`${footerHeadingClass} text-[24px] sm:text-[28px]`}>
+                <span aria-hidden="true" className="slash-accent" />
+                Precisa de ajuda?
+              </h2>
+              <p className="mt-2 max-w-[62ch] text-[15px] leading-relaxed">
+                Fale com a Pichau pelos canais oficiais abaixo. Para saber o que é simulado neste projeto, abra a Central de
+                ajuda.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => onOpenHelp()}
+              className="chamfer chip-button flex h-12 shrink-0 items-center justify-center gap-3 px-6 text-[14px] font-bold tracking-[0.5px] text-heading uppercase"
+            >
+              Central de ajuda
+              <ArrowRight aria-hidden="true" className="size-4.5" />
+            </button>
+          </div>
+
+          <div className="grid gap-3 sm:gap-4 lg:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)]">
+            <ContactPanel icon={Headset} {...OFFICIAL_SUPPORT.online} />
+            <ContactPanel
+              icon={MapPin}
+              {...OFFICIAL_SUPPORT.store}
+              action={
+                <a
+                  href={OFFICIAL_SUPPORT.store.pageUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="chamfer chamfer-outline flex h-11 items-center gap-2 px-5 text-[14px] font-bold text-heading"
+                >
+                  Ver loja
+                  <ArrowUpRight aria-hidden="true" className="size-4.5" />
+                  <span className="sr-only"> física da Pichau (abre em nova aba)</span>
+                </a>
+              }
+            />
+          </div>
+
+          <BusinessBanner />
+
+          <p className="text-center text-[13px] text-soft">
+            Referência à loja oficial. Este projeto não oferece atendimento ou vendas.
+          </p>
         </section>
 
         <div className="chamfer footer-panel px-5 pt-6 pb-6 sm:px-8 sm:pt-8">

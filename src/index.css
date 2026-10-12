@@ -1003,13 +1003,20 @@ html[data-theme='light'] .theme-dark-only {
     background: var(--chamfer-fill);
   }
 
-  .chamfer-field:hover,
-  .chamfer-field:focus-within {
-    --chamfer-border: var(--color-brand);
+  /*
+    Só com mouse: no toque o :hover fica preso depois do toque. E :focus-visible em vez de
+    :focus-within, porque botões (menu, tema) ganham foco no clique e ficariam vermelhos até o
+    próximo clique fora; campos de texto casam com :focus-visible mesmo focados pelo mouse.
+  */
+  @media (hover: hover) {
+    .chamfer-field:hover {
+      --chamfer-border: var(--color-brand);
+    }
   }
 
-  /* Um pouco mais claro que o preto da marca, para o campo ativo se destacar além da borda. */
-  .chamfer-field:focus-within {
+  /* O fundo um pouco mais claro destaca o campo ativo além da borda. */
+  .chamfer-field:is(:focus-visible, :has(:focus-visible)) {
+    --chamfer-border: var(--color-brand);
     --chamfer-fill: var(--field-fill-focus);
   }
 
@@ -1038,28 +1045,21 @@ html[data-theme='light'] .theme-dark-only {
     --chamfer-fill: linear-gradient(180deg, #ff2a44, #bf001e);
   }
 
+  /*
+    Contorno cinza discreto; o vermelho fica só nos traços dos cantos chanfrados. --header-control
+    é a altura dos botões da primeira linha, a mesma área de toque em qualquer celular.
+  */
   .header-bar {
     --bar-cut: 12px;
     --cut: var(--bar-cut);
-    --chamfer-border: #c8001f;
+    --chamfer-border: var(--field-border);
     --chamfer-fill: var(--panel-fill);
-    /*
-      Botões da primeira linha (tema, conta, favoritos e carrinho). Em celulares estreitos encolhem
-      para o logo, o tema e as ações caberem numa linha só.
-    */
     --header-control: 44px;
   }
 
-  @media (width < 414px) {
-    .header-bar {
-      --header-control: 40px;
-    }
-  }
-
-  @media (width < 390px) {
-    .header-bar {
-      --header-control: 36px;
-    }
+  /* O painel tem traços nos quatro cantos: a segunda camada espelha a dos cards na horizontal. */
+  .corner-accents-mirrored {
+    scale: -1 1;
   }
 
   /*
@@ -1080,10 +1080,9 @@ html[data-theme='light'] .theme-dark-only {
   }
 
   /*
-    Molduras da navegação (só desktop), com a mesma folga do carrinho. Cada uma ocupa a largura
-    do item e fica com a folga em cima e embaixo (itens de 64px). O primeiro e o último itens
-    avançam sobre a margem da nav (-ml-3/-mr-3 contra lg:mx-6) até a folga dos cantos, onde o
-    chanfro fica paralelo ao do painel; os do meio usam o mesmo chanfro.
+    Moldura vermelha do Departamentos (só desktop), com a mesma folga do carrinho: ocupa a largura
+    do item com a folga em cima e embaixo (item de 64px). O item avança sobre a margem da nav
+    (-ml-3 contra lg:mx-6) até a folga do canto, onde o chanfro fica paralelo ao do painel.
   */
   .nav-frame {
     --nav-gap: 12px;
@@ -1091,18 +1090,6 @@ html[data-theme='light'] .theme-dark-only {
     position: absolute;
     inset: var(--nav-gap) 0;
     z-index: -1;
-  }
-
-  /* Conta e favoritos já têm a altura da moldura (48px, como o carrinho). */
-  .header-action .nav-frame {
-    inset: 0;
-  }
-
-  /* A moldura responde ao item inteiro, que na navegação é mais alto que ela. */
-  .nav-item:hover .nav-frame.chamfer-field,
-  .header-action:hover .nav-frame.chamfer-field,
-  .header-action[aria-pressed='true'] .nav-frame.chamfer-field {
-    --chamfer-border: var(--color-brand);
   }
 
   .header-bar :focus-visible {
@@ -1581,28 +1568,12 @@ html[data-theme='light'] .theme-dark-only {
     inset: 30% 3% 0;
     z-index: -2;
     border-radius: 50%;
-    box-shadow:
-      0 12px 32px var(--header-shadow),
-      0 8px 24px #ed002426;
-  }
-
-  .header-slash {
-    display: none;
-    width: 2px;
-    height: 22px;
-    flex-shrink: 0;
-    background: var(--color-brand);
-    box-shadow: 0 0 6px #ed002480;
-    transform: skewX(-20deg);
+    box-shadow: 0 12px 32px var(--header-shadow);
   }
 
   @media (width >= 1001px) {
     .header-bar {
       --cut: 16px;
-    }
-
-    .header-slash {
-      display: block;
     }
   }
 

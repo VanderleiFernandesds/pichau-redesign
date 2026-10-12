@@ -9,6 +9,8 @@ export default function SiteHeader({ children }) {
       <div className="wrap">
         <div className="chamfer header-bar pointer-events-auto">
           <span aria-hidden="true" className="header-glow" />
+          <span aria-hidden="true" className="corner-accents" />
+          <span aria-hidden="true" className="corner-accents corner-accents-mirrored" />
           {children}
         </div>
       </div>

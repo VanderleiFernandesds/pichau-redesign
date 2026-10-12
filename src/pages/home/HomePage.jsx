@@ -55,6 +55,10 @@ export default function HomePage() {
   );
   const hasActiveFilter = normalizedQuery !== '' || category !== ALL_CATEGORIES || isFavoriteOnly;
 
+  function showAccountNotice() {
+    toast.showToast('Conceito demonstrativo: área do cliente indisponível.');
+  }
+
   function scrollToOffers() {
     offersRef.current?.scrollIntoView({ behavior: 'smooth' });
   }
@@ -114,7 +118,7 @@ export default function HomePage() {
           onSearch={scrollToOffers}
           isNavOpen={isNavOpen}
           onNavOpenChange={setIsNavOpen}
-          onAccount={() => toast.showToast('Conceito demonstrativo: área do cliente indisponível.')}
+          onAccount={showAccountNotice}
           isFavoriteOnly={isFavoriteOnly}
           onToggleFavorites={toggleFavoriteOnly}
           favoriteCount={favorites.length}
@@ -129,6 +133,9 @@ export default function HomePage() {
           isNavOpen={isNavOpen}
           onNavOpenChange={setIsNavOpen}
           onCoupon={() => toast.showToast('Conceito demonstrativo: nenhum cupom real disponível.')}
+          onAccount={showAccountNotice}
+          theme={theme}
+          onToggleTheme={toggleTheme}
           onOpenDepartment={openDepartment}
         />
       </SiteHeader>

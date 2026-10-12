@@ -1,16 +1,24 @@
-import { Fragment, useEffect, useRef } from 'react';
-import { ChevronDown, Cpu, Gamepad2, Headset, Menu, Tag, Ticket } from 'lucide-react';
+import { useEffect, useRef } from 'react';
+import { ChevronDown, Cpu, Gamepad2, Headset, Menu, Moon, Sun, Tag, Ticket, User } from 'lucide-react';
 import DepartmentMenu from './department-menu/DepartmentMenu';
+import { useActiveSection } from '../../../hooks/useActiveSection';
 
 // No mobile a lista rola dentro do painel, então o foco é desenhado para dentro para não ser cortado.
-// No desktop cada item ganha uma moldura chanfrada (nav-frame), que fica vermelha no hover.
 const navItemClass =
-  'nav-item relative isolate flex min-h-11 w-full items-center gap-2 px-3 text-[13px] transition-colors hover:text-brand focus-visible:-outline-offset-3 lg:h-16 lg:whitespace-nowrap lg:after:hidden lg:focus-visible:outline-offset-4';
+  'relative isolate flex min-h-11 w-full items-center gap-2 px-3 text-[13px] transition-colors hover:text-brand focus-visible:-outline-offset-3 lg:h-16 lg:whitespace-nowrap lg:focus-visible:outline-offset-4';
 const centeredItemClass = 'lg:justify-center lg:px-4';
-const frameClass = 'chamfer nav-frame hidden lg:block';
+// Traço vermelho à esquerda no mobile e embaixo no desktop, sem moldura, para não pesar na linha.
 const activeClass =
-  'text-brand after:absolute after:inset-y-2 after:left-0 after:w-0.5 after:bg-brand lg:after:inset-x-0 lg:after:top-auto lg:after:bottom-0 lg:after:h-0.5 lg:after:w-auto';
+  'text-brand after:absolute after:inset-y-2 after:left-0 after:w-0.5 after:bg-brand lg:after:top-auto lg:after:bottom-3 lg:after:left-1/2 lg:after:h-0.5 lg:after:w-12 lg:after:-translate-x-1/2';
 const iconClass = 'size-5';
+
+const SECTION_LINKS = [
+  { href: '#builder', label: 'Monte seu PC', Icon: Cpu },
+  { href: '#offers', label: 'Ofertas', Icon: Tag },
+  { href: '#choose', label: 'PCs gamers', Icon: Gamepad2 },
+  { href: '#support', label: 'Atendimento', Icon: Headset },
+];
+const SECTION_IDS = SECTION_LINKS.map(({ href }) => href.slice(1));
 
 export default function Navbar({
   isMenuOpen,
@@ -18,9 +26,14 @@ export default function Navbar({
   isNavOpen,
   onNavOpenChange,
   onCoupon,
+  onAccount,
+  theme,
+  onToggleTheme,
   onOpenDepartment,
 }) {
   const departmentsButtonRef = useRef(null);
+  const activeSectionId = useActiveSection(SECTION_IDS);
+  const isDark = theme === 'dark';
 
   // Com o menu de departamentos aberto, o Esc é do <dialog> dele; a lista do mobile continua aberta por baixo.
   useEffect(() => {
@@ -48,23 +61,23 @@ export default function Navbar({
     onOpenDepartment(department);
   }
 
-  /*
-    Os links levam a seções da mesma página, sem estado de "atual": marcar pelo #hash deixava o link
-    vermelho mesmo depois de rolar para outra seção.
-  */
-  function renderSectionLink(href, label, Icon) {
+  function renderSectionLink({ href, label, Icon }) {
+    const isActive = activeSectionId === href.slice(1);
+
     return (
       <a
         href={href}
         onClick={closeList}
-        className={`${navItemClass} ${centeredItemClass} text-text`}
+        aria-current={isActive ? 'location' : undefined}
+        className={`${navItemClass} ${centeredItemClass} ${isActive ? activeClass : 'text-text'}`}
       >
-        <span aria-hidden="true" className={`${frameClass} chamfer-field`} />
         <Icon aria-hidden="true" className={iconClass} />
         {label}
       </a>
     );
   }
+
+  const [builderLink, offersLink, ...otherLinks] = SECTION_LINKS;
 
   const navItems = [
     <button
@@ -72,20 +85,20 @@ export default function Navbar({
       // No desktop o botão é vermelho como o carrinho: o texto fica branco em todos os estados e o
       // menu aberto clareia a moldura. O conteúdo fica à esquerda, e o pl-3 soma-se aos 12px da
       // moldura até o contorno para o ícone alinhar com o logo e o conteúdo da página.
-      className={`nav-departments ${navItemClass} lg:pr-4 lg:pl-3 lg:font-semibold lg:text-white lg:hover:text-white ${isMenuOpen ? activeClass : 'text-text'}`}
+      className={`nav-departments ${navItemClass} lg:pr-4 lg:pl-3 lg:font-semibold lg:text-white lg:hover:text-white lg:after:hidden ${isMenuOpen ? activeClass : 'text-text'}`}
       ref={departmentsButtonRef}
       aria-haspopup="dialog"
       aria-expanded={isMenuOpen}
       aria-controls="department-menu"
       onClick={() => onMenuOpenChange(true)}
     >
-      <span aria-hidden="true" className={`${frameClass} chamfer-accent`} />
+      <span aria-hidden="true" className="chamfer chamfer-accent nav-frame hidden lg:block" />
       <Menu aria-hidden="true" className={iconClass} />
       Departamentos
       <ChevronDown aria-hidden="true" className={`size-4 transition-transform ${isMenuOpen ? 'rotate-180' : ''}`} />
     </button>,
-    renderSectionLink('#builder', 'Monte seu PC', Cpu),
-    renderSectionLink('#offers', 'Ofertas', Tag),
+    renderSectionLink(builderLink),
+    renderSectionLink(offersLink),
     <button
       type="button"
       className={`${navItemClass} ${centeredItemClass} text-text`}
@@ -94,35 +107,50 @@ export default function Navbar({
         closeList();
       }}
     >
-      <span aria-hidden="true" className={`${frameClass} chamfer-field`} />
       <Ticket aria-hidden="true" className={iconClass} />
       Cupons
     </button>,
-    renderSectionLink('#choose', 'PCs gamers', Gamepad2),
-    renderSectionLink('#support', 'Atendimento', Headset),
+    ...otherLinks.map(renderSectionLink),
   ];
 
   return (
-    // Abaixo de 1001px a lista abre pelo botão de menu do Header, ao lado da busca.
+    // Abaixo de 1001px a lista abre pelo botão de menu do Header.
     <nav aria-label="Navegação principal" className="relative mx-3 sm:mx-4 lg:mx-6 lg:border-t lg:border-line">
       {/* A altura máxima impede que o painel sticky passe da tela em celulares na horizontal. */}
       <ul
         id="main-nav-list"
         className={`${isNavOpen ? 'flex' : 'hidden'} max-h-[calc(100dvh-170px)] flex-col overflow-y-auto border-t border-line py-1 lg:flex lg:max-h-none lg:flex-row lg:items-center lg:gap-2 lg:overflow-visible lg:border-0 lg:py-0`}
       >
+        {/* No desktop os itens dividem a linha, menos o Departamentos, que fica na largura do
+            conteúdo e avança sobre a margem da nav (lg:mx-6) até a folga do canto do painel. */}
         {navItems.map((navItem, index) => (
-          <Fragment key={index}>
-            {index > 0 && <li aria-hidden="true" className="header-slash" />}
-            {/* No desktop os itens dividem a linha, menos o Departamentos, que fica na largura do
-                conteúdo. O primeiro e o último avançam sobre a margem da nav (lg:mx-6) até ficarem
-                com a folga dos cantos do painel. */}
-            <li
-              className={`lg:flex ${index === 0 ? 'lg:-ml-3' : 'lg:flex-1'} ${index === navItems.length - 1 ? 'lg:-mr-3' : ''}`}
-            >
-              {navItem}
-            </li>
-          </Fragment>
+          <li key={index} className={`lg:flex ${index === 0 ? 'lg:-ml-3' : 'lg:flex-1'}`}>
+            {navItem}
+          </li>
         ))}
+        {/*
+          No celular conta e tema saem da primeira linha para as ações que ficam terem 44px de toque.
+          O tema não fecha a lista: dá para comparar os dois modos sem reabrir o menu.
+        */}
+        <li className="border-t border-line sm:hidden">
+          <button
+            type="button"
+            className={`${navItemClass} text-text`}
+            onClick={() => {
+              onAccount();
+              closeList();
+            }}
+          >
+            <User aria-hidden="true" className={iconClass} />
+            Minha Conta
+          </button>
+        </li>
+        <li className="sm:hidden">
+          <button type="button" className={`${navItemClass} text-text`} onClick={onToggleTheme}>
+            {isDark ? <Sun aria-hidden="true" className={iconClass} /> : <Moon aria-hidden="true" className={iconClass} />}
+            {isDark ? 'Ativar modo claro' : 'Ativar modo escuro'}
+          </button>
+        </li>
       </ul>
 
       <DepartmentMenu

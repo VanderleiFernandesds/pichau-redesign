@@ -1,10 +1,9 @@
 import { Heart, ShoppingCart, User } from 'lucide-react';
 
 // Abaixo de 1001px conta e favoritos ficam só com ícone; o aria-label mantém o nome acessível.
-// No desktop ganham a moldura chanfrada da navegação, na altura do carrinho e da busca.
+// Sem moldura: o destaque fica no texto, para a linha não virar uma fileira de caixas.
 const actionClass =
-  'header-action relative isolate flex h-(--header-control) min-w-(--header-control) items-center justify-center gap-2 text-[13px] transition-colors hover:text-brand lg:h-12 lg:px-4 lg:whitespace-nowrap';
-const frame = <span aria-hidden="true" className="chamfer chamfer-field nav-frame hidden lg:block" />;
+  'relative flex h-(--header-control) min-w-(--header-control) items-center justify-center gap-2 text-[13px] transition-colors hover:text-brand lg:h-12 lg:px-2 lg:whitespace-nowrap';
 
 function countLabel(count) {
   return `${count} ${count === 1 ? 'produto' : 'produtos'}`;
@@ -23,14 +22,12 @@ export default function HeaderActions({
   const hasCartItems = cartCount > 0;
 
   return (
-    <div className={`flex items-center gap-1 sm:gap-2 lg:gap-5 ${className}`}>
-      <button type="button" onClick={onAccount} aria-label="Minha Conta" className={`${actionClass} text-heading`}>
-        {frame}
+    <div className={`flex items-center gap-2 lg:gap-5 ${className}`}>
+      {/* No celular a conta fica no menu, para as ações restantes manterem 44px de toque. */}
+      <button type="button" onClick={onAccount} aria-label="Minha Conta" className={`${actionClass} text-heading max-sm:hidden`}>
         <User aria-hidden="true" className="size-5" />
         <span className="hidden lg:inline">Minha Conta</span>
       </button>
-
-      <span aria-hidden="true" className="header-slash" />
 
       <button
         type="button"
@@ -39,23 +36,21 @@ export default function HeaderActions({
         aria-label={`Favoritos, ${countLabel(favoriteCount)}`}
         className={`${actionClass} ${isFavoriteOnly ? 'text-brand' : 'text-heading'}`}
       >
-        {frame}
-        {/* A margem no desktop evita que o contador encoste no texto "Favoritos". */}
-        <span className="relative lg:mr-1.5">
-          <Heart aria-hidden="true" className={`size-5 ${isFavoriteOnly ? 'fill-brand' : ''}`} />
-          {favoriteCount > 0 && (
-            <i
-              aria-hidden="true"
-              className="absolute -top-2 -right-2.5 min-w-4 rounded-full bg-brand px-1.25 py-px text-center text-[10px] font-bold text-white not-italic"
-            >
-              {favoriteCount}
-            </i>
-          )}
-        </span>
+        <Heart aria-hidden="true" className={`size-5 ${isFavoriteOnly ? 'fill-brand' : ''}`} />
         <span className="hidden lg:inline">Favoritos</span>
+        {/*
+          O contador fica no canto do botão, fora do coração; no desktop entra na linha depois do
+          texto, um pouco acima, como um expoente.
+        */}
+        {favoriteCount > 0 && (
+          <i
+            aria-hidden="true"
+            className="absolute top-0 right-0 min-w-4 rounded-full bg-brand px-1.25 py-px text-center text-[10px] leading-normal font-bold text-white not-italic lg:static lg:-ml-1 lg:-translate-y-2"
+          >
+            {favoriteCount}
+          </i>
+        )}
       </button>
-
-      <span aria-hidden="true" className="header-slash" />
 
       <button
         type="button"

@@ -28,6 +28,8 @@
   --color-heading: #ffffff;
   --color-soft: #b8b9bf;
   --color-success: #2fcf6f;
+  /* Mensagens de erro: o vermelho da marca não tem contraste suficiente para texto pequeno. */
+  --color-danger: #ff5c6c;
   --color-muted: #9ca1aa;
   --color-line: #2c2e35;
   --color-surface: #121317;
@@ -61,6 +63,7 @@ html[data-theme='light'] {
   --color-heading: #191a1f;
   --color-soft: #5b606a;
   --color-success: #008c35;
+  --color-danger: #c8001f;
   --color-muted: #656a73;
   --color-line: #e8e9ed;
   --color-surface: #ffffff;
@@ -1333,12 +1336,59 @@ html[data-theme='light'] .theme-dark-only {
     Foto da placa-mãe do banner "Monte um PC" (JPG com fundo branco): no escuro o screen some com o
     branco; no claro o multiply faz o mesmo.
   */
-  .builder-banner-art {
-    mix-blend-mode: screen;
+  /* Seção "Monte um PC": painel chanfrado com um brilho vermelho diagonal do lado das peças. */
+  .builder-banner {
+    --cut: 16px;
+    --chamfer-border: var(--card-border);
+    --chamfer-fill:
+      linear-gradient(115deg, transparent 45%, rgb(237 0 36 / 0.16) 62%, transparent 80%), var(--color-surface);
   }
 
-  html[data-theme='light'] .builder-banner-art {
-    mix-blend-mode: multiply;
+  /*
+    A foto inteira, sem corte nem distorção (object-fit: contain), com altura limitada para a seção
+    não virar outro hero. O brilho é um pseudo-elemento borrado atrás da imagem, que fica nítida.
+  */
+  /* Mesmo formato da foto (3:2): o brilho fica exatamente atrás das peças e nada sobra nas bordas. */
+  .builder-art {
+    position: relative;
+    isolation: isolate;
+    justify-self: center;
+    aspect-ratio: 3 / 2;
+    height: clamp(150px, 46vw, 260px);
+    /* min-width: 0 deixa o max-width valer; sem ele o grid mantém a largura vinda da altura. */
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .builder-art::before {
+    content: '';
+    position: absolute;
+    inset: 15% 10%;
+    z-index: -1;
+    border-radius: 50%;
+    background: rgb(237 0 36 / 0.35);
+    filter: blur(48px);
+  }
+
+  /* Absoluta para ocupar a altura fixa do contêiner; numa linha de grid automática, height: 100% não vale. */
+  .builder-art img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  html[data-theme='light'] .builder-art::before {
+    background: rgb(237 0 36 / 0.18);
+  }
+
+  @media (width >= 1001px) {
+    /* No desktop as peças encostam à direita, como no banner original, e crescem em telas largas. */
+    .builder-art {
+      justify-self: end;
+      height: clamp(260px, 23vw, 400px);
+    }
   }
 
   .department-menu-cta {
@@ -1445,6 +1495,60 @@ html[data-theme='light'] .theme-dark-only {
   .chip-button:hover {
     --chamfer-border: var(--color-brand);
     color: var(--color-brand);
+  }
+
+  /* Painéis do footer: o mesmo chanfro e borda fina dos cards, com fundo liso. */
+  .footer-panel {
+    --cut: 16px;
+    --chamfer-border: var(--card-border);
+    --chamfer-fill: var(--color-surface);
+  }
+
+  /* Botão secundário com contorno vermelho (ex.: "Ver loja"); o fundo avermelha no hover. */
+  .chamfer-outline {
+    --chamfer-border: var(--color-brand);
+    --chamfer-fill: var(--color-surface);
+    transition: color 150ms;
+  }
+
+  .chamfer-outline:hover {
+    --chamfer-fill: color-mix(in srgb, var(--color-brand) 14%, var(--color-surface));
+  }
+
+  /* Banner Pichau Empresas: brilho vermelho atrás dos equipamentos, à esquerda. */
+  .business-banner {
+    --chamfer-fill: radial-gradient(ellipse 60% 120% at 25% 100%, #4c0816, var(--color-surface) 70%);
+  }
+
+  html[data-theme='light'] .business-banner {
+    --chamfer-fill: radial-gradient(ellipse 60% 120% at 25% 100%, #ffd3da, var(--color-surface) 70%);
+  }
+
+  /* Traço diagonal vermelho antes dos títulos do footer. */
+  .slash-accent {
+    display: inline-block;
+    flex-shrink: 0;
+    width: 5px;
+    height: 0.9em;
+    background: var(--color-brand);
+    transform: skewX(-20deg);
+  }
+
+  .payment-method {
+    display: flex;
+    align-items: center;
+  }
+
+  /* Separadores entre as formas de pagamento só quando cabem numa linha. */
+  @media (width >= 601px) {
+    .payment-method + .payment-method {
+      padding-left: 2rem;
+      border-left: 1px solid var(--color-line);
+    }
+  }
+
+  .newsletter-error {
+    --chamfer-border: var(--color-danger);
   }
 
   /* Sombra num elemento sem recorte, já que o clip-path também cortaria o box-shadow. */

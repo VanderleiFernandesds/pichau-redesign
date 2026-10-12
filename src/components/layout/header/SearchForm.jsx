@@ -18,10 +18,10 @@ export default function SearchForm({ query, onQueryChange, onSearch, className =
         onChange={(event) => onQueryChange(event.target.value)}
         placeholder="O que você está procurando?"
         autoComplete="off"
-        className="h-full min-w-0 flex-1 bg-transparent text-base text-white outline-0 placeholder:text-[#a3a6ad] lg:text-[14px]"
+        className="h-full min-w-0 flex-1 bg-transparent text-base text-heading outline-0 placeholder:text-muted lg:text-[14px]"
       />
       <span aria-hidden="true" className="h-6 w-px shrink-0 bg-brand/60" />
-      <button type="submit" aria-label="Buscar" className="grid size-10 shrink-0 place-items-center text-brand transition-colors hover:text-white">
+      <button type="submit" aria-label="Buscar" className="grid size-10 shrink-0 place-items-center text-brand transition-colors hover:text-heading">
         <Search aria-hidden="true" className="size-5" />
       </button>
     </form>

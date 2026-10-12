@@ -5,6 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Pichau — conceito de redesign</title>
     <meta name="description" content="Conceito de uma loja gamer com busca, favoritos e carrinho demonstrativo." />
+    <!-- O ?v= força os navegadores a buscar o ícone de novo; aumente ao trocar o favicon. -->
+    <link rel="icon" href="/favicon.ico?v=2" sizes="any" />
+    <!--
+      Aplica o tema salvo antes da primeira pintura, para o modo claro não piscar escuro ao carregar.
+      A chave é a mesma de THEME_STORAGE_KEY (src/hooks/useTheme.js).
+    -->
+    <script>
+      try {
+        if (localStorage.getItem('pichau-theme') === 'light') document.documentElement.dataset.theme = 'light';
+      } catch {}
+    </script>
+    <!-- Só os pesos usados: Inter 400/700/800 e Rajdhani 600/700. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&family=Rajdhani:wght@600;700&display=swap"
+    />
   </head>
   <body>
     <div id="root"></div>

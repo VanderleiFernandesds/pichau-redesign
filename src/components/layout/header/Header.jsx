@@ -12,6 +12,7 @@ export default function Header({
   onAccount,
   isFavoriteOnly,
   onToggleFavorites,
+  favoriteCount,
   cartCount,
   onOpenCart,
   theme,
@@ -56,6 +57,7 @@ export default function Header({
         onAccount={onAccount}
         isFavoriteOnly={isFavoriteOnly}
         onToggleFavorites={onToggleFavorites}
+        favoriteCount={favoriteCount}
         cartCount={cartCount}
         onOpenCart={onOpenCart}
         className="ml-auto"

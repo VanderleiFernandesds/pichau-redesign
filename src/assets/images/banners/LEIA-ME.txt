@@ -1,0 +1,5 @@
+Fundos: 684 x 475 pixels (energy-drink e corsair: 1192 x 475). No CSS, use largura 684.31px e altura 475px.
+Cada objeto tem transparência e proporção própria. Anime translate e scale sem alterar a proporção.
+Textos promocionais, datas, marcas Corsair/ROG e botões devem ser elementos HTML separados.
+As camadas foram reconstruídas a partir dos banners e podem ter pequenas diferenças nos detalhes.
+Convertidas de PNG para AVIF (qualidade 80, cor 4:4:4) para reduzir o peso; os PNGs originais ficam no histórico do git.

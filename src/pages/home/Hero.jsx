@@ -1,44 +1,73 @@
-import { ArrowUpRight, Settings } from 'lucide-react';
-import heroComputer from '../../assets/images/hero-computer.webp';
+import HeroCampaignCopy from './HeroCampaignCopy';
+import HeroPanels from './HeroPanels';
+import HeroCarouselControls from './HeroCarouselControls';
+import HeroCarouselArrows from './HeroCarouselArrows';
+import { HERO_SLIDES } from '../../data/heroCampaigns';
+import { useHeroCarousel } from '../../hooks/useHeroCarousel';
 
-export default function Hero() {
+// Tempos do carrossel em ms; selectTransitionTime é o das trocas feitas por clique ou teclado.
+const CAROUSEL_TIMING = { readingTime: 7000, transitionTime: 500, selectTransitionTime: 450 };
+const SLIDE_IDS = HERO_SLIDES.map((slide) => slide.id);
+
+export default function Hero({ onFilter, theme, children }) {
+  const carousel = useHeroCarousel(SLIDE_IDS, CAROUSEL_TIMING);
+  const { shownId } = carousel;
+
+  // Segue a ordem das campanhas (a dos indicadores) e dá a volta nas pontas.
+  function selectSibling(step) {
+    const index = SLIDE_IDS.indexOf(shownId);
+    carousel.select(SLIDE_IDS[(index + step + SLIDE_IDS.length) % SLIDE_IDS.length]);
+  }
+
   return (
-    <section className="hero relative overflow-hidden bg-[#080607] text-white">
-      <div aria-hidden="true" className="hero-decor" />
-
-      <div className="wrap relative flex min-h-[340px] items-center sm:min-h-[400px] 2xl:min-h-[460px]">
-        <img src={heroComputer} alt="" width="950" height="724" fetchPriority="high" className="hero-computer" />
-        {/* No mobile o computador fica atrás do texto; o gradiente garante o contraste. */}
+    // A seção ocupa a tela (com teto definido em .hero): o painel flutua no topo, os cards
+    // ficam na base e o bloco do texto cresce para preencher o espaço entre eles.
+    <section className="hero flex flex-col bg-page text-heading">
+      <div className="flex flex-1">
         <div
-          aria-hidden="true"
-          className="absolute inset-0 bg-[linear-gradient(90deg,#08090bea_5%,#08090b9c_58%,transparent)] sm:hidden"
-        />
+          role="region"
+          aria-roledescription="carrossel"
+          aria-label="Destaques"
+          className="hero-carousel wrap grid w-full content-center items-center gap-x-10 pt-(--header-offset)"
+          style={{ "--carousel-transition": `${carousel.transitionTime}ms` }}
+          {...carousel.pauseHandlers}
+        >
+          <HeroCampaignCopy
+            campaigns={HERO_SLIDES}
+            shownId={shownId}
+            isAnnounced={!carousel.isRunning}
+            onFilter={onFilter}
+            theme={theme}
+          />
 
-        <div className="relative z-[1] max-w-[590px] py-7 sm:py-10">
-          <span className="eyebrow text-[#e7a3ae]">O SEU SETUP. O SEU PRÓXIMO NÍVEL.</span>
-          <h1 className="my-5 text-[37px] leading-[1.04] font-bold tracking-[-1.3px] sm:text-[45px] sm:tracking-[-2px] lg:text-[54px]">
-            Seu próximo nível
-            <br />
-            <em className="text-brand not-italic">começa aqui.</em>
-          </h1>
-          <p className="my-[1em] text-[14px] leading-[1.5] text-[#e1dfe3] sm:text-[18px]">
-            PCs gamers, hardware e upgrades
-            <br />
-            para o seu setup.
-          </p>
-          <div className="mt-7 flex gap-[9px] sm:gap-3.5">
-            <a className="button" href="#offers">
-              Explorar ofertas <ArrowUpRight aria-hidden="true" className="size-4" />
-            </a>
-            <a className="button border border-[#ffffff60] bg-[#ffffff10] hover:bg-[#bf001e]" href="#builder">
-              <span className="inline-flex items-center gap-1.5">
-                <Settings aria-hidden="true" className="size-4" />
-                Monte seu PC
-              </span>
-            </a>
+          <HeroPanels
+            slides={HERO_SLIDES}
+            order={carousel.order}
+            shownId={shownId}
+            isExpanded={carousel.isExpanded}
+            isJumping={carousel.isJumping}
+            objectsHiddenIds={carousel.objectsHiddenIds}
+            onSelect={carousel.select}
+          />
+
+          <HeroCarouselArrows onPrevious={() => selectSibling(-1)} onNext={() => selectSibling(1)} />
+
+          <div className="hero-controls">
+            <HeroCarouselControls
+              slides={HERO_SLIDES}
+              shownId={shownId}
+              isPlaying={carousel.isPlaying}
+              isProgressShown={carousel.isPlaying && carousel.isReading}
+              isProgressPaused={!carousel.isRunning}
+              readingTime={carousel.readingTime}
+              onSelect={carousel.select}
+              onTogglePlaying={carousel.togglePlaying}
+            />
           </div>
         </div>
       </div>
+
+      <div className="wrap w-full pb-(--hero-gap)">{children}</div>
     </section>
   );
 }

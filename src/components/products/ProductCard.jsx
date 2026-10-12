@@ -1,63 +1,83 @@
-import { Heart, Plus } from 'lucide-react';
+import { ArrowUpRight, Heart, ShoppingCart } from 'lucide-react';
 import { formatMoney } from '../../utils/format';
 
 // O valor no Pix já tem 15% de desconto; o preço no cartão é calculado a partir dele.
 const PIX_DISCOUNT_FACTOR = 0.85;
 const INSTALLMENTS = 12;
 
-// O card responde à própria largura (container query), e não à viewport:
-// abaixo de 220px, como no celular ou na grade de 6 colunas, usa a versão compacta.
-export default function ProductCard({ product, isFavorite, onToggleFavorite, onAddToCart }) {
+/*
+  Card no padrão chanfrado do site (purpose-card: borda, cantos vermelhos e brilho no hover, sem
+  deslocar o layout). As 5 linhas do card (imagem, nome, especificações, preço e botões) são um
+  subgrid da vitrine, então ficam alinhadas entre os cards da mesma linha mesmo quando um texto
+  quebra em mais linhas. Abaixo de 640px os cards são estreitos e ficam mais compactos; não dá para
+  usar container query aqui, porque a contenção de layout dela desativa o subgrid.
+*/
+export default function ProductCard({ product, isFavorite, onToggleFavorite, onAddToCart, onView }) {
   const cardPrice = product.price / PIX_DISCOUNT_FACTOR;
 
   return (
-    <article className="@container relative rounded-[7px] border border-line bg-white transition-[box-shadow,transform] duration-200 hover:-translate-y-[3px] hover:shadow-[0_10px_30px_#191a2010]">
-      <div className="flex h-full flex-col p-[11px] @min-[220px]:p-4">
-        <span className="absolute top-[13px] left-[13px] rounded-sm bg-brand px-[7px] py-[5px] text-[9px] font-bold text-white @min-[220px]:px-[9px] @min-[220px]:py-1.5 @min-[220px]:text-[11px]">
-          -{product.discount}%
-        </span>
+    <article className="chamfer purpose-card row-span-5 grid grid-rows-subgrid gap-0 p-3 text-heading sm:p-4">
+      <span aria-hidden="true" className="corner-accents" />
+
+      {/* As fotos são JPG com fundo branco; ficam numa área clara, em vez de um recorte sobre o grafite. */}
+      <div className="chamfer product-media relative flex h-36 items-center justify-center p-2 sm:h-48 sm:p-3">
+        <img
+          src={product.image}
+          alt={product.name}
+          loading="lazy"
+          decoding="async"
+          width="240"
+          height="190"
+          className="h-full w-full object-contain"
+        />
         <button
           type="button"
           onClick={() => onToggleFavorite(product.id)}
           aria-pressed={isFavorite}
           aria-label={`Favoritar ${product.name}`}
-          className={`absolute top-2.5 right-3 z-[2] grid size-8 place-items-center rounded-sm bg-white hover:text-brand ${isFavorite ? 'text-brand' : 'text-[#68707a]'}`}
+          className={`chamfer chip-button absolute top-1.5 right-1.5 grid size-9 place-items-center sm:size-10 ${isFavorite ? 'text-brand' : 'text-heading'}`}
         >
-          <Heart aria-hidden="true" className={`size-[22px] ${isFavorite ? 'fill-current' : ''}`} />
+          <Heart aria-hidden="true" className={`size-4.5 ${isFavorite ? 'fill-current' : ''}`} />
         </button>
-        <img
-          src={product.image}
-          alt={product.name}
-          loading="lazy"
-          width="240"
-          height="190"
-          className="mt-[23px] mb-3 h-[135px] w-full object-contain @min-[220px]:mt-4 @min-[220px]:h-[190px]"
-        />
-        <h3 className="mb-[9px] min-h-[35px] text-[12px] leading-[1.4] font-bold @min-[220px]:min-h-[39px] @min-[220px]:text-[14px]">
-          {product.name}
-        </h3>
-        <p className="mb-3.5 text-[10px] leading-[1.5] text-muted @min-[220px]:mb-[22px] @min-[220px]:text-[11px]">{product.spec}</p>
-        <div className="mt-auto flex items-center justify-between gap-1">
-          <div className="min-w-0">
-            <span className="text-[18px] font-extrabold tracking-[-1px] text-success @min-[220px]:text-[23px]">
-              {formatMoney(product.price)}
-            </span>
-            <span className="mt-0.5 block text-[10px] whitespace-nowrap text-success @min-[220px]:mt-0 @min-[220px]:ml-[3px] @min-[220px]:inline">no Pix</span>
-            <div className="mt-[5px] text-[9px] leading-[1.5] text-[#565b65] @min-[220px]:text-[10px]">
-              ou {INSTALLMENTS}x de {formatMoney(cardPrice / INSTALLMENTS)}
-              <br />
-              Total no cartão: {formatMoney(cardPrice)}
-            </div>
-          </div>
-          <button
-            type="button"
-            onClick={() => onAddToCart(product.id)}
-            aria-label={`Adicionar ${product.name} ao carrinho`}
-            className="grid h-[34px] w-[30px] shrink-0 place-items-center rounded-[5px] bg-brand text-white hover:bg-[#b5001c] @min-[220px]:h-10 @min-[220px]:w-[38px]"
-          >
-            <Plus aria-hidden="true" className="size-4 @min-[220px]:size-5" strokeWidth={2.5} />
-          </button>
-        </div>
+      </div>
+
+      <h3 className="mt-3 line-clamp-2 font-display text-[14px] leading-tight font-bold sm:text-[17px]">
+        {product.name}
+      </h3>
+      <p className="mt-1 text-[12px] leading-snug text-soft sm:text-[13px]">{product.spec}</p>
+
+      <div className="pt-3">
+        <p className="flex flex-wrap items-baseline gap-x-1.5">
+          <span className="text-[19px] font-extrabold tracking-[-0.5px] sm:text-[24px]">{formatMoney(product.price)}</span>
+          <span className="text-[12px] font-semibold text-success">no Pix</span>
+        </p>
+        <p className="mt-1 text-[11px] leading-normal text-soft sm:text-[12px]">
+          {INSTALLMENTS}x de {formatMoney(cardPrice / INSTALLMENTS)} sem juros
+          <br />
+          Total no cartão: {formatMoney(cardPrice)}
+        </p>
+      </div>
+
+      {/* Em cards estreitos não cabe o texto ao lado do carrinho, então os botões empilham. */}
+      <div className="mt-3 flex flex-col gap-2 sm:flex-row">
+        <button
+          type="button"
+          onClick={() => onView(product.id)}
+          className="chamfer chamfer-accent flex h-11 min-w-0 items-center justify-center gap-2 px-2 text-[11px] font-bold tracking-[0.5px] whitespace-nowrap text-white uppercase sm:flex-1 sm:justify-between sm:px-4 sm:text-[13px]"
+        >
+          Ver produto
+          <ArrowUpRight aria-hidden="true" className="hidden size-4 sm:block" />
+        </button>
+        <button
+          type="button"
+          onClick={() => onAddToCart(product.id)}
+          aria-label={`Adicionar ${product.name} ao carrinho`}
+          title="Adicionar ao carrinho"
+          className="chamfer chip-button flex h-11 shrink-0 items-center justify-center gap-2 text-[12px] font-semibold sm:w-11"
+        >
+          <ShoppingCart aria-hidden="true" className="size-4.5" />
+          <span aria-hidden="true" className="sm:hidden">Adicionar</span>
+        </button>
       </div>
     </article>
   );

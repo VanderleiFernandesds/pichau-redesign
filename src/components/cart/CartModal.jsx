@@ -3,7 +3,7 @@ import Modal from '../ui/Modal';
 import { formatMoney } from '../../utils/format';
 
 const noteClass = 'my-[1em] text-[12px] leading-[1.6] text-muted';
-const quantityButtonClass = 'grid h-[25px] w-[25px] place-items-center rounded-sm bg-[#f1f2f4]';
+const quantityButtonClass = 'grid h-[25px] w-[25px] place-items-center rounded-sm bg-fill hover:bg-fill-hover';
 
 export default function CartModal({ isOpen, onClose, cartItems, total, onChangeQuantity, onRemove }) {
   return (
@@ -15,9 +15,9 @@ export default function CartModal({ isOpen, onClose, cartItems, total, onChangeQ
 
         {cartItems.map(({ product, quantity }) => (
           <div key={product.id} className="flex items-center gap-3 border-b border-line py-[18px]">
-            <img src={product.image} alt="" className="h-[60px] w-[60px] object-contain" />
+            <img src={product.image} alt="" className="h-[60px] w-[60px] rounded-sm bg-white object-contain p-1" />
             <div className="flex-1">
-              <b className="block text-[12px]">{product.name}</b>
+              <b className="block text-[12px] text-heading">{product.name}</b>
               <small className="text-[11px] text-success">{formatMoney(product.price)}</small>
               <div className="mt-2 flex items-center gap-2.5">
                 <button
@@ -39,12 +39,11 @@ export default function CartModal({ isOpen, onClose, cartItems, total, onChangeQ
                 </button>
               </div>
             </div>
-            {/* ButtonFace reproduz o fundo padrão de botão que o original herdava do navegador. */}
             <button
               type="button"
               onClick={() => onRemove(product.id)}
               aria-label={`Remover ${product.name}`}
-              className="grid size-6 place-items-center rounded-sm bg-[ButtonFace] hover:text-brand"
+              className="grid size-6 place-items-center rounded-sm bg-fill hover:text-brand"
             >
               <X aria-hidden="true" className="size-4" />
             </button>

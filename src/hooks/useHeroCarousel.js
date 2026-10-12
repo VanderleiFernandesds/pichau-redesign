@@ -41,11 +41,11 @@ export function useHeroCarousel(slideIds, { readingTime, transitionTime, selectT
     isQuick: false,
   }));
   const [isPlaying, setIsPlaying] = useState(!isReducedMotion);
-  const [isHovered, setIsHovered] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
   const [isPageHidden, setIsPageHidden] = useState(() => document.hidden);
 
-  const isRunning = isPlaying && !isHovered && !isFocused && !isPageHidden;
+  // Passar o mouse não pausa; só o foco de teclado, a aba oculta e o botão de pausa.
+  const isRunning = isPlaying && !isFocused && !isPageHidden;
 
   useEffect(() => {
     function handleVisibilityChange() {
@@ -99,7 +99,7 @@ export function useHeroCarousel(slideIds, { readingTime, transitionTime, selectT
   const isReading = cycle.phase === 'expanded';
 
   /*
-    Tempo de leitura já cumprido no slide atual. Pausas passageiras (hover, foco, aba oculta)
+    Tempo de leitura já cumprido no slide atual. Pausas passageiras (foco, aba oculta)
     retomam de onde pararam, como a barra de progresso do indicador, que só congela. Um novo
     slide ou a pausa pelo botão zeram: ao dar play, a leitura recomeça junto com a barra.
   */
@@ -141,16 +141,12 @@ export function useHeroCarousel(slideIds, { readingTime, transitionTime, selectT
       return;
     }
 
-    // Retomar é uma ação explícita: não espera o ponteiro ou o foco saírem do carrossel.
-    setIsHovered(false);
+    // Retomar é uma ação explícita: não espera o foco sair do carrossel.
     setIsFocused(false);
     setIsPlaying(true);
   }
 
   const pauseHandlers = {
-    // Só mouse: no toque, pointerenter dispararia a cada tap e o ciclo pausaria sem motivo.
-    onPointerEnter: (event) => event.pointerType === 'mouse' && setIsHovered(true),
-    onPointerLeave: () => setIsHovered(false),
     // Só foco de teclado: no toque e no clique o botão também recebe foco, e o carrossel ficaria
     // pausado até o foco sair dele.
     onFocus: (event) => event.target.matches(':focus-visible') && setIsFocused(true),

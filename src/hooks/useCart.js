@@ -41,6 +41,10 @@ export function useCart() {
     });
   }
 
+  function clearCart() {
+    setCart({});
+  }
+
   const cartItems = products
     .filter((product) => cart[product.id] > 0)
     .map((product) => ({ product, quantity: cart[product.id] }));
@@ -55,5 +59,6 @@ export function useCart() {
     addItem: (id) => changeQuantity(id, 1),
     changeQuantity,
     removeItem,
+    clearCart,
   };
 }

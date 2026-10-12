@@ -4,7 +4,7 @@ import Navbar from '../../components/layout/header/Navbar';
 import SiteHeader from '../../components/layout/header/SiteHeader';
 import Footer from '../../components/layout/Footer';
 import ProductSection from '../../components/products/ProductSection';
-import CartModal from '../../components/cart/CartModal';
+import CartDrawer from '../../components/cart/CartDrawer';
 import EmptyState from '../../components/ui/EmptyState';
 import Toast from '../../components/ui/Toast';
 import Hero from './Hero';
@@ -195,13 +195,14 @@ export default function HomePage() {
 
       <Footer />
 
-      <CartModal
+      <CartDrawer
         isOpen={isCartOpen}
         onClose={() => setIsCartOpen(false)}
         cartItems={cart.cartItems}
         total={cart.total}
         onChangeQuantity={cart.changeQuantity}
         onRemove={cart.removeItem}
+        onClear={cart.clearCart}
       />
       <ConfigModal isOpen={isConfigOpen} onClose={() => setIsConfigOpen(false)} onSelectGoal={selectGoal} />
       <Toast message={toast.message} isVisible={toast.isVisible} />

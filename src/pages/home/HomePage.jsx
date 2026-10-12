@@ -115,6 +115,7 @@ export default function HomePage() {
           onAccount={() => toast.showToast('Conceito demonstrativo: área do cliente indisponível.')}
           isFavoriteOnly={isFavoriteOnly}
           onToggleFavorites={toggleFavoriteOnly}
+          favoriteCount={favorites.length}
           cartCount={cart.itemCount}
           onOpenCart={() => setIsCartOpen(true)}
           theme={theme}

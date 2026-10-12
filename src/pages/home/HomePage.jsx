@@ -202,6 +202,7 @@ export default function HomePage() {
       <CartDrawer
         isOpen={isCartOpen}
         onClose={() => setIsCartOpen(false)}
+        onExploreProducts={scrollToOffers}
         cartItems={cart.cartItems}
         total={cart.total}
         onChangeQuantity={cart.changeQuantity}

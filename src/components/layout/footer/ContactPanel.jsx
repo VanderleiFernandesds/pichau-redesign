@@ -11,7 +11,7 @@ const CONTACT_TYPES = {
 */
 export default function ContactPanel({ icon: Icon, title, city, hours, contacts, action }) {
   return (
-    <section className="chamfer footer-panel relative flex flex-col gap-5 p-5 sm:p-6">
+    <section className="chamfer footer-panel relative flex flex-col gap-5 px-6 py-5 sm:py-6">
       <span aria-hidden="true" className="corner-accents" />
 
       <div className="flex items-start gap-4">

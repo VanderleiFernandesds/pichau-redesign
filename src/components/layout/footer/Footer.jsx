@@ -82,7 +82,7 @@ export default function Footer({ onOpenHelp, onOpenDepartment, onShowAllDepartme
           </p>
         </section>
 
-        <div className="chamfer footer-panel px-5 pt-6 pb-6 sm:px-8 sm:pt-8">
+        <div className="chamfer footer-panel px-6 pt-6 pb-6 sm:pt-8">
           <div className="grid gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)_minmax(0,1fr)_minmax(0,1.4fr)] lg:gap-0">
             <div className="lg:pr-8">
               <a href="./" aria-label="Pichau início" className="inline-block">
@@ -157,7 +157,7 @@ export default function Footer({ onOpenHelp, onOpenDepartment, onShowAllDepartme
 
         <section
           aria-label="Sobre este projeto"
-          className="chamfer footer-panel flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:gap-6 sm:px-8"
+          className="chamfer footer-panel flex flex-col gap-4 px-6 py-5 sm:flex-row sm:items-center sm:gap-6"
         >
           <div className="flex gap-3">
             <span aria-hidden="true" className="slash-accent mt-1" />

@@ -202,6 +202,7 @@ export default function HomePage() {
         total={cart.total}
         onChangeQuantity={cart.changeQuantity}
         onRemove={cart.removeItem}
+        onClear={cart.clearCart}
       />
       <ConfigModal isOpen={isConfigOpen} onClose={() => setIsConfigOpen(false)} onSelectGoal={selectGoal} />
       <Toast message={toast.message} isVisible={toast.isVisible} />

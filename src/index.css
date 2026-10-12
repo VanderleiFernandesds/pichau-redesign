@@ -1040,6 +1040,23 @@ html[data-theme='light'] .theme-dark-only {
     --cut: var(--bar-cut);
     --chamfer-border: #c8001f;
     --chamfer-fill: var(--panel-fill);
+    /*
+      Botões da primeira linha (tema, conta, favoritos e carrinho). Em celulares estreitos encolhem
+      para o logo, o tema e as ações caberem numa linha só.
+    */
+    --header-control: 44px;
+  }
+
+  @media (width < 414px) {
+    .header-bar {
+      --header-control: 40px;
+    }
+  }
+
+  @media (width < 390px) {
+    .header-bar {
+      --header-control: 36px;
+    }
   }
 
   /*

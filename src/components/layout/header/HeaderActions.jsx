@@ -3,7 +3,7 @@ import { Heart, ShoppingCart, User } from 'lucide-react';
 // Abaixo de 1001px conta e favoritos ficam só com ícone; o aria-label mantém o nome acessível.
 // No desktop ganham a moldura chanfrada da navegação, na altura do carrinho e da busca.
 const actionClass =
-  'header-action relative isolate flex h-11 min-w-11 items-center justify-center gap-2 text-[13px] transition-colors hover:text-brand lg:h-12 lg:px-4 lg:whitespace-nowrap';
+  'header-action relative isolate flex h-(--header-control) min-w-(--header-control) items-center justify-center gap-2 text-[13px] transition-colors hover:text-brand lg:h-12 lg:px-4 lg:whitespace-nowrap';
 const frame = <span aria-hidden="true" className="chamfer chamfer-field nav-frame hidden lg:block" />;
 
 function countLabel(count) {
@@ -62,7 +62,7 @@ export default function HeaderActions({
         onClick={onOpenCart}
         aria-label={`Carrinho, ${cartLabel}`}
         // Fica verde enquanto houver produtos no carrinho e volta ao vermelho quando ele esvazia.
-        className={`chamfer ${hasCartItems ? 'chamfer-success' : 'chamfer-accent'} header-cart ml-1 flex h-11 items-center gap-2.5 px-3 text-white sm:px-4 lg:ml-0 lg:h-12 lg:px-5`}
+        className={`chamfer ${hasCartItems ? 'chamfer-success' : 'chamfer-accent'} header-cart flex h-(--header-control) min-w-(--header-control) items-center justify-center gap-2.5 text-white min-[414px]:ml-1 sm:px-4 lg:ml-0 lg:h-12 lg:px-5`}
       >
         <span className="relative">
           <ShoppingCart aria-hidden="true" className="size-5" />

@@ -20,6 +20,33 @@ export const AUTHOR = {
 export const OFFICIAL_STORE_URL = 'https://www.pichau.com.br/';
 
 /*
+  Canais oficiais da Pichau, conferidos em out/2026 no rodapé de pichau.com.br/localizacao e no
+  pichau.com.br/llms.txt. "Nossas Lojas" e "Localização" do site oficial levam para /quem-somos.
+  O endereço da loja não aparece nessas fontes, então a seção mostra só a cidade.
+*/
+export const OFFICIAL_SUPPORT = {
+  online: {
+    title: 'Atendimento online',
+    hours: [{ days: 'Seg a sex', time: '8h – 12h e 14h – 18h' }],
+    contacts: [
+      { type: 'phone', label: '(47) 3305-5150', href: 'tel:+554733055150' },
+      { type: 'email', label: 'sac@pichau.com.br', href: 'mailto:sac@pichau.com.br' },
+    ],
+  },
+  store: {
+    title: 'Loja física',
+    city: 'Joinville · SC',
+    hours: [
+      { days: 'Seg a sex', time: '9h – 19h' },
+      { days: 'Sáb', time: '9h – 13h' },
+    ],
+    contacts: [{ type: 'phone', label: '(47) 3026-6446', href: 'tel:+554730266446' }],
+    pageUrl: 'https://www.pichau.com.br/quem-somos',
+  },
+  businessPortalUrl: 'https://empresas.pichau.com.br/',
+};
+
+/*
   Tópicos da Central de ajuda. O site é um projeto de estudo: os textos explicam o que é simulado
   aqui e indicam o site oficial para compras, entregas e garantia reais.
 */

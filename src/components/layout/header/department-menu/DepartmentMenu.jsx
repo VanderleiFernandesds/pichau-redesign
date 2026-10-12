@@ -1,8 +1,9 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { X } from 'lucide-react';
 import DepartmentList from './DepartmentList';
 import DepartmentDetail from './DepartmentDetail';
 import { DEPARTMENT_GROUPS } from '../../../../data/departments';
+import { useSlidingDialog } from '../../../../hooks/useSlidingDialog';
 
 const MOBILE_QUERY = '(width < 1001px)';
 const HOVER_DELAY = 120;
@@ -57,46 +58,8 @@ export default function DepartmentMenu({ isOpen, onClose, triggerRef, onOpenDepa
   const visibleDepartments = groups.flatMap((group) => group.departments);
   const activeDepartment = visibleDepartments.find(({ id }) => id === selectedId) ?? null;
 
-  useEffect(() => {
-    const dialog = dialogRef.current;
-    const panel = panelRef.current;
-    if (isOpen && !dialog.open) {
-      dialog.showModal();
-      // O painel recebe o foco, e não a busca, para o teclado virtual não abrir sozinho no celular.
-      panel.focus();
-    }
-    if (isOpen || !dialog.open) return;
-
-    /*
-      close() tira o <dialog> da tela na hora; a saída anima primeiro (data-closing) e o fecha no
-      fim. O timeout cobre o caso de a transição não terminar, e sem transição (movimento
-      reduzido) fecha direto.
-    */
-    if (!parseFloat(getComputedStyle(panel).transitionDuration)) {
-      dialog.close();
-      return;
-    }
-
-    function finishClosing() {
-      if (dialog.open) dialog.close();
-    }
-
-    // transitionend borbulha das transições dos filhos (hover dos links); só vale a do painel.
-    function handleTransitionEnd(event) {
-      if (event.target === panel && event.propertyName === 'translate') finishClosing();
-    }
-
-    dialog.dataset.closing = '';
-    panel.addEventListener('transitionend', handleTransitionEnd);
-    const fallback = setTimeout(finishClosing, 400);
-
-    // Reaberto no meio da saída: cancela o fechamento e o painel volta a entrar.
-    return () => {
-      delete dialog.dataset.closing;
-      panel.removeEventListener('transitionend', handleTransitionEnd);
-      clearTimeout(fallback);
-    };
-  }, [isOpen]);
+  // O painel recebe o foco, e não a busca, para o teclado virtual não abrir sozinho no celular.
+  useSlidingDialog(isOpen, dialogRef, panelRef, () => panelRef.current.focus());
 
   // Esc passa pelo mesmo fechamento animado em vez de fechar o <dialog> direto.
   function handleCancel(event) {

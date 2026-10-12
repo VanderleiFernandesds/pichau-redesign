@@ -11,7 +11,6 @@ import Hero from './Hero';
 import PurposeCards from './PurposeCards';
 import DepartmentShowcase from './DepartmentShowcase';
 import BuilderBanner from './BuilderBanner';
-import Benefits from './Benefits';
 import ConfigModal from './ConfigModal';
 import HelpCenterModal from '../../components/help/HelpCenterModal';
 import { products } from '../../data/products';
@@ -191,8 +190,6 @@ export default function HomePage() {
               )
             }
           />
-
-          <Benefits />
         </div>
       </main>
 

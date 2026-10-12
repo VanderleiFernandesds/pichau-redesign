@@ -15,8 +15,21 @@ const INSTALLMENTS = 12;
 export default function ProductCard({ product, isFavorite, onToggleFavorite, onAddToCart, onView }) {
   const cardPrice = product.price / PIX_DISCOUNT_FACTOR;
 
+  /*
+    O card inteiro abre o produto, como o "Ver produto". É só um atalho para o mouse e o toque: no
+    teclado o caminho é o próprio botão, e os botões de dentro (favoritar, carrinho) mantêm a ação
+    deles.
+  */
+  function handleCardClick(event) {
+    if (event.target.closest('button')) return;
+    onView(product.id);
+  }
+
   return (
-    <article className="chamfer purpose-card row-span-5 grid grid-rows-subgrid gap-0 p-3 text-heading sm:p-4">
+    <article
+      onClick={handleCardClick}
+      className="chamfer purpose-card row-span-5 grid cursor-pointer grid-rows-subgrid gap-0 p-3 text-heading sm:p-4"
+    >
       <span aria-hidden="true" className="corner-accents" />
 
       {/* As fotos são JPG com fundo branco; ficam numa área clara, em vez de um recorte sobre o grafite. */}
@@ -48,7 +61,7 @@ export default function ProductCard({ product, isFavorite, onToggleFavorite, onA
 
       <div className="pt-3">
         <p className="flex flex-wrap items-baseline gap-x-1.5">
-          <span className="text-[19px] font-extrabold tracking-[-0.5px] sm:text-[24px]">{formatMoney(product.price)}</span>
+          <span className="text-[19px] font-extrabold tracking-[-0.5px] text-success sm:text-[24px]">{formatMoney(product.price)}</span>
           <span className="text-[12px] font-semibold text-success">no Pix</span>
         </p>
         <p className="mt-1 text-[11px] leading-normal text-soft sm:text-[12px]">

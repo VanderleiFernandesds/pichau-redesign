@@ -11,13 +11,81 @@
   --breakpoint-xl: 1440px;
   --breakpoint-2xl: 1500px;
 
-  --font-sans: Arial, Helvetica, sans-serif;
+  --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  /* Títulos do hero, das seções e dos cards. */
+  --font-display: 'Rajdhani', 'Arial Narrow', Arial, sans-serif;
 
   --color-brand: #ed0024;
-  --color-ink: #17191f;
+  /* Preto da marca: fundos escuros, texto principal e as fusões dos degradês com o fundo do hero. */
+  --color-ink: #191a1f;
+  /*
+    Cores do conteúdo da página (seções, cards, modais), no tema escuro, o padrão. O tema claro
+    troca esses mesmos valores em html[data-theme='light']; header, hero, rodapé e menu de
+    departamentos são escuros nos dois temas e não usam estas cores.
+  */
+  --color-page: #191a1f;
+  --color-text: #e9eaee;
+  --color-heading: #ffffff;
+  --color-soft: #b8b9bf;
+  --color-success: #2fcf6f;
+  --color-muted: #9ca1aa;
+  --color-line: #2c2e35;
+  --color-surface: #121317;
+  /* Sombra do título do hero sobre a arte da campanha. */
+  --color-hero-title-shadow: rgb(0 0 0 / 0.6);
+  /* Fundo de botões e opções neutras (abas, quantidade, objetivos). */
+  --color-fill: rgb(255 255 255 / 0.08);
+  --color-fill-hover: rgb(255 255 255 / 0.14);
+  --color-footer: #191a1f;
+}
+
+/* Fundos de componentes (degradês e bordas dos chanfros), trocados pelo tema claro como as cores. */
+:root {
+  --panel-fill: linear-gradient(180deg, #1a1b20, #191a1f);
+  --field-fill: #191a1f;
+  --field-fill-focus: #202128;
+  --field-border: #34363d;
+  --card-border: #34363d;
+  --card-fill: radial-gradient(120% 90% at 80% 85%, #1c1c21, #0c0c0f 70%);
+  --card-fill-hover: radial-gradient(120% 90% at 80% 85%, #2a0a10, #0d0b0d 70%);
+  --chip-border: #4a4c54;
+  --chip-fill: #101114;
+  --banner-fill: radial-gradient(ellipse at right, #4c0816, #121216 65%);
+  --scrollbar: #3a3c44;
+  --header-shadow: #00000059;
+}
+
+html[data-theme='light'] {
+  --color-page: #ffffff;
+  --color-text: #191a1f;
+  --color-heading: #191a1f;
+  --color-soft: #5b606a;
   --color-success: #008c35;
   --color-muted: #656a73;
   --color-line: #e8e9ed;
+  --color-surface: #ffffff;
+  --color-hero-title-shadow: rgb(255 255 255 / 0.7);
+  --color-fill: #f3f4f6;
+  --color-fill-hover: #e8e9ed;
+  --color-footer: #f4f5f7;
+  --panel-fill: linear-gradient(180deg, #ffffff, #f6f7f9);
+  --field-fill: #f4f5f7;
+  --field-fill-focus: #ffffff;
+  --field-border: #d9dce2;
+  --card-border: #e1e3e8;
+  --card-fill: radial-gradient(120% 90% at 80% 85%, #ffffff, #f1f2f5 70%);
+  --card-fill-hover: radial-gradient(120% 90% at 80% 85%, #ffecef, #ffffff 70%);
+  --chip-border: #cfd2d8;
+  --chip-fill: #ffffff;
+  --banner-fill: radial-gradient(ellipse at right, #ffd3da, #f4f5f7 65%);
+  --scrollbar: #c9ccd3;
+  --header-shadow: #ffffffd9;
+}
+
+/* Elementos com uma versão para cada tema (logos com texto branco ou escuro). */
+html:not([data-theme='light']) .theme-light-only,
+html[data-theme='light'] .theme-dark-only {
+  display: none;
 }
 
 /*
@@ -29,38 +97,51 @@
   --container-max: 1920px;
   --container-gutter: 16px;
   --container-start: max(0px, (100vw - var(--container-max)) / 2) + var(--container-gutter);
+  /* Recuo lateral do conteúdo dentro dos blocos com fundo (header, cards, banner, hero no desktop). */
+  --box-padding: 16px;
+  /*
+    Espaço ocupado pelo painel flutuante (16px do topo + altura do painel + folga):
+    logo/ações, busca e botão de menu até 1000px; duas linhas acima disso.
+  */
+  --header-offset: 148px;
 }
 
 @media (width >= 601px) {
   :root {
     --container-gutter: 24px;
+    --box-padding: 24px;
   }
 }
 
 @media (width >= 1001px) {
   :root {
     --container-gutter: clamp(24px, 36.67vw - 343px, 185px);
+    /* Base do painel flutuante: 16px do topo + 137px de altura. */
+    --header-bottom: 153px;
+    --header-offset: calc(var(--header-bottom) + 13px);
   }
 }
 
 @layer base {
   /* O preflight usa line-height 1.5; o layout original foi feito com o valor padrão do navegador. */
   html {
+    color-scheme: dark;
     line-height: normal;
     scroll-behavior: smooth;
-    scroll-padding-top: 200px;
+    scroll-padding-top: var(--header-offset);
   }
 
-  /* Compensa o painel flutuante: logo/ações, busca e botão de menu até 1000px; duas linhas acima disso. */
-  @media (width >= 1001px) {
-    html {
-      scroll-padding-top: 160px;
-    }
+  html[data-theme='light'] {
+    color-scheme: light;
   }
 
+  /*
+    O body tem a cor da página no tema atual: é o que aparece atrás do menu de departamentos
+    quando o site se desloca, nos cantos chanfrados do painel.
+  */
   body {
-    color: var(--color-ink);
-    background: white;
+    color: var(--color-text);
+    background: var(--color-page);
   }
 
   button,
@@ -98,79 +179,772 @@
   }
 }
 
-/*
-  Hero: o fundo decorativo e o computador compartilham a mesma escala
-  (--hero-unit = px de tela por px da foto original de 2172x724) e são
-  posicionados a partir do centro da seção, que coincide com o centro do .wrap.
-  O teto da escala impede que o computador cresça com a viewport em telas
-  ultralargas ou com zoom reduzido.
-*/
 .hero {
-  --hero-unit: 0.47px;
-  --hero-shift: -192;
+  /* Espaço vertical do hero acompanha a altura da tela para o conteúdo caber em notebooks baixos. */
+  --hero-gap: clamp(12px, 3.5svh, 32px);
+  /*
+    Ocupa a tela até 1000px de altura. Acima disso (zoom reduzido ou monitores altos) o hero para
+    de crescer e a próxima seção aparece, em vez de o conteúdo flutuar num fundo vazio.
+  */
+  min-height: min(100svh, 1000px);
 }
 
-@media (width >= 601px) {
-  .hero {
-    --hero-unit: 0.552px;
-    --hero-shift: 0;
-  }
+/*
+  Moldura do carrossel do hero. Parâmetros:
+  --frame-width    largura máxima de cada moldura (encolhe se o grupo não couber)
+  --frame-height   altura; no desktop, o termo 100svh - 434px reserva espaço para o painel e os cards
+  --frame-slant    inclinação: deslocamento horizontal do topo por px de altura (0 = retângulo)
+  --frame-line     espessura do contorno
+  --frame-cut      tamanho do chanfro dos cantos, o mesmo do painel e dos cards do hero
+*/
+.hero-frame {
+  --frame-width: 160px;
+  --frame-height: clamp(220px, 40svh, 340px);
+  --frame-slant: 0;
+  --frame-line: 1px;
+  --frame-cut: 12px;
+  /* Em repouso a moldura é neutra, como os cards de escolha; o vermelho fica para o hover e o foco. */
+  --frame-accent: var(--card-border);
+  --frame-fill: var(--color-page);
+  --frame-glow: transparent;
+
+  position: relative;
+  width: min(100%, var(--frame-width));
+  height: var(--frame-height);
+  container-type: size;
+  /* drop-shadow acompanha o recorte das camadas; box-shadow seria retangular. */
+  filter: drop-shadow(0 0 14px var(--frame-glow));
 }
 
 @media (width >= 1001px) {
-  .hero {
-    --hero-unit: clamp(0.552px, 100vw / 2172, 0.6px);
+  .hero-frame {
+    --frame-height: clamp(300px, min(55svh, 100svh - 434px), 640px);
+    --frame-cut: 16px;
   }
 }
 
-@media (width >= 1500px) {
-  .hero {
-    --hero-unit: 0.66px;
+/*
+  Carrossel do hero. Mobile: o texto fica sobre a arte do card exibido, na mesma célula do grid
+  (stack), e os controles vêm logo abaixo. Desktop: texto e controles à esquerda, painéis à
+  direita ocupando as duas linhas.
+*/
+.hero-carousel {
+  /* Altura da área da arte com os objetos no mobile; o card cresce além dela para caber o texto. */
+  --hero-art-height: clamp(220px, 40svh, 340px);
+  /* Curva comum das animações do carrossel: acelera e desacelera devagar, sem arranques. */
+  --carousel-ease: cubic-bezier(0.65, 0, 0.35, 1);
+  grid-template-areas: 'stack' 'controls';
+}
+
+/* Acima da arte. O padding de baixo deixa livre a parte do card onde ficam os objetos. */
+.hero-copy {
+  grid-area: stack;
+  position: relative;
+  z-index: 1;
+  padding: calc(var(--box-padding) * 1.5) var(--box-padding) calc(var(--hero-art-height) * 0.7);
+}
+
+.hero-copy h1.is-stacked .hero-title-part {
+  display: block;
+}
+
+.hero-controls {
+  grid-area: controls;
+  padding-block: 12px var(--hero-gap);
+}
+
+@media (width >= 1001px) {
+  /*
+    --copy-width e --copy-gap também posicionam o fundo ampliado (.hero-stage) atrás do texto;
+    --copy-inset é o recuo comum de texto e controles sobre ele.
+  */
+  .hero-carousel {
+    --copy-inset: var(--box-padding);
+    --copy-width: clamp(340px, 26vw, 460px);
+    --copy-gap: 24px;
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas: 'copy panels' 'controls panels';
+    column-gap: var(--copy-gap);
+    /* Mesmo espaço entre o header e os painéis e entre os painéis e os cards. */
+    --panels-gap: 24px;
+    padding-top: calc(var(--header-bottom) + var(--panels-gap));
+  }
+
+  /* Largura fixa, para o card não mudar de tamanho com a campanha. Fica acima do fundo ampliado. */
+  .hero-copy {
+    grid-area: copy;
+    align-self: end;
+    width: var(--copy-width);
+    max-width: none;
+    padding: var(--hero-gap) 0 0 var(--copy-inset);
+  }
+
+  /*
+    Título numa linha só, com tamanho próprio (não segue --copy-width): os mais longos passam da
+    coluna e ficam por cima da arte do card aberto, que é mais larga que o texto. A sombra mantém
+    o contraste sobre as partes claras da arte.
+  */
+  .hero-copy h1 {
+    font-size: clamp(55px, 4.8vw, 80px);
+    white-space: nowrap;
+    text-shadow: 0 2px 18px var(--color-hero-title-shadow);
+  }
+
+  /* Em duas linhas o título ganha altura, então fica menor para a linha mais longa caber na coluna. */
+  .hero-copy h1.is-stacked {
+    font-size: clamp(46px, 3.9vw, 64px);
+    line-height: 0.95;
+  }
+
+  .hero-controls {
+    position: relative;
+    z-index: 1;
+    align-self: start;
+    padding-block: 20px 0;
+    padding-left: var(--copy-inset);
   }
 }
 
-.hero-decor {
-  position: absolute;
-  inset-block: 0;
-  left: -50%;
-  right: -50%;
-  transform: translateX(calc(var(--hero-shift) * var(--hero-unit)));
-  background:
-    radial-gradient(calc(300 * var(--hero-unit)) calc(50 * var(--hero-unit)) at calc(50% - 40 * var(--hero-unit)) calc(50% + 215 * var(--hero-unit)), #ed002440, transparent),
-    linear-gradient(transparent calc(50% + 203 * var(--hero-unit)), #0c0b0d calc(50% + 203 * var(--hero-unit)), #050506),
-    radial-gradient(calc(300 * var(--hero-unit)) calc(160 * var(--hero-unit)) at calc(50% - 190 * var(--hero-unit)) calc(50% + 140 * var(--hero-unit)), #be001473, transparent),
-    linear-gradient(
-      54deg,
-      transparent calc(50% - 131 * var(--hero-unit)),
-      #ed00248c calc(50% - 120 * var(--hero-unit)),
-      #ff2a3c calc(50% - 117 * var(--hero-unit)),
-      #ed00248c calc(50% - 114 * var(--hero-unit)),
-      transparent calc(50% - 103 * var(--hero-unit)),
-      transparent calc(50% + 29 * var(--hero-unit)),
-      #141112 calc(50% + 29 * var(--hero-unit)),
-      #241d1e calc(50% + 136 * var(--hero-unit)),
-      #ff2236 calc(50% + 141 * var(--hero-unit)),
-      #ed002466 calc(50% + 150 * var(--hero-unit)),
-      transparent calc(50% + 190 * var(--hero-unit))
-    ),
-    radial-gradient(calc(520 * var(--hero-unit)) calc(460 * var(--hero-unit)) at calc(50% + 160 * var(--hero-unit)) calc(50% - 160 * var(--hero-unit)), #aa00128c, transparent),
-    radial-gradient(calc(320 * var(--hero-unit)) calc(420 * var(--hero-unit)) at calc(50% + 900 * var(--hero-unit)) calc(50% - 60 * var(--hero-unit)), #96000f66, transparent),
-    #080607;
+/*
+  Setas do mobile: juntas no canto superior direito do card (célula stack), centradas na linha da
+  chamada e acima do texto e do botão de seleção do card. O topo segue o padding do texto
+  (.hero-copy) para a linha central dos botões coincidir com a da chamada sem encostar no título.
+*/
+.hero-arrows {
+  --arrow-size: 40px;
+  grid-area: stack;
+  align-self: start;
+  justify-self: end;
+  position: relative;
+  z-index: 2;
+  display: flex;
+  gap: 8px;
+  margin-top: calc(var(--box-padding) * 1.5 + 6px - var(--arrow-size) / 2);
+  margin-right: var(--box-padding);
 }
 
-.hero-computer {
+.hero-arrow {
+  --chamfer-fill: color-mix(in srgb, var(--color-page) 80%, transparent);
+  display: grid;
+  place-items: center;
+  width: var(--arrow-size);
+  height: var(--arrow-size);
+  color: var(--color-heading);
+}
+
+.hero-arrow:hover {
+  --chamfer-border: var(--color-brand);
+}
+
+/* Moldura que agrupa pausar/retomar e os indicadores do hero: segue o tema, como o restante do hero. */
+.hero-control {
+  --chamfer-fill: var(--color-surface);
+  --chamfer-border: var(--color-line);
+}
+
+/* Setas do carrossel "Na Pichau Tem!": as mesmas do hero, desabilitadas nas pontas da trilha. */
+.showcase-arrow {
+  --arrow-size: 40px;
+}
+
+.showcase-arrow:disabled {
+  --chamfer-border: var(--card-border);
+  cursor: default;
+  opacity: 0.4;
+}
+
+@media (width >= 1001px) {
+  .hero-arrows {
+    display: none;
+  }
+}
+
+/*
+  Preenchimento do indicador ativo durante a leitura. Começa quando o slide abre, como o timer
+  do hook, e para junto com ele; com movimento reduzido fica cheio, sem animar.
+*/
+.hero-progress {
   position: absolute;
-  top: 50%;
-  left: calc(50% + (64 + var(--hero-shift)) * var(--hero-unit));
-  width: calc(950 * var(--hero-unit));
+  inset: 0;
+  background: var(--color-brand);
+  transform-origin: left;
+  animation: hero-progress var(--reading-time) linear forwards;
+}
+
+.hero-progress.is-paused {
+  animation-play-state: paused;
+}
+
+@keyframes hero-progress {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-progress {
+    animation: none;
+  }
+}
+
+/*
+  Troca em sequência: o texto que sai some na primeira metade e o novo entra na segunda. Em
+  crossfade, os dois ficavam sobrepostos e ilegíveis no meio da transição.
+*/
+.hero-fade {
+  transition:
+    opacity calc(var(--carousel-transition) / 2) var(--carousel-ease) calc(var(--carousel-transition) / 2),
+    visibility 0s calc(var(--carousel-transition) / 2);
+}
+
+.hero-fade.invisible {
+  transition:
+    opacity calc(var(--carousel-transition) / 2) var(--carousel-ease),
+    visibility 0s calc(var(--carousel-transition) / 2);
+}
+
+/*
+  Os painéis dividem a mesma célula do grid, então a célula sempre tem a altura de um painel.
+  Mobile: só o do slide exibido aparece. Desktop: cada um é deslocado conforme a posição na fila.
+*/
+.hero-panels {
+  grid-area: panels;
+  display: grid;
+}
+
+/* No mobile só um painel aparece; o fade evita o corte seco na troca. */
+.hero-panel {
+  position: relative;
+  grid-area: 1 / 1;
+  transition:
+    opacity var(--carousel-transition) var(--carousel-ease),
+    visibility var(--carousel-transition);
+}
+
+/*
+  Registrada para resolver em px no .hero-panel, onde cqw é o da fila; dentro da moldura, as
+  unidades de container usariam o próprio card, que muda de largura durante a animação.
+*/
+@property --object-unit {
+  syntax: '<length>';
+  inherits: true;
+  initial-value: 0px;
+}
+
+/* Máscara do fundo ampliado: largura revelada a partir da borda direita e largura da borda suave. */
+@property --stage-reveal {
+  syntax: '<length-percentage>';
+  inherits: false;
+  initial-value: 0px;
+}
+
+@property --stage-soft {
+  syntax: '<length-percentage>';
+  inherits: false;
+  initial-value: 0px;
+}
+
+/* Seleção manual: a fila e o card que estava aberto mudam de uma vez, sem animação. */
+.hero-panels.is-jumping *,
+.hero-panels.is-jumping *::before,
+.hero-panels.is-jumping *::after {
+  transition: none !important;
+}
+
+.hero-panel-select {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+/*
+  Mobile: os painéis ficam atrás do texto e ocupam a célula inteira. O z-index cria um contexto
+  de empilhamento, então o botão de seleção do card não cobre o CTA. A arte ganha um degradê no
+  topo para o texto ser legível, e os objetos ficam numa faixa na base com a altura que o card
+  tinha antes, mantendo o mesmo tamanho e as mesmas posições.
+*/
+@media (width < 1001px) {
+  /* Sem conteúdo no fluxo, só tem altura esticando até a da célula, definida pelo texto. */
+  .hero-panels {
+    grid-area: stack;
+    align-self: stretch;
+    position: relative;
+    z-index: 0;
+  }
+
+  .hero-panel {
+    position: absolute;
+    inset: 0;
+  }
+
+  .hero-panel .hero-frame {
+    --frame-height: 100%;
+  }
+
+  .hero-panel .hero-frame-content::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-page) 90%, transparent),
+      color-mix(in srgb, var(--color-page) 65%, transparent) 45%,
+      transparent 75%
+    );
+    pointer-events: none;
+  }
+
+  .hero-panel .campaign-object {
+    top: auto;
+    height: var(--hero-art-height);
+  }
+
+  /* No celular o card é sempre o aberto; o logo da campanha já aparece acima do título. */
+  .hero-panel .campaign-object.is-collapsed-only {
+    display: none;
+  }
+
+  .hero-panel .campaign-object img {
+    width: calc(var(--size) * min(1cqw, var(--hero-art-height) / 100));
+  }
+
+  /*
+    Arte com objetos apoiados nos blocos (sceneMobile): o fundo cobre só a faixa dos objetos,
+    alinhado à direita e pela base, e some para cima no preenchimento do card, sob o texto.
+    --scene-unit é a escala do fundo (px na tela por px da arte); o cover usa a maior entre a
+    da altura da faixa e a da largura do card, e o card (.hero-frame) é o container.
+  */
+  .hero-panel.has-mobile-scene .hero-panel-image {
+    top: auto;
+    height: var(--hero-art-height);
+    object-position: right bottom;
+    mask-image: linear-gradient(to bottom, transparent, #000 35%);
+  }
+
+  .hero-panel .campaign-object.is-on-mobile-scene {
+    --scene-unit: calc(max(100cqw, var(--hero-art-height) * var(--bg-width) / var(--bg-height)) / var(--bg-width));
+    --point-right: var(--mobile-scene-right);
+    --point-lift: var(--mobile-scene-lift);
+    --point-width: var(--mobile-scene-width);
+    transform: none;
+  }
+
+  .hero-panel .campaign-object.is-on-mobile-scene img {
+    top: calc(100% - var(--point-lift) * var(--scene-unit));
+    left: calc(100% - var(--point-right) * var(--scene-unit));
+    width: calc(var(--point-width) * var(--scene-unit));
+    transform: translate(-50%, -100%);
+  }
+}
+
+/* A partir daqui a faixa já mostra a arte quase inteira, e a cena do desktop cabe nela. */
+@media (601px <= width < 1001px) {
+  .hero-panel .campaign-object.is-on-mobile-scene {
+    --point-right: var(--scene-right);
+    --point-lift: var(--scene-lift);
+    --point-width: var(--scene-width);
+  }
+}
+
+.hero-panel:not(.is-shown) {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.hero-panel .hero-frame {
+  width: 100%;
+  transition: filter var(--carousel-transition) var(--carousel-ease);
+}
+
+/* Sem atraso: o atraso de --frame-return é só para a moldura voltar no fim do fechamento. */
+.hero-panel:hover .hero-frame,
+.hero-panel:has(.hero-panel-select:focus-visible) .hero-frame {
+  --frame-accent: var(--color-brand);
+  --frame-glow: #ed002459;
+  transition-delay: 0s;
+}
+
+.hero-frame .corner-accents {
+  --cut: var(--frame-cut);
+}
+
+/* O clip-path já recorta a moldura; o overflow garante que o fundo acompanhe os limites do card. */
+.hero-panel .hero-frame-content {
+  overflow: hidden;
+}
+
+/*
+  Fundo da campanha com object-fit: cover, sem deformar. O enquadramento vem do slide
+  (--position-collapsed/--position-expanded); no mobile o painel é largo e usa o do expandido.
+*/
+.hero-panel-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  object-position: var(--position-expanded);
+  transition:
+    filter var(--carousel-transition) var(--carousel-ease),
+    object-position var(--carousel-transition) var(--carousel-ease),
+    opacity var(--carousel-transition) var(--carousel-ease);
+}
+
+/* Fundo ampliado do card expandido: só existe no desktop. */
+.hero-stage {
+  display: none;
+}
+
+/*
+  Objetos transparentes da campanha. O wrapper ocupa o card inteiro, então o translate em % é
+  relativo ao card; a imagem fica centrada nesse ponto.
+  A largura base usa cqmin (menor lado do card) e height: auto, então a proporção nunca muda.
+  Sem estado (mobile, onde o card é largo) vale a configuração do expandido.
+*/
+.campaign-object {
+  position: absolute;
+  inset: 0;
+  z-index: var(--expanded-layer);
+  pointer-events: none;
+  transform: translate(var(--expanded-x), var(--expanded-y));
+}
+
+.campaign-object img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: calc(var(--size) * 1cqmin);
   max-width: none;
   height: auto;
-  translate: 0 -50%;
-  /* As bordas do recorte se dissolvem no fundo decorativo. */
-  mask-image:
-    linear-gradient(90deg, transparent, #000 14%, #000 82%, transparent),
-    linear-gradient(transparent, #000 4%, #000 96%, transparent);
-  mask-composite: intersect;
+  transform: translate(-50%, -50%) scale(var(--expanded-scale));
+}
+
+/*
+  Desktop: a fila fica encostada à direita. O primeiro da fila é o único que expande e, como fica
+  alinhado pela borda direita, cresce para a esquerda; a largura expandida é o que sobra da coluna
+  depois dos estreitos, mais --panel-reach, que avança sobre o espaço entre a coluna e o texto.
+  O texto fica acima dos painéis (z-index), então o card nunca cobre o título nem o CTA.
+*/
+@media (width >= 1001px) {
+  .hero-panels {
+    --panel-gap: 14px;
+    --panel-narrow: min(160px, 18cqw);
+    --panel-reach: 48px;
+    --panel-expanded: calc(
+      max(var(--panel-narrow), 100cqw - (var(--slide-count) - 1) * (var(--panel-narrow) + var(--panel-gap))) + var(--panel-reach)
+    );
+    /* Altura dos fundos das campanhas (475px), fixa também durante a expansão. */
+    --panel-height: 475px;
+    /*
+      Moldura e fundo do card: somem no início da expansão (--frame-fade) e só voltam no fim do
+      fechamento (--frame-return), quando o card já está quase estreito.
+    */
+    --frame-fade: calc(var(--carousel-transition) * 0.2);
+    --frame-return: calc(var(--carousel-transition) * 0.8);
+    position: relative;
+    margin-bottom: var(--panels-gap);
+    container: hero-panels / inline-size;
+  }
+
+  .hero-panel {
+    justify-self: end;
+    width: var(--panel-narrow);
+    transform: translateX(calc((var(--position) - var(--slide-count) + 1) * (var(--panel-narrow) + var(--panel-gap))));
+    /* A fila só muda de ordem no jumping, sem animação; o que anima é a expansão do primeiro. */
+    transition: width var(--carousel-transition) var(--carousel-ease);
+  }
+
+  .hero-panel:not(.is-shown) {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  .hero-panel .hero-frame {
+    --frame-height: var(--panel-height);
+    transition: filter var(--frame-fade) var(--carousel-ease) var(--frame-return);
+  }
+
+  /* Recolhidos ficam escurecidos; o expandido (ou o painel sob o mouse) aparece por inteiro. */
+  .hero-panel-image {
+    object-position: var(--position-collapsed);
+    filter: brightness(0.55) saturate(0.85);
+  }
+
+  .hero-panel:hover .hero-panel-image,
+  .hero-panel.is-expanded .hero-panel-image {
+    filter: none;
+  }
+
+  .hero-panel.is-expanded .hero-panel-image {
+    object-position: var(--position-expanded);
+  }
+
+  .hero-panel .hero-frame-line,
+  .hero-panel .corner-accents {
+    transition: opacity var(--frame-fade) var(--carousel-ease) var(--frame-return);
+  }
+
+  /* --object-unit é o 1cqmin do card no estado final; o estreito é sempre mais estreito que alto. */
+  .hero-panel {
+    --object-unit: calc(var(--panel-narrow) / 100);
+  }
+
+  .hero-panel.is-expanded {
+    --object-unit: calc(min(var(--panel-expanded), var(--panel-height)) / 100);
+    width: var(--panel-expanded);
+  }
+
+  /* Só a moldura decorativa some; o foco de teclado é o outline do botão e continua visível. */
+  .hero-panel.is-expanded .hero-frame {
+    --frame-glow: transparent;
+    transition-delay: 0s;
+  }
+
+  .hero-panel.is-expanded .hero-frame-line,
+  .hero-panel.is-expanded .corner-accents {
+    opacity: 0;
+    transition-delay: 0s;
+  }
+
+  /*
+    Fundo ampliado: vai do início do texto (--copy-width + --copy-gap à esquerda da coluna dos
+    painéis) até a borda direita do card expandido, na altura dos painéis. O degradê preto deixa o
+    texto legível à esquerda e a arte aparece à direita.
+  */
+  .hero-stage {
+    display: block;
+    position: absolute;
+    top: 0;
+    right: calc((var(--slide-count) - 1) * (var(--panel-narrow) + var(--panel-gap)));
+    bottom: 0;
+    left: calc(-1 * (var(--copy-width) + var(--copy-gap)));
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .hero-stage::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(
+        90deg,
+        var(--color-page) 0%,
+        color-mix(in srgb, var(--color-page) 92%, transparent) 28%,
+        color-mix(in srgb, var(--color-page) 55%, transparent) 50%,
+        transparent 72%,
+        transparent 94%,
+        var(--color-page)
+      ),
+      linear-gradient(180deg, var(--color-page), transparent 12%, transparent 88%, var(--color-page));
+  }
+
+  /*
+    O fundo ampliado é revelado da direita para a esquerda junto com a expansão. Fechado, a área
+    revelada é exatamente o card (que fica encostado na mesma borda direita) e fica por baixo dele;
+    ao expandir, ela avança para a esquerda e ganha uma borda suave, então nunca há um limite
+    nítido sobre a área do texto nem crossfade entre dois enquadramentos na área inteira.
+  */
+  .hero-stage-image {
+    --stage-reveal: var(--panel-narrow);
+    --stage-soft: 0%;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    object-fit: cover;
+    opacity: 0;
+    mask-image: linear-gradient(to left, #000 var(--stage-reveal), transparent calc(var(--stage-reveal) + var(--stage-soft)));
+    /*
+      Ao fechar, a máscara chega ao tamanho do card um pouco antes do fim, quando o fundo do card
+      volta por cima, e o fundo ampliado só some depois disso.
+    */
+    --reveal-return: calc(var(--carousel-transition) - var(--frame-fade) / 2);
+    transition:
+      --stage-reveal var(--reveal-return) var(--carousel-ease),
+      --stage-soft var(--reveal-return) var(--carousel-ease),
+      opacity 0s var(--carousel-transition);
+  }
+
+  /*
+    Entra opaco na hora, ainda todo sob o fundo do card. A revelação espera metade de --frame-fade
+    para não passar da borda do card enquanto o fundo dele ainda está saindo.
+  */
+  .hero-stage-image.is-visible {
+    --stage-reveal: 100%;
+    --stage-soft: 30%;
+    --reveal-delay: calc(var(--frame-fade) / 2);
+    opacity: 1;
+    transition:
+      --stage-reveal calc(var(--carousel-transition) - var(--reveal-delay)) var(--carousel-ease) var(--reveal-delay),
+      --stage-soft calc(var(--carousel-transition) - var(--reveal-delay)) var(--carousel-ease) var(--reveal-delay),
+      opacity 0s;
+  }
+
+  /* O card aberto não tem ação: a campanha segue pelo CTA e a pausa pelo botão próprio. */
+  .hero-panel.is-expanded .hero-panel-select {
+    cursor: default;
+  }
+
+  /*
+    Fundo local do card (preenchimento e imagem): sai no início da expansão sobre o fundo ampliado
+    já opaco, então a troca não escurece o card; no fechamento volta por cima dele antes de ele sumir.
+  */
+  .hero-panel .hero-frame-content {
+    transition: background-color var(--frame-fade) var(--carousel-ease) var(--frame-return);
+  }
+
+  .hero-panel .hero-panel-image {
+    transition:
+      filter var(--carousel-transition) var(--carousel-ease),
+      object-position var(--carousel-transition) var(--carousel-ease),
+      opacity var(--frame-fade) var(--carousel-ease) var(--frame-return);
+  }
+
+  .hero-panel.is-expanded .hero-frame-content {
+    background-color: transparent;
+    transition-delay: 0s;
+  }
+
+  .hero-panel.is-expanded .hero-panel-image {
+    opacity: 0;
+    transition:
+      filter var(--carousel-transition) var(--carousel-ease),
+      object-position var(--carousel-transition) var(--carousel-ease),
+      opacity var(--frame-fade) var(--carousel-ease);
+  }
+
+  /*
+    Os objetos não animam posição nem tamanho: somem (is-hiding-objects), trocam de lugar enquanto
+    estão invisíveis e reaparecem. Ao reaparecer no card aberto, esperam a expansão terminar; no
+    card fechado, voltam junto com ele. A largura usa as medidas finais do card (--object-unit),
+    então já está certa quando o objeto aparece e a proporção vem do height: auto.
+  */
+  .campaign-object {
+    z-index: var(--collapsed-layer);
+    transform: translate(var(--collapsed-x), var(--collapsed-y));
+    transition: opacity var(--carousel-transition) var(--carousel-ease);
+  }
+
+  .campaign-object img {
+    width: calc(var(--size) * var(--object-unit) * var(--collapsed-scale));
+    transform: translate(-50%, -50%);
+  }
+
+  /* Com base, o ponto de --collapsed-y é onde o objeto encosta, não o centro dele. */
+  .hero-panel:not(.is-expanded) .campaign-object.has-collapsed-base img {
+    transform: translate(-50%, -100%);
+  }
+
+  .hero-panel.is-expanded .campaign-object {
+    z-index: var(--expanded-layer);
+    transform: translate(var(--expanded-x), var(--expanded-y));
+    transition-delay: var(--carousel-transition);
+  }
+
+  .hero-panel.is-expanded .campaign-object img {
+    width: calc(var(--size) * var(--object-unit) * var(--expanded-scale));
+  }
+
+  /*
+    Objetos apoiados nos blocos do fundo (scene): posição e largura em px da arte, contados da
+    borda direita do card, onde o fundo ampliado se alinha. O ponto de apoio é a base do objeto.
+    No card mais estreito a cena é cortada à esquerda, como o próprio fundo; a máscara suaviza o
+    corte dos objetos, que ali já ficam sob o degradê escuro do fundo ampliado.
+  */
+  .hero-panel.is-expanded .campaign-object.is-on-scene {
+    transform: none;
+    mask-image: linear-gradient(to right, transparent, #000 72px);
+  }
+
+  .hero-panel.is-expanded .campaign-object.is-on-scene img {
+    top: calc(var(--scene-bottom) * 1px);
+    left: calc(100% - var(--scene-right) * 1px);
+    width: calc(var(--scene-width) * 1px);
+    transform: translate(-50%, -100%);
+  }
+
+  /*
+    Abaixo de ~640px de card (fila com menos de 942px) a cena larga perde os produtos da esquerda.
+    Objetos com sceneNarrow usam ali posições feitas para a parte direita da arte.
+  */
+  @container hero-panels (width < 942px) {
+    .hero-panel.is-expanded .campaign-object.is-on-narrow-scene img {
+      top: calc(var(--narrow-scene-bottom) * 1px);
+      left: calc(100% - var(--narrow-scene-right) * 1px);
+      width: calc(var(--narrow-scene-width) * 1px);
+    }
+  }
+
+  .hero-panel.is-hiding-objects .campaign-object,
+  .hero-panel:not(.is-expanded) .campaign-object.is-expanded-only,
+  .hero-panel.is-expanded .campaign-object.is-collapsed-only {
+    opacity: 0;
+    transition-delay: 0s;
+  }
+
+  /*
+    Degradê preto atrás do logo do card fechado. Fica dentro da moldura, para seguir o chanfro,
+    acima do fundo e abaixo dos objetos (z-index a partir de 1); sai no início da expansão e só
+    volta no fim do fechamento, junto com o logo.
+  */
+  .hero-panel .hero-frame-content::after {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto;
+    z-index: 0;
+    height: 200px;
+    background: linear-gradient(180deg, rgb(0 0 0 / 0.9), rgb(0 0 0 / 0.6) 45%, transparent);
+    pointer-events: none;
+    transition: opacity calc(var(--carousel-transition) * 0.4) var(--carousel-ease) calc(var(--carousel-transition) * 0.6);
+  }
+
+  /* No tema claro o degradê é branco; os logos de texto branco trocam pela versão escura (srcOnLight). */
+  html[data-theme='light'] .hero-panel .hero-frame-content::after {
+    background: linear-gradient(180deg, rgb(255 255 255 / 0.95), rgb(255 255 255 / 0.7) 45%, transparent);
+  }
+
+  .hero-panel.is-expanded .hero-frame-content::after {
+    opacity: 0;
+    transition: opacity calc(var(--carousel-transition) * 0.4) var(--carousel-ease);
+  }
+}
+
+/*
+  Cada camada é o mesmo paralelogramo chanfrado, recuado por --layer-inset. O recuo horizontal é
+  maior que o vertical para o contorno ter a mesma espessura nas laterais inclinadas e no topo/base,
+  e o chanfro interno diminui para a diagonal do contorno também manter a espessura.
+  Nos lados inclinados o corte desce --cut na vertical e anda --slant * --cut na horizontal.
+*/
+.hero-frame-layer {
+  --layer-inset: 0px;
+  --inset-x: calc(var(--layer-inset) * (sqrt(1 + var(--frame-slant) * var(--frame-slant)) + var(--frame-slant)));
+  --offset: calc(var(--frame-slant) * (100cqh - 2 * var(--layer-inset)));
+  --cut: calc(var(--frame-cut) - var(--layer-inset) * 0.4142);
+  --cut-x: calc(var(--frame-slant) * var(--cut));
+  position: absolute;
+  inset: var(--layer-inset) var(--inset-x);
+  clip-path: polygon(
+    calc(var(--offset) + var(--cut)) 0,
+    calc(100% - var(--cut)) 0,
+    calc(100% - var(--cut-x)) var(--cut),
+    calc(100% - var(--offset) + var(--cut-x)) calc(100% - var(--cut)),
+    calc(100% - var(--offset) - var(--cut)) 100%,
+    var(--cut) 100%,
+    var(--cut-x) calc(100% - var(--cut)),
+    calc(var(--offset) - var(--cut-x)) var(--cut)
+  );
+}
+
+.hero-frame-line {
+  background: var(--frame-accent);
+}
+
+.hero-frame-content {
+  --layer-inset: var(--frame-line);
+  background: var(--frame-fill);
 }
 
 @layer components {
@@ -179,7 +953,7 @@
   }
 
   .button {
-    @apply inline-flex items-center justify-center gap-3 rounded-[5px] bg-brand px-3.5 py-3 text-[11px] font-bold text-white transition-[transform,background-color] duration-150 hover:-translate-y-0.5 hover:bg-[#bf001e] sm:gap-6 sm:px-[22px] sm:py-3.5 sm:text-[13px];
+    @apply inline-flex items-center justify-center gap-3 rounded-[5px] bg-brand whitespace-nowrap px-3.5 py-3 text-[11px] font-bold text-white transition-[transform,background-color] duration-150 hover:-translate-y-0.5 hover:bg-[#bf001e] sm:gap-6 sm:px-[22px] sm:py-3.5 sm:text-[13px];
   }
 
   /*
@@ -188,8 +962,8 @@
   */
   .chamfer {
     --cut: 8px;
-    --chamfer-border: #34363d;
-    --chamfer-fill: #0b0c0f;
+    --chamfer-border: var(--field-border);
+    --chamfer-fill: var(--field-fill);
     position: relative;
     isolation: isolate;
   }
@@ -226,8 +1000,9 @@
     --chamfer-border: var(--color-brand);
   }
 
+  /* Um pouco mais claro que o preto da marca, para o campo ativo se destacar além da borda. */
   .chamfer-field:focus-within {
-    --chamfer-fill: #121318;
+    --chamfer-fill: var(--field-fill-focus);
   }
 
   .chamfer-accent {
@@ -235,18 +1010,328 @@
     --chamfer-fill: linear-gradient(180deg, #f2122f, #a3001a);
   }
 
-  .chamfer-accent:hover {
+  /* A moldura do Departamentos responde ao botão inteiro, que é mais alto que ela. */
+  .chamfer-accent:hover,
+  .nav-departments:hover .chamfer-accent,
+  .nav-departments[aria-expanded='true'] .chamfer-accent {
     --chamfer-fill: linear-gradient(180deg, #ff2a44, #bf001e);
   }
 
   .header-bar {
-    --cut: 12px;
+    --bar-cut: 12px;
+    --cut: var(--bar-cut);
     --chamfer-border: #c8001f;
-    --chamfer-fill: linear-gradient(180deg, #1a1b20, #0b0c0f);
+    --chamfer-fill: var(--panel-fill);
+  }
+
+  /*
+    Carrinho no canto do painel: a folga até o contorno à direita é a mesma de cima e de baixo
+    (a sobra vertical da linha), e o chanfro fica paralelo ao do painel. Num corte de 45°, recuar
+    g para dentro diminui o chanfro em g * (√2 - 1).
+  */
+  .header-cart {
+    --cart-gap: 10px;
+    --cut: calc(var(--bar-cut) - var(--cart-gap) * 0.4142);
+    margin-right: calc(var(--cart-gap) - var(--box-padding));
+  }
+
+  @media (width >= 1001px) {
+    .header-cart {
+      --cart-gap: 12px;
+    }
+  }
+
+  /*
+    Molduras da navegação (só desktop), com a mesma folga do carrinho. Cada uma ocupa a largura
+    do item e fica com a folga em cima e embaixo (itens de 64px). O primeiro e o último itens
+    avançam sobre a margem da nav (-ml-3/-mr-3 contra lg:mx-6) até a folga dos cantos, onde o
+    chanfro fica paralelo ao do painel; os do meio usam o mesmo chanfro.
+  */
+  .nav-frame {
+    --nav-gap: 12px;
+    --cut: calc(var(--bar-cut) - var(--nav-gap) * 0.4142);
+    position: absolute;
+    inset: var(--nav-gap) 0;
+    z-index: -1;
+  }
+
+  /* Conta e favoritos já têm a altura da moldura (48px, como o carrinho). */
+  .header-action .nav-frame {
+    inset: 0;
+  }
+
+  /* A moldura responde ao item inteiro, que na navegação é mais alto que ela. */
+  .nav-item:hover .nav-frame.chamfer-field,
+  .header-action:hover .nav-frame.chamfer-field,
+  .header-action[aria-pressed='true'] .nav-frame.chamfer-field {
+    --chamfer-border: var(--color-brand);
   }
 
   .header-bar :focus-visible {
     outline-color: var(--color-brand);
+  }
+
+  /*
+    Menu de departamentos. O <dialog> cobre a tela (o clique fora do painel cai nele) e o painel
+    encosta à esquerda. Só com a lista a página continua rolando; com um departamento escolhido
+    ela trava. O scrollbar-gutter mantém o espaço da barra para o layout não pular.
+  */
+  :root:has(.department-menu[open]:not([data-closing]) [data-has-detail]) {
+    overflow: hidden;
+    scrollbar-gutter: stable;
+  }
+
+  .department-menu {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    max-width: none;
+    height: 100dvh;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--color-text);
+  }
+
+  /*
+    Só com a lista aberta a página continua visível e a sombra separa o painel dela. Ao escolher um
+    departamento o fundo escurece; na saída ele clareia junto com o painel.
+  */
+  .department-menu::backdrop {
+    background: transparent;
+    backdrop-filter: blur(0);
+    transition:
+      background 0.25s ease,
+      backdrop-filter 0.25s ease;
+  }
+
+  .department-menu:has([data-has-detail]):not([data-closing])::backdrop {
+    background: rgb(8 9 17 / 0.7);
+    backdrop-filter: blur(4px);
+  }
+
+  .department-menu-panel {
+    --cut: 14px;
+    --chamfer-fill: var(--color-surface);
+    display: flex;
+    width: min(420px, 100%);
+    height: 100%;
+    /* drop-shadow acompanha o recorte chanfrado; box-shadow seria retangular. */
+    filter: drop-shadow(12px 0 32px rgb(0 0 0 / 0.55));
+    transition: translate 0.25s var(--carousel-ease, ease);
+  }
+
+  /*
+    Entrada pelo @starting-style; na saída o componente marca data-closing, o painel volta para a
+    esquerda e só então o <dialog> fecha. Durante a saída a página já volta a rolar e a receber
+    cliques.
+  */
+  @starting-style {
+    .department-menu[open] .department-menu-panel {
+      translate: -100% 0;
+    }
+  }
+
+  .department-menu[data-closing] {
+    pointer-events: none;
+  }
+
+  .department-menu[data-closing] .department-menu-panel {
+    translate: -100% 0;
+  }
+
+  /* Barras de rolagem finas e escuras nos painéis, com o vermelho da marca no hover. */
+  /* O contain impede que a rolagem passe para a página ao chegar no fim da lista. */
+  .department-menu :is(nav, .department-menu-detail > div) {
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar) transparent;
+  }
+
+  .department-menu :is(nav, .department-menu-detail > div):hover {
+    scrollbar-color: var(--color-brand) transparent;
+  }
+
+  /*
+    Celular: um nível por vez; o desktop mostra lista e subcategorias juntas. O display fica aqui,
+    e não em utilitários do Tailwind, que teriam prioridade sobre o display: none abaixo.
+  */
+  .department-menu-list,
+  .department-menu-detail {
+    display: flex;
+    flex-direction: column;
+  }
+
+  @media (width < 1001px) {
+    .department-menu-panel[data-level='list'] .department-menu-detail,
+    .department-menu-panel[data-level='detail'] .department-menu-list {
+      display: none;
+    }
+  }
+
+  /*
+    Desktop: abre só com a lista e cresce para a direita quando um departamento é escolhido. O
+    site inteiro anda para a direita até sair de baixo da lista, para o menu ficar ao lado da página e
+    não por cima; o painel expandido passa por cima do site já deslocado, sob o fundo escurecido.
+    O <dialog> fica na camada superior e não acompanha o deslocamento. O #root corta o que sai
+    pela direita: com clip (e não hidden) não há rolagem horizontal nem por script, e o header
+    sticky continua funcionando.
+  */
+  @media (width >= 1001px) {
+    :root {
+      --department-list-width: 340px;
+    }
+
+    #root {
+      overflow-x: clip;
+    }
+
+    #root > * {
+      transition: translate 0.25s var(--carousel-ease, ease);
+    }
+
+    /*
+      O deslocamento desconta a margem lateral do site (--container-start), para o conteúdo
+      começar logo depois da lista, com a folga mínima do desktop (24px), em qualquer largura.
+    */
+    #root:has(.department-menu[open]:not([data-closing])) > * {
+      translate: max(0px, var(--department-list-width) + 24px - (var(--container-start))) 0;
+    }
+
+    .department-menu-panel {
+      width: var(--department-list-width);
+      transition:
+        translate 0.25s var(--carousel-ease, ease),
+        width 0.25s var(--carousel-ease, ease);
+    }
+
+    .department-menu-panel[data-has-detail] {
+      width: min(1000px, 100% - 48px);
+    }
+
+    .department-menu-panel:not([data-has-detail]) .department-menu-detail {
+      display: none;
+    }
+  }
+
+  /*
+    Foto da placa-mãe do banner "Monte um PC" (JPG com fundo branco): no escuro o screen some com o
+    branco; no claro o multiply faz o mesmo.
+  */
+  .builder-banner-art {
+    mix-blend-mode: screen;
+  }
+
+  html[data-theme='light'] .builder-banner-art {
+    mix-blend-mode: multiply;
+  }
+
+  .department-menu-cta {
+    --chamfer-border: var(--color-brand);
+    --chamfer-fill: var(--color-surface);
+  }
+
+  .department-menu-cta:hover {
+    --chamfer-fill: color-mix(in srgb, var(--color-brand) 12%, var(--color-surface));
+  }
+
+  /*
+    Carrossel "Na Pichau Tem!". --cards é quantos cabem na largura: fracionado no celular, para o
+    próximo card aparecer cortado e indicar que dá para deslizar; cinco ou seis inteiros no desktop.
+  */
+  .department-showcase-track {
+    --cards: 2.3;
+    --gap: 12px;
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: calc((100% - (var(--cards) - 1) * var(--gap)) / var(--cards));
+    gap: var(--gap);
+    /* Espaço para o brilho do hover, que o overflow cortaria; a margem negativa compensa no layout. */
+    margin-block: -10px;
+    padding-block: 10px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  /* Celulares bem estreitos: menos cards, para "Computadores" caber numa linha. */
+  @media (width < 360px) {
+    .department-showcase-track {
+      --cards: 1.7;
+    }
+  }
+
+  @media (width >= 601px) {
+    .department-showcase-track {
+      --cards: 3.4;
+      --gap: 16px;
+    }
+  }
+
+  @media (width >= 768px) {
+    .department-showcase-track {
+      --cards: 4.4;
+    }
+  }
+
+  /* Seis por vez só a partir de 1280px: abaixo disso o card fica estreito para nome e seta lado a lado. */
+  @media (width >= 1001px) {
+    .department-showcase-track {
+      --cards: 5;
+    }
+  }
+
+  @media (width >= 1280px) {
+    .department-showcase-track {
+      --cards: 6;
+    }
+  }
+
+  .department-showcase-track > li {
+    scroll-snap-align: start;
+  }
+
+  /* Card no padrão do purpose-card (chanfro, cantos e brilho); aqui só o miolo e o foco. */
+  .department-card {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    padding: 16px 12px 14px;
+  }
+
+  /*
+    O foco usa o destaque do próprio purpose-card (borda chanfrada vermelha e brilho), que segue o
+    recorte; o outline padrão seria retangular e, por fora, a trilha o cortaria.
+  */
+  .department-card:focus-visible {
+    outline: none;
+  }
+
+  .department-card:is(:hover, :focus-visible) .purpose-card-arrow {
+    color: var(--color-brand);
+  }
+
+  /* Branco nos dois temas, porque as fotos têm fundo branco. */
+  .product-media {
+    --cut: 10px;
+    --chamfer-border: #ffffff;
+    --chamfer-fill: #ffffff;
+  }
+
+  /* Botão secundário chanfrado (favoritar, carrinho, "mostrar mais"), no estilo das setas dos cards. */
+  .chip-button {
+    --cut: 6px;
+    --chamfer-border: var(--chip-border);
+    --chamfer-fill: var(--chip-fill);
+    transition: color 150ms;
+  }
+
+  .chip-button:hover {
+    --chamfer-border: var(--color-brand);
+    color: var(--color-brand);
   }
 
   /* Sombra num elemento sem recorte, já que o clip-path também cortaria o box-shadow. */
@@ -256,7 +1341,7 @@
     z-index: -2;
     border-radius: 50%;
     box-shadow:
-      0 12px 32px #00000059,
+      0 12px 32px var(--header-shadow),
       0 8px 24px #ed002426;
   }
 
@@ -278,6 +1363,84 @@
     .header-slash {
       display: block;
     }
+  }
+
+  .purpose-card {
+    --cut: 16px;
+    --chamfer-border: var(--card-border);
+    /* No escuro, mais escuro que a página nas bordas, para o card ter profundidade. */
+    --chamfer-fill: var(--card-fill);
+    /* drop-shadow segue o contorno chanfrado; box-shadow ficaria retangular. */
+    transition: filter 200ms;
+  }
+
+  /* No hover o degradê fica avermelhado; o centro dele está atrás da imagem do produto. */
+  .purpose-card:hover,
+  .purpose-card:focus-visible {
+    --chamfer-border: var(--color-brand);
+    --chamfer-fill: var(--card-fill-hover);
+    filter: drop-shadow(0 0 10px #ed002459);
+  }
+
+  /* Traços vermelhos sobre as diagonais dos cantos superior direito e inferior esquerdo. */
+  .corner-accents {
+    --accent-length: calc(var(--cut) * 1.1);
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .corner-accents::before,
+  .corner-accents::after {
+    content: '';
+    position: absolute;
+    width: var(--accent-length);
+    height: 3px;
+    background: var(--color-brand);
+    transform: rotate(45deg);
+  }
+
+  .corner-accents::before {
+    top: calc(var(--cut) / 2 - 1.5px);
+    right: calc(var(--cut) / 2 - var(--accent-length) / 2);
+  }
+
+  .corner-accents::after {
+    bottom: calc(var(--cut) / 2 - 1.5px);
+    left: calc(var(--cut) / 2 - var(--accent-length) / 2);
+  }
+
+  .purpose-card-arrow {
+    --cut: 6px;
+    --chamfer-border: var(--chip-border);
+    --chamfer-fill: var(--chip-fill);
+  }
+
+  .purpose-card:hover .purpose-card-arrow,
+  .purpose-card:focus-visible .purpose-card-arrow {
+    --chamfer-border: var(--color-brand);
+  }
+
+  /*
+    Enquadra só a área do produto (--frame-*) dentro da caixa, como um object-contain aplicado ao
+    produto e não à tela inteira do PNG: a escala é a mesma nos dois eixos, então nada é esticado.
+    O produto fica alinhado à direita e à base; a margem transparente que sobra é cortada.
+  */
+  .purpose-card-art {
+    position: relative;
+    height: clamp(92px, 14svh, 170px);
+    overflow: hidden;
+    container-type: size;
+  }
+
+  .purpose-card-art img {
+    --scale: min(100cqw / var(--frame-width), 100cqh / var(--frame-height));
+    position: absolute;
+    left: calc(100cqw - (var(--frame-x) + var(--frame-width)) * var(--scale));
+    top: calc(100cqh - (var(--frame-y) + var(--frame-height)) * var(--scale));
+    width: calc(var(--source-width) * var(--scale));
+    max-width: none;
+    height: auto;
   }
 
   .eyebrow {

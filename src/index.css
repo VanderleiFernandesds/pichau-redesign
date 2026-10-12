@@ -1499,6 +1499,14 @@ html[data-theme='light'] .theme-dark-only {
     --chamfer-fill: #ffffff;
   }
 
+  /*
+    Repetido em cada card, o contorno claro do chamfer-accent pesava na vitrine; aqui a borda fica no
+    tom do degradê e o botão perde o brilho, sem deixar de ser a ação principal.
+  */
+  .product-card-cta {
+    --chamfer-border: #c8001f;
+  }
+
   /* Botão secundário chanfrado (favoritar, carrinho, "mostrar mais"), no estilo das setas dos cards. */
   .chip-button {
     --cut: 6px;
@@ -1507,7 +1515,8 @@ html[data-theme='light'] .theme-dark-only {
     transition: color 150ms;
   }
 
-  .chip-button:hover {
+  .chip-button:hover,
+  button:hover > .chip-button {
     --chamfer-border: var(--color-brand);
     color: var(--color-brand);
   }

@@ -1387,19 +1387,18 @@ html[data-theme='light'] .hero-copy h1 {
   }
 
   /*
-    A foto inteira, sem corte nem distorção (object-fit: contain), com altura limitada para a seção
-    não virar outro hero. O brilho é um pseudo-elemento borrado atrás da imagem, que fica nítida.
+    Gabinete e peças inteiros, sem corte nem distorção (object-fit: contain), com altura limitada
+    para a seção não virar outro hero. A área é 2:1: as peças (3:2) ocupam 75% da largura à esquerda
+    e o gabinete entra à direita, um pouco por trás delas. A altura sai da largura, então a
+    composição se mantém quando a coluna é mais estreita que --art-height pede.
   */
-  /* Mesmo formato da foto (3:2): o brilho fica exatamente atrás das peças e nada sobra nas bordas. */
   .builder-art {
+    --art-height: clamp(150px, 46vw, 260px);
     position: relative;
     isolation: isolate;
     justify-self: center;
-    aspect-ratio: 3 / 2;
-    height: clamp(150px, 46vw, 260px);
-    /* min-width: 0 deixa o max-width valer; sem ele o grid mantém a largura vinda da altura. */
-    min-width: 0;
-    max-width: 100%;
+    aspect-ratio: 2 / 1;
+    width: min(100%, var(--art-height) * 2);
   }
 
   .builder-art::before {
@@ -1412,13 +1411,24 @@ html[data-theme='light'] .hero-copy h1 {
     filter: blur(48px);
   }
 
-  /* Absoluta para ocupar a altura fixa do contêiner; numa linha de grid automática, height: 100% não vale. */
+  /* Absolutas para ocupar a altura do contêiner; numa linha de grid automática, height: 100% não vale. */
   .builder-art img {
     position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
+    bottom: 0;
     object-fit: contain;
+  }
+
+  .builder-art-case {
+    right: 2%;
+    width: auto;
+    height: 92%;
+  }
+
+  .builder-art-parts {
+    left: 0;
+    width: 75%;
+    height: 100%;
+    object-position: left bottom;
   }
 
   html[data-theme='light'] .builder-art::before {
@@ -1426,10 +1436,10 @@ html[data-theme='light'] .hero-copy h1 {
   }
 
   @media (width >= 1001px) {
-    /* No desktop as peças encostam à direita, como no banner original, e crescem em telas largas. */
+    /* No desktop a arte encosta à direita, como no banner original, e cresce em telas largas. */
     .builder-art {
+      --art-height: clamp(260px, 23vw, 400px);
       justify-self: end;
-      height: clamp(260px, 23vw, 400px);
     }
   }
 

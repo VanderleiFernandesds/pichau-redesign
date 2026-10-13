@@ -1138,8 +1138,8 @@ html[data-theme='light'] .hero-copy h1 {
 
   /*
     Menu de departamentos. O <dialog> cobre a tela (o clique fora do painel cai nele) e o painel
-    encosta à esquerda. Só com a lista a página continua rolando; com um departamento escolhido
-    ela trava.
+    encosta à esquerda. Em telas largas, só com a lista, a página continua rolando; com um
+    departamento escolhido (ou abaixo de 1500px) ela trava.
   */
   :root:has(.department-menu[open]:not([data-closing]) [data-has-detail]) {
     overflow: hidden;
@@ -1160,8 +1160,9 @@ html[data-theme='light'] .hero-copy h1 {
   }
 
   /*
-    Só com a lista aberta a página continua visível e a sombra separa o painel dela. Ao escolher um
-    departamento o fundo escurece; na saída ele clareia junto com o painel.
+    Em telas largas, só com a lista aberta, a página continua visível ao lado e a sombra separa o
+    painel dela. Ao escolher um departamento o fundo escurece; na saída ele clareia junto com o
+    painel.
   */
   .department-menu::backdrop {
     background: transparent;
@@ -1174,6 +1175,28 @@ html[data-theme='light'] .hero-copy h1 {
   .department-menu:has([data-has-detail]):not([data-closing])::backdrop {
     background: rgb(8 9 17 / 0.7);
     backdrop-filter: blur(4px);
+  }
+
+  /*
+    Abaixo de 1500px a lista passa por cima do site (só telas largas o empurram para o lado), então
+    já abre com o fundo escurecido e a página travada, como o carrinho.
+  */
+  @media (width < 1500px) {
+    :root:has(.department-menu[open]:not([data-closing])) {
+      overflow: hidden;
+    }
+
+    .department-menu:not([data-closing])::backdrop {
+      background: rgb(8 9 17 / 0.7);
+      backdrop-filter: blur(4px);
+    }
+
+    @starting-style {
+      .department-menu[open]::backdrop {
+        background: transparent;
+        backdrop-filter: blur(0);
+      }
+    }
   }
 
   .department-menu-panel {
@@ -1330,32 +1353,12 @@ html[data-theme='light'] .hero-copy h1 {
   }
 
   /*
-    Desktop: abre só com a lista e cresce para a direita quando um departamento é escolhido. O
-    site inteiro anda para a direita até sair de baixo da lista, para o menu ficar ao lado da página e
-    não por cima; o painel expandido passa por cima do site já deslocado, sob o fundo escurecido.
-    O <dialog> fica na camada superior e não acompanha o deslocamento. O #root corta o que sai
-    pela direita: com clip (e não hidden) não há rolagem horizontal nem por script, e o header
-    sticky continua funcionando.
+    Desktop: abre só com a lista e cresce para a direita quando um departamento é escolhido; o
+    painel expandido passa por cima do site, sob o fundo escurecido.
   */
   @media (width >= 1001px) {
     :root {
       --department-list-width: 340px;
-    }
-
-    #root {
-      overflow-x: clip;
-    }
-
-    #root > * {
-      transition: translate 0.25s var(--carousel-ease, ease);
-    }
-
-    /*
-      O deslocamento desconta a margem lateral do site (--container-start), para o conteúdo
-      começar logo depois da lista, com a folga mínima do desktop (24px), em qualquer largura.
-    */
-    #root:has(.department-menu[open]:not([data-closing])) > * {
-      translate: max(0px, var(--department-list-width) + 24px - (var(--container-start))) 0;
     }
 
     .department-menu-panel {
@@ -1371,6 +1374,31 @@ html[data-theme='light'] .hero-copy h1 {
 
     .department-menu-panel:not([data-has-detail]) .department-menu-detail {
       display: none;
+    }
+  }
+
+  /*
+    Em telas largas o site anda para a direita até sair de baixo da lista, para o menu ficar ao
+    lado da página e não por cima. Abaixo de 1500px o deslocamento (de 180px a 340px) cortaria boa
+    parte da página, então a lista passa por cima dela. O <dialog> fica na camada superior e não
+    acompanha o deslocamento. O #root corta o que sai pela direita: com clip (e não hidden) não há
+    rolagem horizontal nem por script, e o header sticky continua funcionando.
+  */
+  @media (width >= 1500px) {
+    #root {
+      overflow-x: clip;
+    }
+
+    #root > * {
+      transition: translate 0.25s var(--carousel-ease, ease);
+    }
+
+    /*
+      O deslocamento desconta a margem lateral do site (--container-start), para o conteúdo
+      começar logo depois da lista, com a folga mínima do desktop (24px), em qualquer largura.
+    */
+    #root:has(.department-menu[open]:not([data-closing])) > * {
+      translate: max(0px, var(--department-list-width) + 24px - (var(--container-start))) 0;
     }
   }
 

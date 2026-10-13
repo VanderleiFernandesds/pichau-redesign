@@ -1,13 +1,15 @@
 import { Gamepad2, House, Settings } from 'lucide-react';
-import pcGamerImage from '../assets/images/purposes/pc-gamer.png';
-import workstationImage from '../assets/images/purposes/workstation.png';
-import homeOfficeImage from '../assets/images/purposes/casa-escritorio.png';
-import buildPcImage from '../assets/images/purposes/monte-seu-pc.png';
+import pcGamerImage from '../assets/images/purposes/pc-gamer.avif';
+import workstationImage from '../assets/images/purposes/workstation.avif';
+import homeOfficeImage from '../assets/images/purposes/casa-escritorio.avif';
+import buildPcImage from '../assets/images/purposes/monte-seu-pc-600.avif';
 
 /*
-  Os PNGs têm bastante margem transparente. `imageFrame` marca a área ocupada pelo produto (em px
-  da imagem original) para o card enquadrar o produto, não a tela inteira. Se uma imagem for
-  trocada, o tamanho de origem e essa área precisam ser medidos de novo.
+  As imagens têm bastante margem transparente. `imageFrame` marca a área ocupada pelo produto (em px
+  da arte original, de 1536 ou 1254px) para o card enquadrar o produto, não a tela inteira. Os AVIFs
+  foram reduzidos para 600px na mesma proporção: o CSS escala pelo tamanho de origem, então as
+  medidas continuam valendo. Se uma imagem for trocada, o tamanho de origem e essa área precisam
+  ser medidos de novo.
 */
 const WIDE_SOURCE = { sourceWidth: 1536, sourceHeight: 1024 };
 const SQUARE_SOURCE = { sourceWidth: 1254, sourceHeight: 1254 };

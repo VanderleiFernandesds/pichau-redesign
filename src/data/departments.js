@@ -19,6 +19,13 @@ import computersImage from '../assets/images/categories/computadores.avif';
 import upgradeKitImage from '../assets/images/categories/kit-upgrade.avif';
 import monitorsImage from '../assets/images/categories/monitores.avif';
 import chairsImage from '../assets/images/categories/cadeiras.avif';
+import notebooksImage from '../assets/images/categories/notebooks-portateis.avif';
+import networkImage from '../assets/images/categories/redes-wifi.avif';
+import gamesImage from '../assets/images/categories/games-consoles.avif';
+import homeImage from '../assets/images/categories/casa-lazer.avif';
+import apparelImage from '../assets/images/categories/vestuario-acessorios.avif';
+import energyDrinksImage from '../assets/images/categories/energeticos.avif';
+import openboxImage from '../assets/images/categories/openbox.avif';
 
 /*
   Catálogo do menu de departamentos. `productCategory` liga o departamento ao filtro das ofertas
@@ -60,6 +67,7 @@ export const DEPARTMENT_GROUPS = [
       },
       {
         id: 'notebooks',
+        image: notebooksImage,
         name: 'Notebooks e portáteis',
         icon: Laptop,
         description: 'Desempenho para levar a qualquer lugar.',
@@ -126,6 +134,7 @@ export const DEPARTMENT_GROUPS = [
       },
       {
         id: 'redes',
+        image: networkImage,
         name: 'Redes e Wi-Fi',
         icon: Wifi,
         description: 'Conexão estável para jogar e trabalhar.',
@@ -141,6 +150,7 @@ export const DEPARTMENT_GROUPS = [
     departments: [
       {
         id: 'games',
+        image: gamesImage,
         name: 'Games e consoles',
         icon: Gamepad2,
         description: 'Consoles, controles e jogos.',
@@ -153,6 +163,7 @@ export const DEPARTMENT_GROUPS = [
       },
       {
         id: 'casa',
+        image: homeImage,
         name: 'Casa e lazer',
         icon: House,
         description: 'Tecnologia para o dia a dia em casa.',
@@ -164,6 +175,7 @@ export const DEPARTMENT_GROUPS = [
       },
       {
         id: 'vestuario',
+        image: apparelImage,
         name: 'Vestuário e acessórios',
         icon: Shirt,
         description: 'Roupas e acessórios com a marca Pichau.',
@@ -175,6 +187,7 @@ export const DEPARTMENT_GROUPS = [
       },
       {
         id: 'energeticos',
+        image: energyDrinksImage,
         name: 'Energéticos',
         icon: Zap,
         description: 'A linha de energéticos da Pichau.',
@@ -186,6 +199,7 @@ export const DEPARTMENT_GROUPS = [
       },
       {
         id: 'openbox',
+        image: openboxImage,
         name: 'Openbox',
         icon: Package,
         description: 'Produtos revisados, com garantia e preço menor.',

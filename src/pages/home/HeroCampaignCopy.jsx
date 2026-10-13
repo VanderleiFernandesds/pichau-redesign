@@ -15,7 +15,7 @@ export default function HeroCampaignCopy({ campaigns, shownId, isAnnounced, onFi
   return (
     <div className="hero-copy max-w-[590px]">
       <div className="grid" aria-live={isAnnounced ? 'polite' : 'off'}>
-        {campaigns.map(({ id, eyebrow, logo, title, isTitleStacked, description, highlights, details }) => (
+        {campaigns.map(({ id, eyebrow, logo, title, isTitleStacked, description, details }) => (
           <div key={id} className={`hero-fade col-start-1 row-start-1 ${visibility(id)}`}>
             {logo ? (
               // Largura fixa e altura automática, para a proporção vir sempre da arte; no celular o logo
@@ -43,19 +43,6 @@ export default function HeroCampaignCopy({ campaigns, shownId, isAnnounced, onFi
               ))}
             </h1>
             <p className="line-clamp-3 max-w-[36ch] text-[14px] leading-[1.5] text-text sm:text-[16px]">{description}</p>
-
-            {highlights.length > 0 && (
-              <ul className="mt-3 flex flex-wrap gap-2" aria-label="Destaques">
-                {highlights.map((highlight) => (
-                  <li
-                    key={highlight}
-                    className="rounded-[4px] border border-line bg-fill px-2.5 py-1 text-[12px] font-semibold text-text"
-                  >
-                    {highlight}
-                  </li>
-                ))}
-              </ul>
-            )}
 
             {details.length > 0 && (
               <ul className="mt-3 grid gap-1.5 text-[13px] text-soft">

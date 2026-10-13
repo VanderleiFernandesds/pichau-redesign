@@ -1,5 +1,6 @@
 import { ArrowRight } from 'lucide-react';
-import partsImage from '../../assets/images/purposes/monte-seu-pc.png';
+import partsImage from '../../assets/images/purposes/monte-seu-pc-600.avif';
+import partsImageLarge from '../../assets/images/purposes/monte-seu-pc-1200.avif';
 
 /*
   Chamada para o modal de objetivos (ConfigModal). Ele recomenda por onde começar e filtra as
@@ -35,7 +36,17 @@ export default function BuilderBanner({ onStart }) {
 
       {/* Decorativa: o título já diz do que se trata. O brilho fica num pseudo-elemento atrás da foto. */}
       <div className="builder-art">
-        <img src={partsImage} alt="" width="1536" height="1024" loading="lazy" decoding="async" />
+        {/* A arte ocupa no máximo 600 x 400 (desktop largo) e 390px de largura abaixo de 1001px. */}
+        <img
+          src={partsImage}
+          srcSet={`${partsImage} 600w, ${partsImageLarge} 1200w`}
+          sizes="(min-width: 1001px) 600px, 390px"
+          alt=""
+          width="1536"
+          height="1024"
+          loading="lazy"
+          decoding="async"
+        />
       </div>
     </section>
   );

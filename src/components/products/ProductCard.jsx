@@ -33,7 +33,7 @@ export default function ProductCard({ product, isFavorite, onToggleFavorite, onA
       <span aria-hidden="true" className="corner-accents" />
 
       {/* As fotos são JPG com fundo branco; ficam numa área clara, em vez de um recorte sobre o grafite. */}
-      <div className="chamfer product-media relative flex h-36 items-center justify-center p-2 sm:h-48 sm:p-3">
+      <div className="chamfer product-media relative flex h-30 items-center justify-center p-2 sm:h-48 sm:p-3">
         <img
           src={product.image}
           alt={product.name}
@@ -43,14 +43,17 @@ export default function ProductCard({ product, isFavorite, onToggleFavorite, onA
           height="190"
           className="h-full w-full object-contain"
         />
+        {/* No celular o chip é menor que o botão, para não cobrir a foto; a área de toque segue com 44px. */}
         <button
           type="button"
           onClick={() => onToggleFavorite(product.id)}
           aria-pressed={isFavorite}
           aria-label={`Favoritar ${product.name}`}
-          className={`chamfer chip-button absolute top-1.5 right-1.5 grid size-9 place-items-center sm:size-10 ${isFavorite ? 'text-brand' : 'text-heading'}`}
+          className={`absolute top-0 right-0 grid size-11 place-items-center sm:top-1 sm:right-1 ${isFavorite ? 'text-brand' : 'text-heading'}`}
         >
-          <Heart aria-hidden="true" className={`size-4.5 ${isFavorite ? 'fill-current' : ''}`} />
+          <span className="chamfer chip-button grid size-7 place-items-center sm:size-10">
+            <Heart aria-hidden="true" className={`size-3.5 sm:size-4.5 ${isFavorite ? 'fill-current' : ''}`} />
+          </span>
         </button>
       </div>
 
@@ -59,15 +62,22 @@ export default function ProductCard({ product, isFavorite, onToggleFavorite, onA
       </h3>
       <p className="mt-1 text-[12px] leading-snug text-soft sm:text-[13px]">{product.spec}</p>
 
-      <div className="pt-3">
-        <p className="flex flex-wrap items-baseline gap-x-1.5">
-          <span className="text-[19px] font-extrabold tracking-[-0.5px] text-success sm:text-[24px]">{formatMoney(product.price)}</span>
-          <span className="text-[12px] font-semibold text-success">no Pix</span>
+      <div className="pt-2 sm:pt-3">
+        {/*
+          No celular "no Pix" fica sempre embaixo do valor, que não quebra: com ele ao lado, cada card
+          quebrava num ponto diferente conforme o tamanho do preço.
+        */}
+        <p className="flex flex-col text-success sm:flex-row sm:flex-wrap sm:items-baseline sm:gap-x-1.5">
+          <span className="text-[clamp(18px,5.2vw,21px)] leading-tight font-extrabold tracking-[-0.5px] whitespace-nowrap sm:text-[24px]">
+            {formatMoney(product.price)}
+          </span>
+          <span className="text-[12px] font-semibold">no Pix</span>
         </p>
-        <p className="mt-1 text-[11px] leading-normal text-soft sm:text-[12px]">
-          {INSTALLMENTS}x de {formatMoney(cardPrice / INSTALLMENTS)} sem juros
+        <p className="mt-1.5 text-[12px] leading-snug text-soft sm:mt-1 sm:leading-normal">
+          {INSTALLMENTS}x de <span className="whitespace-nowrap">{formatMoney(cardPrice / INSTALLMENTS)}</span> <span className="whitespace-nowrap">sem juros</span>
           <br />
-          Total no cartão: {formatMoney(cardPrice)}
+          Total no cartão<span className="max-sm:hidden">:</span>{' '}
+          <span className="whitespace-nowrap max-sm:block">{formatMoney(cardPrice)}</span>
         </p>
       </div>
 
@@ -76,7 +86,7 @@ export default function ProductCard({ product, isFavorite, onToggleFavorite, onA
         <button
           type="button"
           onClick={() => onView(product.id)}
-          className="chamfer chamfer-accent flex h-11 min-w-0 items-center justify-center gap-2 px-2 text-[11px] font-bold tracking-[0.5px] whitespace-nowrap text-white uppercase sm:flex-1 sm:justify-between sm:px-4 sm:text-[13px]"
+          className="chamfer chamfer-accent product-card-cta flex h-10 min-w-0 sm:h-11 items-center justify-center gap-2 px-2 text-[11px] font-bold tracking-[0.5px] whitespace-nowrap text-white uppercase sm:flex-1 sm:justify-between sm:px-4 sm:text-[13px]"
         >
           Ver produto
           <ArrowUpRight aria-hidden="true" className="hidden size-4 sm:block" />
@@ -86,9 +96,9 @@ export default function ProductCard({ product, isFavorite, onToggleFavorite, onA
           onClick={() => onAddToCart(product.id)}
           aria-label={`Adicionar ${product.name} ao carrinho`}
           title="Adicionar ao carrinho"
-          className="chamfer chip-button flex h-11 shrink-0 items-center justify-center gap-2 text-[12px] font-semibold sm:w-11"
+          className="chamfer chip-button flex h-10 shrink-0 items-center justify-center gap-2 text-[12px] font-semibold sm:size-11"
         >
-          <ShoppingCart aria-hidden="true" className="size-4.5" />
+          <ShoppingCart aria-hidden="true" className="size-4 sm:size-4.5" />
           <span aria-hidden="true" className="sm:hidden">Adicionar</span>
         </button>
       </div>

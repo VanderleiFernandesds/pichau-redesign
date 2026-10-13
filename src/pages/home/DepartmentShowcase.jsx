@@ -38,22 +38,41 @@ export default function DepartmentShowcase({ onOpenDepartment, onShowAll }) {
     track.scrollBy({ left: direction * (card.offsetWidth + gap), behavior: 'smooth' });
   }
 
+  /*
+    Com scroll-snap obrigatório, a rolagem que o navegador faz ao focar um card pelo teclado volta
+    para o ponto de encaixe anterior e deixa o card cortado. Alinhar o card ao início da trilha cai
+    num ponto de encaixe, então ele fica inteiro na tela.
+  */
+  function revealFocusedCard(event) {
+    const item = event.target.closest('li');
+    if (!item) return;
+
+    const trackRect = trackRef.current.getBoundingClientRect();
+    const itemRect = item.getBoundingClientRect();
+    if (itemRect.left < trackRect.left || itemRect.right > trackRect.right) {
+      item.scrollIntoView({ block: 'nearest', inline: 'start' });
+    }
+  }
+
   return (
-    // Mesmo cabeçalho das vitrines de produtos (eyebrow, título e ação à direita) e o mesmo espaçamento.
+    // Mesmo cabeçalho das vitrines de produtos (título e ação à direita) e o mesmo espaçamento.
     <section aria-labelledby="department-showcase-title" className="department-showcase wrap pt-7 sm:pt-11">
       <div className="mb-4 flex flex-col items-start justify-between gap-[15px] sm:mb-[22px] lg:flex-row lg:items-end">
         <div>
-          <span className="eyebrow">DEPARTAMENTOS</span>
-          <h2 id="department-showcase-title" className="mt-2 font-display text-[26px] leading-tight font-bold text-heading sm:text-[32px]">
+          <h2 id="department-showcase-title" className="font-display text-[26px] leading-tight font-bold text-heading sm:text-[32px]">
             Na Pichau Tem!
           </h2>
           <p className="mt-1 text-[13px] text-soft sm:text-[14px]">Encontre o que você precisa para o seu setup</p>
         </div>
 
         <div className="flex items-center gap-5">
-          <button type="button" onClick={onShowAll} className="inline-flex min-h-11 items-center gap-1 text-[12px] text-brand hover:underline">
+          <button
+            type="button"
+            onClick={onShowAll}
+            className="inline-flex min-h-11 items-center gap-1.5 text-[14px] font-semibold text-heading underline-offset-4 transition-colors hover:text-brand hover:underline"
+          >
             Ver todos os departamentos
-            <ArrowUpRight aria-hidden="true" className="size-3.5" />
+            <ArrowUpRight aria-hidden="true" className="size-4 text-brand" />
           </button>
 
           <div className="hidden gap-2 lg:flex">
@@ -81,7 +100,13 @@ export default function DepartmentShowcase({ onOpenDepartment, onShowAll }) {
         </div>
       </div>
 
-      <ul id="department-showcase-track" ref={trackRef} className="department-showcase-track" aria-label="Departamentos">
+      <ul
+        id="department-showcase-track"
+        ref={trackRef}
+        onFocus={revealFocusedCard}
+        className="department-showcase-track"
+        aria-label="Departamentos"
+      >
         {SHOWCASE_DEPARTMENTS.map((department) => (
           <li key={department.id} className="flex">
             <DepartmentCard department={department} onOpen={onOpenDepartment} />

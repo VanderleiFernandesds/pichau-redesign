@@ -43,7 +43,7 @@ function objectStyle({ size, collapsed, expanded, scene, sceneMobile, sceneNarro
   O card mostra só fundo e objetos; os textos da campanha ficam na coluna à esquerda do hero.
   No card fechado o logo da campanha faz o papel de título. O botão de seleção cobre o card inteiro.
 */
-export default function HeroCampaignPanel({ campaign, position, stateClasses, isShown, onSelect }) {
+export default function HeroCampaignPanel({ campaign, position, stateClasses, isShown, fetchPriority, onSelect }) {
   const { name, background, objects } = campaign;
   const hasMobileScene = objects.some((object) => object.sceneMobile);
 
@@ -61,6 +61,7 @@ export default function HeroCampaignPanel({ campaign, position, stateClasses, is
             '--position-collapsed': background.position.collapsed,
             '--position-expanded': background.position.expanded,
           }}
+          fetchPriority={fetchPriority}
           decoding="async"
           onError={hideBrokenImage}
         />
@@ -85,6 +86,9 @@ export default function HeroCampaignPanel({ campaign, position, stateClasses, is
               alt=""
               width={object.width}
               height={object.height}
+              // Os objetos são decorativos e pesam mais que o fundo (o LCP): baixam depois dele, das
+              // fontes e do JavaScript, em vez de dividir a banda com o fundo.
+              fetchPriority="low"
               decoding="async"
               onError={hideBrokenImage}
               className={object.srcOnLight ? 'theme-dark-only' : undefined}
@@ -96,6 +100,7 @@ export default function HeroCampaignPanel({ campaign, position, stateClasses, is
                 alt=""
                 width={object.width}
                 height={object.height}
+                fetchPriority="low"
                 decoding="async"
                 onError={hideBrokenImage}
                 className="theme-light-only"

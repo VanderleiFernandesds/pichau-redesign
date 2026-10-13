@@ -7,6 +7,15 @@ import { hideBrokenImage } from '../../utils/image';
   com as transições desligadas, então nenhuma animação é cortada. A posição vem de --position: no desktop vira deslocamento horizontal; no
   mobile os painéis dividem a mesma célula e só o do slide exibido aparece.
 */
+/*
+  O fundo do primeiro slide é o LCP (o index.html faz preload dele): fica com prioridade alta, e as
+  imagens dos outros slides com prioridade baixa. No celular elas nem aparecem até o carrossel girar;
+  no desktop os cards fechados aparecem, mas são pequenos e chegam logo depois.
+*/
+function fetchPriority(slides, id) {
+  return id === slides[0].id ? 'high' : 'low';
+}
+
 export default function HeroPanels({ slides, order, shownId, isExpanded, isJumping, objectsHiddenIds, onSelect }) {
   return (
     <div className={`hero-panels ${isJumping ? 'is-jumping' : ''}`} style={{ '--slide-count': slides.length }}>
@@ -22,6 +31,7 @@ export default function HeroPanels({ slides, order, shownId, isExpanded, isJumpi
             alt=""
             className={`hero-stage-image ${id === shownId && isExpanded ? 'is-visible' : ''}`}
             style={{ objectPosition: background.position.stage }}
+            fetchPriority={fetchPriority(slides, id)}
             decoding="async"
             onError={hideBrokenImage}
           />
@@ -43,6 +53,7 @@ export default function HeroPanels({ slides, order, shownId, isExpanded, isJumpi
               objectsHiddenIds.includes(slide.id) && 'is-hiding-objects',
             ]}
             isShown={isShown}
+            fetchPriority={fetchPriority(slides, slide.id)}
             onSelect={() => onSelect(slide.id)}
           />
         );

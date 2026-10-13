@@ -34,7 +34,7 @@ export default function Header({
       </button>
 
       <a href="./" aria-label="Pichau início" className="flex min-h-(--header-control) shrink-0 items-center">
-        <PichauLogo className="h-[18px] w-auto drop-shadow-[0_0_18px_#ed002466] min-[360px]:h-[26px] sm:h-[30px] lg:h-[38px]" />
+        <PichauLogo className="h-[18px] w-auto drop-shadow-[0_0_18px_#ed002466] min-[360px]:h-[26px] [html[data-theme=light]_&]:drop-shadow-none sm:h-[30px] lg:h-[38px]" />
       </a>
 
       {/* Abaixo de 1001px a busca ocupa sozinha a segunda linha. */}

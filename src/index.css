@@ -285,6 +285,17 @@ html[data-theme='light'] .theme-dark-only {
   display: block;
 }
 
+/*
+  No tema claro os títulos das campanhas ficam no vermelho da marca, como os logos, com contorno
+  branco. O paint-order pinta o contorno por baixo do preenchimento: só a metade de fora aparece e
+  a letra não afina.
+*/
+html[data-theme='light'] .hero-copy h1 {
+  color: var(--color-brand);
+  -webkit-text-stroke: 0.08em #ffffff;
+  paint-order: stroke fill;
+}
+
 .hero-controls {
   grid-area: controls;
   padding-block: 12px var(--hero-gap);

@@ -58,7 +58,6 @@ import arenaGamerGeek from '../assets/images/banners/pichau-arena/gamer-geek.avi
                  srcOnLight é a versão com texto escuro para o tema claro, quando o logo tem texto branco
     title        partes do título; com isTitleStacked, cada uma ocupa uma linha
     description  até três linhas
-    highlights   até três destaques curtos (vazio quando não há o que destacar)
     details      oferta, data ou local; `type` escolhe o ícone (offer, date, location)
 */
 export const HERO_CAMPAIGNS = {
@@ -111,7 +110,6 @@ export const HERO_CAMPAIGNS = {
     logo: { src: energyDrinkLogo, width: 1647, height: 955, displayWidth: 112, alt: 'Pichau Energy Drink Protein' },
     title: ['Energy Drink', 'Protein'],
     description: 'Energético Pichau sabor Black Cherry, com 12g de proteína em cada lata de 350ml.',
-    highlights: ['12g de proteína', 'Black Cherry'],
     details: [],
     cta: { label: 'Ver Energy Drink', href: '#offers' },
   },
@@ -205,7 +203,6 @@ export const HERO_CAMPAIGNS = {
     logo: { src: corsairLogo, srcOnLight: corsairLogoDark, width: 800, height: 186, displayWidth: 189, alt: 'Corsair' },
     title: ['Seleção', 'Corsair'],
     description: 'Uma seleção especial de produtos Corsair na Pichau.',
-    highlights: ['Hardware', 'Periféricos'],
     details: [],
     cta: { label: 'Ver seleção Corsair', href: '#offers', category: 'Hardware' },
   },
@@ -312,7 +309,6 @@ export const HERO_CAMPAIGNS = {
     title: ['PARA AQUELES', 'QUE OUSAM.'],
     isTitleStacked: true,
     description: 'Explore notebooks, componentes e periféricos ROG.',
-    highlights: [],
     details: [],
     cta: { label: 'EXPLORE A ROG', href: 'https://rog.asus.com/br/' },
   },
@@ -344,7 +340,6 @@ export const HERO_CAMPAIGNS = {
     logo: { src: arenaLogo, width: 903, height: 785, displayWidth: 51, alt: 'Pichau Arena' },
     title: ['Gamer', '& Geek'],
     description: 'O evento gamer e geek da Pichau Arena em Joinville–SC.',
-    highlights: [],
     details: [
       { type: 'date', text: '10 a 12 de outubro' },
       { type: 'location', text: 'Joinville Square Garden, Joinville–SC' },

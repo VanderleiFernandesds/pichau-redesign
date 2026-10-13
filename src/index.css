@@ -352,7 +352,7 @@ html[data-theme='light'] .theme-dark-only {
 
 /* Setas do carrossel "Na Pichau Tem!": as mesmas do hero, desabilitadas nas pontas da trilha. */
 .showcase-arrow {
-  --arrow-size: 40px;
+  --arrow-size: 44px;
 }
 
 .showcase-arrow:disabled {
@@ -1413,9 +1413,6 @@ html[data-theme='light'] .theme-dark-only {
     grid-auto-flow: column;
     grid-auto-columns: calc((100% - (var(--cards) - 1) * var(--gap)) / var(--cards));
     gap: var(--gap);
-    /* Espaço para o brilho do hover, que o overflow cortaria; a margem negativa compensa no layout. */
-    margin-block: -10px;
-    padding-block: 10px;
     overflow-x: auto;
     overscroll-behavior-x: contain;
     scroll-snap-type: x mandatory;
@@ -1459,23 +1456,45 @@ html[data-theme='light'] .theme-dark-only {
     scroll-snap-align: start;
   }
 
-  /* Card no padrão do purpose-card (chanfro, cantos e brilho); aqui só o miolo e o foco. */
+  /* Card no padrão do purpose-card (chanfro e cantos); aqui o miolo e um destaque mais contido. */
   .department-card {
     display: flex;
     width: 100%;
     flex-direction: column;
     padding: 16px 12px 14px;
+    container-type: inline-size;
   }
 
   /*
-    O foco usa o destaque do próprio purpose-card (borda chanfrada vermelha e brilho), que segue o
-    recorte; o outline padrão seria retangular e, por fora, a trilha o cortaria.
+    O nome acompanha a largura do card (entre 15px e 18px) para a palavra mais longa,
+    "Computadores" (~6,1em), caber inteira: uma palavra só não quebra, e o line-clamp a cortaria.
+    A partir de 601px a seta divide a linha com o nome e desconta os 32px dela.
+  */
+  .department-card-label {
+    font-size: clamp(15px, (100cqi - 2px) / 6.1, 18px);
+  }
+
+  @media (width >= 601px) {
+    .department-card-label {
+      font-size: clamp(15px, (100cqi - 34px) / 6.1, 18px);
+    }
+  }
+
+  /*
+    O foco usa a borda chanfrada vermelha, que segue o recorte; o outline padrão seria retangular e,
+    por fora, a trilha o cortaria. Sem o brilho e o fundo avermelhado do purpose-card: aqui são
+    muitos cards lado a lado, e só borda e nome já marcam o card.
   */
   .department-card:focus-visible {
     outline: none;
   }
 
-  .department-card:is(:hover, :focus-visible) .purpose-card-arrow {
+  .purpose-card.department-card:is(:hover, :focus-visible) {
+    --chamfer-fill: var(--card-fill);
+    filter: none;
+  }
+
+  .department-card:is(:hover, :focus-visible) :is(.purpose-card-arrow, .department-card-name) {
     color: var(--color-brand);
   }
 

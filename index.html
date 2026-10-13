@@ -16,12 +16,21 @@
         if (localStorage.getItem('pichau-theme') === 'light') document.documentElement.dataset.theme = 'light';
       } catch {}
     </script>
-    <!-- Só os pesos usados: Inter 400/700/800 e Rajdhani 600/700. -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!--
+      As fontes (declaradas em src/index.css) e o fundo do primeiro slide do hero, que é o LCP, só
+      seriam descobertos depois do CSS e do JavaScript. O preload começa o download junto com o HTML;
+      o Vite troca os caminhos pelos arquivos com hash no build. Ao mudar o primeiro slide
+      (HERO_SLIDES em src/data/heroCampaigns.js), troque o fundo abaixo.
+    -->
+    <link rel="preload" href="/src/assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/src/assets/fonts/rajdhani-700-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/src/assets/fonts/rajdhani-600-latin.woff2" as="font" type="font/woff2" crossorigin />
     <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&family=Rajdhani:wght@600;700&display=swap"
+      rel="preload"
+      href="/src/assets/images/banners/energy-drink/fundo-1192x475.avif"
+      as="image"
+      type="image/avif"
+      fetchpriority="high"
     />
   </head>
   <body>

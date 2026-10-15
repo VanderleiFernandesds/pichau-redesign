@@ -1,6 +1,6 @@
 import { formatMoney } from '../../utils/format';
 
-// Resumo só de leitura da revisão demonstrativa: para mudar quantidades, volta-se ao carrinho.
+// Resumo só de leitura do checkout demonstrativo: para mudar quantidades, volta-se ao carrinho.
 export default function CartReview({ cartItems }) {
   return (
     <ul aria-label="Resumo do pedido">

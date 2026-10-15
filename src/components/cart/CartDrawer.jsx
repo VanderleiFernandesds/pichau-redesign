@@ -1,57 +1,104 @@
 import { useEffect, useId, useRef, useState } from 'react';
-import { ArrowRight, Minus, Plus, ShoppingCart, Trash2, X } from 'lucide-react';
-import { formatMoney } from '../../utils/format';
+import { ArrowRight, ChevronLeft, ShoppingCart, Trash2, Undo2, X } from 'lucide-react';
+import CartItem from './CartItem';
+import CartReview from './CartReview';
+import { formatItemCount, formatMoney } from '../../utils/format';
 import { useSlidingDialog } from '../../hooks/useSlidingDialog';
 
-const quantityButtonClass = 'chamfer chip-button grid size-8 place-items-center';
 const primaryButtonClass =
   'chamfer chamfer-accent flex h-11 w-full items-center justify-center text-[13px] font-bold tracking-[0.5px] text-white uppercase';
 
 /*
   Carrinho em painel lateral, entrando pela direita. Como o menu de departamentos, é um <dialog>
   que cobre a tela: o clique fora do painel cai nele e fecha, e o Esc passa pela saída animada.
+  Cabeçalho e rodapé ficam fixos; só a lista rola. "Revisar pedido" troca a lista por um resumo
+  só de leitura, demonstrativo: não há pagamento nem checkout.
 */
 export default function CartDrawer({
   isOpen,
   onClose,
   onExploreProducts,
   cartItems,
+  itemCount,
   total,
   onChangeQuantity,
   onRemove,
   onClear,
+  onRestore,
 }) {
   const dialogRef = useRef(null);
   const panelRef = useRef(null);
-  const closeButtonRef = useRef(null);
   const clearButtonRef = useRef(null);
-  const cancelClearRef = useRef(null);
+  const undoButtonRef = useRef(null);
+  const titleRef = useRef(null);
+  const reviewButtonRef = useRef(null);
   const titleId = useId();
-  const [isConfirmingClear, setIsConfirmingClear] = useState(false);
+  const countId = useId();
+  // Última remoção (um produto ou o carrinho todo), com o que é preciso para desfazer.
+  const [removal, setRemoval] = useState(null);
+  const [announcement, setAnnouncement] = useState('');
+  const [isReviewing, setIsReviewing] = useState(false);
   const isEmpty = cartItems.length === 0;
 
   useSlidingDialog(isOpen, dialogRef, panelRef);
 
-  // A confirmação não sobrevive ao fechamento: o carrinho reabre sempre no estado normal.
+  // Desfazer e revisão não sobrevivem ao fechamento: o carrinho reabre sempre no estado normal.
   useEffect(() => {
-    if (!isOpen) setIsConfirmingClear(false);
+    if (isOpen) return;
+    setRemoval(null);
+    setAnnouncement('');
+    setIsReviewing(false);
   }, [isOpen]);
 
-  // Os botões trocam de lugar; o foco acompanha para quem usa teclado não ficar sem referência.
-  function askToClear() {
-    setIsConfirmingClear(true);
-    requestAnimationFrame(() => cancelClearRef.current?.focus());
+  // O título muda para "Revisão do pedido" e recebe o foco, para o leitor de tela anunciar a troca.
+  function startReview() {
+    setIsReviewing(true);
+    setRemoval(null);
+    requestAnimationFrame(() => titleRef.current?.focus());
   }
 
-  function cancelClear() {
-    setIsConfirmingClear(false);
-    requestAnimationFrame(() => clearButtonRef.current?.focus());
+  function backToCart() {
+    setIsReviewing(false);
+    requestAnimationFrame(() => reviewButtonRef.current?.focus());
   }
 
-  function confirmClear() {
+  function changeQuantity(id, delta) {
+    const { product, quantity } = cartItems.find((item) => item.product.id === id);
+    onChangeQuantity(id, delta);
+    setAnnouncement(`Quantidade de ${product.name}: ${quantity + delta}.`);
+  }
+
+  // O botão clicado some da lista; o foco vai para o "Desfazer", a próxima ação provável.
+  function registerRemoval(message, items, restoredId) {
+    setRemoval({ message, items, restoredId });
+    setAnnouncement(message);
+    requestAnimationFrame(() => undoButtonRef.current?.focus());
+  }
+
+  function removeItem(product, quantity) {
+    onRemove(product.id);
+    registerRemoval(`Removido do carrinho: ${product.name}.`, [{ id: product.id, quantity }], product.id);
+  }
+
+  function clearCart() {
+    const items = cartItems.map(({ product, quantity }) => ({ id: product.id, quantity }));
     onClear();
-    setIsConfirmingClear(false);
-    closeButtonRef.current.focus();
+    registerRemoval('Carrinho esvaziado.', items, null);
+  }
+
+  // Ao desfazer, o foco volta para onde a remoção começou: a lixeira do produto ou o "Esvaziar".
+  function undoRemoval() {
+    const { items, restoredId } = removal;
+    onRestore(items);
+    setRemoval(null);
+    setAnnouncement(restoredId === null ? 'Produtos devolvidos ao carrinho.' : 'Produto devolvido ao carrinho.');
+    requestAnimationFrame(() => {
+      const target =
+        restoredId === null
+          ? clearButtonRef.current
+          : dialogRef.current.querySelector(`[data-product-id="${restoredId}"] [data-remove]`);
+      target?.focus();
+    });
   }
 
   /*
@@ -75,31 +122,81 @@ export default function CartDrawer({
   return (
     <dialog
       ref={dialogRef}
-      aria-labelledby={titleId}
+      aria-labelledby={isEmpty ? titleId : `${titleId} ${countId}`}
       onCancel={handleCancel}
       onClose={onClose}
       onClick={handleDialogClick}
       className="cart-drawer"
     >
       <div ref={panelRef} className="cart-drawer-panel chamfer">
-        <div className="flex items-center justify-between gap-3 border-b border-line px-5 py-3">
-          <h2 id={titleId} className="font-display text-[24px] leading-tight font-bold text-heading">
-            Seu carrinho
-          </h2>
-          <button
-            ref={closeButtonRef}
-            type="button"
-            onClick={onClose}
-            aria-label="Fechar carrinho"
-            className="grid size-11 place-items-center text-muted transition-colors hover:text-brand"
-          >
-            <X aria-hidden="true" className="size-6" strokeWidth={1.75} />
-          </button>
-        </div>
+        <header className="border-b border-line px-5 pt-2 pb-1">
+          <div className="flex items-center gap-3">
+            <h2
+              id={titleId}
+              ref={titleRef}
+              tabIndex={-1}
+              className="font-display text-[24px] leading-tight font-bold text-heading outline-none"
+            >
+              {isReviewing ? 'Revisão do pedido' : 'Seu carrinho'}
+            </h2>
+            {!isEmpty && (
+              <span id={countId} className="chamfer cart-count px-2.5 py-1 text-[12px] font-semibold whitespace-nowrap text-heading">
+                {formatItemCount(itemCount)}
+              </span>
+            )}
+            <button
+              type="button"
+              onClick={onClose}
+              aria-label="Fechar carrinho"
+              className="-mr-2 ml-auto grid size-11 shrink-0 place-items-center text-muted transition-colors hover:text-brand"
+            >
+              <X aria-hidden="true" className="size-6" strokeWidth={1.75} />
+            </button>
+          </div>
 
-        <div className="cart-drawer-list flex flex-1 flex-col overflow-y-auto px-5">
-          <p className="py-3 text-[13px] leading-[1.6] text-muted">Carrinho demonstrativo. Nenhuma compra será realizada.</p>
+          {isReviewing ? (
+            <button
+              type="button"
+              onClick={backToCart}
+              className="-ml-2 inline-flex min-h-11 items-center gap-1.5 px-2 text-[13px] font-semibold text-soft transition-colors hover:text-brand"
+            >
+              <ChevronLeft aria-hidden="true" className="size-4" />
+              Voltar ao carrinho
+            </button>
+          ) : (
+            <div className="flex items-center justify-between gap-3">
+              <p className="min-w-0 py-2 text-[12px] leading-snug text-muted">Projeto demonstrativo, sem compras reais.</p>
+              {!isEmpty && (
+                <button
+                  ref={clearButtonRef}
+                  type="button"
+                  onClick={clearCart}
+                  className="-mr-1 inline-flex min-h-11 shrink-0 items-center gap-1.5 px-1 text-[12px] font-semibold text-muted transition-colors hover:text-brand"
+                >
+                  <Trash2 aria-hidden="true" className="size-4" />
+                  Esvaziar carrinho
+                </button>
+              )}
+            </div>
+          )}
+        </header>
 
+        {removal && (
+          <div className="flex items-center justify-between gap-3 border-b border-line bg-fill py-1 pr-3 pl-5">
+            <p className="min-w-0 text-[13px] leading-snug wrap-anywhere text-text">{removal.message}</p>
+            <button
+              ref={undoButtonRef}
+              type="button"
+              onClick={undoRemoval}
+              className="inline-flex min-h-11 shrink-0 items-center gap-1.5 px-2 text-[13px] font-bold text-heading underline-offset-4 hover:underline"
+            >
+              <Undo2 aria-hidden="true" className="size-4 text-brand" />
+              Desfazer
+            </button>
+          </div>
+        )}
+
+        <div className="cart-drawer-list flex min-h-0 flex-1 flex-col overflow-y-auto px-5">
           {isEmpty ? (
             // my-auto centraliza sem esconder o topo quando o conteúdo passa da altura, como faria o justify-center.
             <div className="mx-auto my-auto flex w-full max-w-[320px] flex-col items-center pt-8 pb-[calc(2rem+env(safe-area-inset-bottom,0px))] text-center">
@@ -121,93 +218,61 @@ export default function CartDrawer({
                 <ArrowRight aria-hidden="true" className="size-4" />
               </button>
             </div>
+          ) : isReviewing ? (
+            <CartReview cartItems={cartItems} />
           ) : (
-            <>
-              {isConfirmingClear ? (
-                <div role="group" aria-label="Confirmar esvaziar carrinho" className="flex flex-wrap items-center gap-2 pb-3">
-                  <span className="mr-auto text-[13px] text-heading">Remover todos os produtos?</span>
-                  <div className="ml-auto flex gap-2">
-                    <button ref={cancelClearRef} type="button" onClick={cancelClear} className="chamfer chip-button h-9 px-3 text-[12px] font-semibold">
-                      Cancelar
-                    </button>
-                    <button
-                      type="button"
-                      onClick={confirmClear}
-                      className="chamfer chamfer-accent h-9 px-3 text-[12px] font-bold text-white"
-                    >
-                      Esvaziar
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                <div className="flex justify-end pb-3">
-                  <button
-                    ref={clearButtonRef}
-                    type="button"
-                    onClick={askToClear}
-                    className="inline-flex min-h-9 items-center gap-1.5 text-[12px] font-semibold text-muted transition-colors hover:text-brand"
-                  >
-                    <Trash2 aria-hidden="true" className="size-4" />
-                    Esvaziar carrinho
-                  </button>
-                </div>
-              )}
-
-              <ul>
-                {cartItems.map(({ product, quantity }) => (
-                  <li key={product.id} className="flex items-center gap-3 border-t border-line py-4">
-                    <span className="chamfer product-media grid size-16 shrink-0 place-items-center p-1.5">
-                      <img src={product.image} alt="" className="h-full w-full object-contain" />
-                    </span>
-                    <div className="min-w-0 flex-1">
-                      <b className="line-clamp-2 text-[13px] leading-snug text-heading">{product.name}</b>
-                      <small className="block text-[12px] font-semibold text-success">{formatMoney(product.price)} no Pix</small>
-                      <div className="mt-2 flex items-center gap-3">
-                        <button
-                          type="button"
-                          onClick={() => onChangeQuantity(product.id, -1)}
-                          aria-label={`Diminuir quantidade de ${product.name}`}
-                          className={quantityButtonClass}
-                        >
-                          <Minus aria-hidden="true" className="size-3.5" />
-                        </button>
-                        <span className="min-w-4 text-center text-[13px]">{quantity}</span>
-                        <button
-                          type="button"
-                          onClick={() => onChangeQuantity(product.id, 1)}
-                          aria-label={`Aumentar quantidade de ${product.name}`}
-                          className={quantityButtonClass}
-                        >
-                          <Plus aria-hidden="true" className="size-3.5" />
-                        </button>
-                      </div>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => onRemove(product.id)}
-                      aria-label={`Remover ${product.name}`}
-                      className={quantityButtonClass}
-                    >
-                      <Trash2 aria-hidden="true" className="size-4" />
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </>
+            <ul aria-label="Produtos no carrinho">
+              {cartItems.map(({ product, quantity }) => (
+                <CartItem
+                  key={product.id}
+                  product={product}
+                  quantity={quantity}
+                  onChangeQuantity={changeQuantity}
+                  onRemove={removeItem}
+                />
+              ))}
+            </ul>
           )}
         </div>
 
         {!isEmpty && (
-          <div className="cart-drawer-footer border-t border-line px-5 pt-4">
-            <div className="mb-4 flex items-baseline justify-between">
-              <span className="text-[14px]">Total no Pix</span>
-              <strong className="text-[22px] font-extrabold text-success">{formatMoney(total)}</strong>
+          <div className="cart-drawer-footer border-t border-line px-5 pt-3">
+            <div className="cart-drawer-summary mb-3 flex items-end justify-between gap-3">
+              <div>
+                <span className="block text-[15px] font-semibold text-heading">Total no Pix</span>
+                <span className="cart-drawer-summary-count text-[12px] text-muted">{formatItemCount(itemCount)}</span>
+              </div>
+              <strong className="text-[22px] leading-tight font-extrabold whitespace-nowrap text-success">{formatMoney(total)}</strong>
             </div>
-            <button type="button" onClick={onClose} className={primaryButtonClass}>
-              Continuar explorando
-            </button>
+            <div className="cart-drawer-actions">
+              <p className="cart-drawer-note mb-2 text-center text-[12px] text-muted">Revisão demonstrativa, sem pagamento.</p>
+              {isReviewing ? (
+                <button type="button" onClick={onClose} className={primaryButtonClass}>
+                  Continuar explorando
+                </button>
+              ) : (
+                <>
+                  <button ref={reviewButtonRef} type="button" onClick={startReview} className={`${primaryButtonClass} gap-3`}>
+                    Revisar pedido
+                    <ArrowRight aria-hidden="true" className="size-4" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={onClose}
+                    className="cart-drawer-secondary mt-1 flex min-h-11 w-full items-center justify-center text-[14px] font-semibold text-soft transition-colors hover:text-heading"
+                  >
+                    Continuar explorando
+                  </button>
+                </>
+              )}
+            </div>
           </div>
         )}
+
+        {/* Quantidades, remoções e o desfazer são anunciados aqui, sem tirar o foco de onde está. */}
+        <p aria-live="polite" className="sr-only">
+          {announcement}
+        </p>
       </div>
     </dialog>
   );

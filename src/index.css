@@ -1532,6 +1532,13 @@ html[data-theme='light'] .hero-copy h1 {
     padding-bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px));
   }
 
+  /* Aviso fixo do checkout demonstrativo: borda vermelha e fundo levemente avermelhado. */
+  .checkout-notice {
+    --cut: 8px;
+    --chamfer-border: var(--color-brand);
+    --chamfer-fill: color-mix(in srgb, var(--color-brand) 10%, var(--color-surface));
+  }
+
   /* Contador ao lado do título: a moldura dos botões secundários, sem o hover, porque não é clicável. */
   .cart-count {
     --cut: 6px;
@@ -1997,8 +2004,8 @@ html[data-theme='light'] .hero-copy h1 {
 /*
   Carrinho com o celular deitado: o rodapé empilhado deixava a lista com menos que um produto de
   altura. Total e ação principal dividem uma linha; saem a contagem de itens (já está no
-  cabeçalho), a nota da revisão e o "Continuar explorando" secundário (o fechar do cabeçalho faz o
-  mesmo). Acima de 600px o painel alarga para os dois caberem. Fora das camadas para valer sobre os
+  cabeçalho) e o "Continuar comprando" secundário (o fechar do cabeçalho mantém os itens do mesmo
+  jeito). Acima de 600px o painel alarga para os dois caberem. Fora das camadas para valer sobre os
   utilitários (mb-3, w-full) do JSX.
 */
 @media (orientation: landscape) and (height < 500px) {
@@ -2023,7 +2030,6 @@ html[data-theme='light'] .hero-copy h1 {
   }
 
   .cart-drawer-summary-count,
-  .cart-drawer-note,
   .cart-drawer-secondary {
     display: none;
   }

@@ -59,6 +59,8 @@ import arenaGamerGeek from '../assets/images/banners/pichau-arena/gamer-geek.avi
     title        partes do título; com isTitleStacked, cada uma ocupa uma linha
     description  até três linhas
     details      oferta, data ou local; `type` escolhe o ícone (offer, date, location)
+    cta          chamada (label, href e, opcional, a categoria que filtra as ofertas); mobileLabel
+                 é um texto mais curto para o botão do celular
 */
 export const HERO_CAMPAIGNS = {
   energyDrink: {
@@ -122,6 +124,10 @@ export const HERO_CAMPAIGNS = {
       height: 475,
       position: { collapsed: '80% 50%', expanded: '62% 50%', stage: '100% 50%' },
     },
+    /*
+      sceneMobile: tudo a partir de x 800 da arte, que já aparece no card de 320px. PC (bloco do
+      meio) e teclado (laje da frente) são os destaques; os demais ficam menores, nas pontas.
+    */
     objects: [
       {
         id: 'gabinete',
@@ -132,7 +138,7 @@ export const HERO_CAMPAIGNS = {
         collapsed: { x: '50%', base: '332px', scale: 0.85, layer: 1 },
         expanded: { x: '60%', y: '52%', scale: 0.42, layer: 1 },
         scene: { x: 900, bottom: 330, width: 190 },
-        sceneMobile: { x: 930, bottom: 332, width: 160 },
+        sceneMobile: { x: 952, bottom: 324, width: 180 },
       },
       {
         id: 'memorias',
@@ -143,7 +149,7 @@ export const HERO_CAMPAIGNS = {
         collapsed: null,
         expanded: { x: '35%', y: '60%', scale: 0.24, layer: 2 },
         scene: { x: 700, bottom: 281, width: 110 },
-        sceneMobile: { x: 752, bottom: 280, width: 95 },
+        sceneMobile: { x: 846, bottom: 322, width: 74 },
       },
       {
         id: 'fonte',
@@ -154,7 +160,7 @@ export const HERO_CAMPAIGNS = {
         collapsed: null,
         expanded: { x: '84%', y: '63%', scale: 0.28, layer: 2 },
         scene: { x: 1095, bottom: 334, width: 130 },
-        sceneMobile: { x: 1105, bottom: 334, width: 115 },
+        sceneMobile: { x: 1125, bottom: 334, width: 100 },
       },
       {
         id: 'headset',
@@ -165,7 +171,7 @@ export const HERO_CAMPAIGNS = {
         collapsed: { x: '50%', base: '430px', scale: 0.62, layer: 2 },
         expanded: { x: '14%', y: '57%', scale: 0.24, layer: 5 },
         scene: { x: 560, bottom: 304, width: 105 },
-        sceneMobile: { x: 738, bottom: 440, width: 80 },
+        sceneMobile: { x: 1150, bottom: 452, width: 68 },
       },
       {
         id: 'teclado',
@@ -176,7 +182,7 @@ export const HERO_CAMPAIGNS = {
         collapsed: null,
         expanded: { x: '27%', y: '84%', scale: 0.6, layer: 4 },
         scene: { x: 700, bottom: 436, width: 300 },
-        sceneMobile: { x: 850, bottom: 436, width: 290 },
+        sceneMobile: { x: 935, bottom: 440, width: 262 },
       },
       {
         id: 'mouse',
@@ -187,7 +193,7 @@ export const HERO_CAMPAIGNS = {
         collapsed: null,
         expanded: { x: '56%', y: '88%', scale: 0.17, layer: 5 },
         scene: { x: 888, bottom: 436, width: 74 },
-        sceneMobile: { x: 1015, bottom: 436, width: 58 },
+        sceneMobile: { x: 1083, bottom: 452, width: 50 },
       },
       {
         id: 'logo',
@@ -204,7 +210,7 @@ export const HERO_CAMPAIGNS = {
     title: ['Seleção', 'Corsair'],
     description: 'Uma seleção especial de produtos Corsair na Pichau.',
     details: [],
-    cta: { label: 'Ver seleção Corsair', href: '#offers', category: 'Hardware' },
+    cta: { label: 'Ver seleção Corsair', mobileLabel: 'Explorar Corsair', href: '#offers', category: 'Hardware' },
   },
   /*
     scene segue a composição da referência (1192 x 475): placa no bloco alto, fone no degrau,

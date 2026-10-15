@@ -40,8 +40,8 @@ function filterGroups(query) {
 
 /*
   <dialog> nativo com showModal(): o navegador prende o foco, fecha com Esc e coloca o menu na
-  camada superior, acima do header fixo. Desktop: lista e subcategorias lado a lado; celular: um
-  painel por vez (data-level), com "Voltar".
+  camada superior, acima do header fixo. Desktop: lista e subcategorias lado a lado; abaixo de
+  1001px, um painel por vez (data-level), com "Voltar".
 */
 export default function DepartmentMenu({ isOpen, onClose, triggerRef, onOpenDepartment, onNavigate }) {
   const dialogRef = useRef(null);
@@ -86,7 +86,7 @@ export default function DepartmentMenu({ isOpen, onClose, triggerRef, onOpenDepa
     setSelectedId(id);
     if (!window.matchMedia(MOBILE_QUERY).matches) return;
 
-    // No celular a lista some ao abrir o nível seguinte; o foco vai para o nome do departamento.
+    // Abaixo de 1001px a lista some ao abrir o nível seguinte; o foco vai para o nome do departamento.
     setIsDetailOpen(true);
     requestAnimationFrame(() => titleRef.current?.focus());
   }

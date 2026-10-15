@@ -5,7 +5,8 @@ import { hideBrokenImage } from '../../utils/image';
 // Sem `collapsed`, o objeto usa a posição do expandido e o CSS o esconde no card fechado; sem
 // `expanded`, o inverso.
 // `scene` vem em px do fundo e vai sem unidade: o CSS multiplica pela escala do fundo em cada
-// layout. A posição é a distância até a borda direita (e, no mobile, até a base) da arte.
+// layout. A posição é a distância até a borda direita da arte e, abaixo de 1001px, também até a
+// base.
 function sceneVars(prefix, point, background) {
   return (
     point && {

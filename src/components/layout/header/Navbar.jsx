@@ -3,11 +3,11 @@ import { ChevronDown, Cpu, Gamepad2, Headset, Menu, Tag, Ticket } from 'lucide-r
 import DepartmentMenu from './department-menu/DepartmentMenu';
 import { useActiveSection } from '../../../hooks/useActiveSection';
 
-// No mobile a lista rola dentro do painel, então o foco é desenhado para dentro para não ser cortado.
+// No tablet a lista rola dentro do painel, então o foco é desenhado para dentro para não ser cortado.
 const navItemClass =
   'relative isolate flex min-h-11 w-full items-center gap-2 px-3 text-[13px] transition-colors hover:text-brand focus-visible:-outline-offset-3 lg:h-16 lg:whitespace-nowrap lg:focus-visible:outline-offset-4';
 const centeredItemClass = 'lg:justify-center lg:px-4';
-// Traço vermelho à esquerda no mobile e embaixo no desktop, sem moldura, para não pesar na linha.
+// Traço vermelho à esquerda no tablet e embaixo no desktop, sem moldura, para não pesar na linha.
 const activeClass =
   'text-brand after:absolute after:inset-y-2 after:left-0 after:w-0.5 after:bg-brand lg:after:top-auto lg:after:bottom-3 lg:after:left-1/2 lg:after:h-0.5 lg:after:w-12 lg:after:-translate-x-1/2';
 const iconClass = 'size-5';
@@ -31,7 +31,7 @@ export default function Navbar({
   const departmentsButtonRef = useRef(null);
   const activeSectionId = useActiveSection(SECTION_IDS);
 
-  // Com o menu de departamentos aberto, o Esc é do <dialog> dele; a lista do mobile continua aberta por baixo.
+  // Com o menu de departamentos aberto, o Esc é do <dialog> dele; a lista do tablet continua aberta por baixo.
   useEffect(() => {
     if (!isNavOpen || isMenuOpen) return;
 

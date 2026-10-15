@@ -11,7 +11,7 @@ export default function SearchForm({ query, onQueryChange, onSearch, inputRef, c
       <label className="sr-only" htmlFor="query">
         Buscar produtos
       </label>
-      {/* 16px no mobile evita o zoom automático do iOS ao focar o campo. */}
+      {/* 16px abaixo de 1001px evita o zoom automático do iOS ao focar o campo. */}
       <input
         ref={inputRef}
         id="query"

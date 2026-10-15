@@ -67,7 +67,6 @@ export default function DepartmentList({
                 const isActive = department.id === activeId;
                 return (
                   <li key={department.id}>
-                    {/* Selecionado: fundo vermelho suave e linha vermelha à esquerda. */}
                     <button
                       type="button"
                       onClick={() => onSelect(department.id)}

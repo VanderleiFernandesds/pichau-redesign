@@ -1,6 +1,6 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-// Só no mobile (o CSS esconde no desktop), no canto superior direito do card.
+// Só abaixo de 1001px (o CSS esconde no desktop), no canto superior direito do card.
 export default function HeroCarouselArrows({ onPrevious, onNext }) {
   return (
     <div className="hero-arrows">

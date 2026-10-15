@@ -136,6 +136,15 @@ html[data-theme='light'] .theme-dark-only {
     logo/ações, busca e botão de menu até 1000px; duas linhas acima disso.
   */
   --header-offset: 148px;
+  /* Altura ocupada pela barra inferior do celular (MobileNavBar); zero a partir do tablet. */
+  --mobile-nav-space: 0px;
+}
+
+@media (width < 601px) {
+  :root {
+    --mobile-nav-height: 64px;
+    --mobile-nav-space: calc(var(--mobile-nav-height) + env(safe-area-inset-bottom, 0px));
+  }
 }
 
 @media (width >= 601px) {
@@ -161,6 +170,7 @@ html[data-theme='light'] .theme-dark-only {
     line-height: normal;
     scroll-behavior: smooth;
     scroll-padding-top: var(--header-offset);
+    scroll-padding-bottom: var(--mobile-nav-space);
     /*
       Espaço da barra de rolagem sempre reservado: ao travar a rolagem (menu de departamentos e
       carrinho) a barra some, e sem isso a página alarga e o layout pula.
@@ -176,9 +186,11 @@ html[data-theme='light'] .theme-dark-only {
     O body tem a cor da página no tema atual: é o que aparece atrás do menu de departamentos
     quando o site se desloca, nos cantos chanfrados do painel.
   */
+  /* O padding reserva o espaço da barra inferior do celular para ela não cobrir o fim do footer. */
   body {
     color: var(--color-text);
     background: var(--color-page);
+    padding-bottom: var(--mobile-nav-space);
   }
 
   button,
@@ -1137,6 +1149,139 @@ html[data-theme='light'] .hero-copy h1 {
   }
 
   /*
+    Barra inferior do celular. Como no .chamfer, o recorte fica nas camadas (::before = borda,
+    ::after = fundo), aqui só nos cantos de cima, e os traços vermelhos ficam fora do recorte.
+    Os modais são <dialog> na camada superior, então sempre ficam acima dela.
+  */
+  .mobile-nav {
+    --cut: 12px;
+    position: fixed;
+    inset-inline: 0;
+    bottom: 0;
+    z-index: 30;
+    isolation: isolate;
+    padding: 0 env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
+    filter: drop-shadow(0 -6px 18px var(--header-shadow));
+    transition:
+      translate 0.2s ease,
+      visibility 0.2s;
+  }
+
+  .mobile-nav::before,
+  .mobile-nav::after {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    clip-path: polygon(var(--cut) 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, 0 100%, 0 var(--cut));
+  }
+
+  .mobile-nav::before {
+    inset: 0;
+    background: var(--field-border);
+  }
+
+  .mobile-nav::after {
+    inset: 1px 0 0;
+    background: var(--color-surface);
+  }
+
+  .mobile-nav-accents {
+    --accent-length: calc(var(--cut) * 1.1);
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .mobile-nav-accents::before,
+  .mobile-nav-accents::after {
+    content: '';
+    position: absolute;
+    top: calc(var(--cut) / 2 - 1.5px);
+    width: var(--accent-length);
+    height: 3px;
+    background: var(--color-brand);
+  }
+
+  .mobile-nav-accents::before {
+    left: calc(var(--cut) / 2 - var(--accent-length) / 2);
+    transform: rotate(-45deg);
+  }
+
+  .mobile-nav-accents::after {
+    right: calc(var(--cut) / 2 - var(--accent-length) / 2);
+    transform: rotate(45deg);
+  }
+
+  /*
+    Com o teclado virtual aberto a barra só ocuparia espaço (e, no iOS, flutuaria sobre o campo);
+    ela sai enquanto um campo de texto tem o foco.
+  */
+  @media (pointer: coarse) {
+    :root:has(:is(input:not([type='checkbox'], [type='radio']), textarea, select):focus) .mobile-nav {
+      translate: 0 100%;
+      visibility: hidden;
+    }
+  }
+
+  /*
+    Até uns 380px "Monte seu PC" não cabe numa linha a 11px; a legenda quebra em duas em vez de
+    encolher. Os itens alinham pelo topo para os ícones ficarem na mesma altura.
+  */
+  .mobile-nav-item {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    width: 100%;
+    height: var(--mobile-nav-height);
+    padding: 9px 2px 0;
+    font-size: 11px;
+    line-height: 1.2;
+    font-weight: 500;
+    text-align: center;
+    text-wrap: balance;
+    color: var(--color-text);
+    transition: color 0.15s;
+  }
+
+  .mobile-nav-item:focus-visible {
+    outline-color: var(--color-brand);
+    outline-offset: -3px;
+  }
+
+  @media (hover: hover) {
+    .mobile-nav-item:hover {
+      color: var(--color-brand);
+    }
+  }
+
+  /*
+    Item com painel aberto ou filtro ligado: ícone vermelho, legenda em negrito e o traço chanfrado
+    no topo. A legenda não fica vermelha porque o vermelho da marca não tem contraste para 11px.
+  */
+  .mobile-nav-item:is([aria-expanded='true'], [aria-pressed='true']) {
+    color: var(--color-heading);
+    font-weight: 700;
+  }
+
+  .mobile-nav-item:is([aria-expanded='true'], [aria-pressed='true']) svg {
+    color: var(--color-brand);
+  }
+
+  .mobile-nav-item:is([aria-expanded='true'], [aria-pressed='true'])::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 28px;
+    height: 3px;
+    translate: -50% 0;
+    background: var(--color-brand);
+    clip-path: polygon(0 0, 100% 0, calc(100% - 3px) 100%, 3px 100%);
+  }
+
+  /*
     Menu de departamentos. O <dialog> cobre a tela (o clique fora do painel cai nele) e o painel
     encosta à esquerda. Em telas largas, só com a lista, a página continua rolando; com um
     departamento escolhido (ou abaixo de 1500px) ela trava.
@@ -1208,6 +1353,13 @@ html[data-theme='light'] .hero-copy h1 {
     /* drop-shadow acompanha o recorte chanfrado; box-shadow seria retangular. */
     filter: drop-shadow(12px 0 32px rgb(0 0 0 / 0.55));
     transition: translate 0.25s var(--carousel-ease, ease);
+  }
+
+  /* No celular sobra uma faixa da página escurecida à direita, que também fecha o menu ao toque. */
+  @media (width < 601px) {
+    .department-menu-panel {
+      width: calc(100% - 56px);
+    }
   }
 
   /*

@@ -3,6 +3,7 @@ import Header from '../../components/layout/header/Header';
 import Navbar from '../../components/layout/header/Navbar';
 import SiteHeader from '../../components/layout/header/SiteHeader';
 import Footer from '../../components/layout/footer/Footer';
+import MobileNavBar from '../../components/layout/MobileNavBar';
 import ProductSection from '../../components/products/ProductSection';
 import CartDrawer from '../../components/cart/CartDrawer';
 import EmptyState from '../../components/ui/EmptyState';
@@ -40,6 +41,7 @@ export default function HomePage() {
   const [help, setHelp] = useState({ isOpen: false, topicId: null });
   const [otherVisibleCount, setOtherVisibleCount] = useState(OTHER_PAGE_SIZE);
   const offersRef = useRef(null);
+  const searchInputRef = useRef(null);
 
   const cart = useCart();
   const { favorites, toggleFavorite } = useFavorites();
@@ -55,8 +57,27 @@ export default function HomePage() {
   );
   const hasActiveFilter = normalizedQuery !== '' || category !== ALL_CATEGORIES || isFavoriteOnly;
 
+  // Conta, busca, favoritos e carrinho fecham a lista do menu: só um painel aberto por vez.
   function showAccountNotice() {
+    setIsNavOpen(false);
     toast.showToast('Conceito demonstrativo: área do cliente indisponível.');
+  }
+
+  function openCart() {
+    setIsNavOpen(false);
+    setIsCartOpen(true);
+  }
+
+  /*
+    O foco é síncrono para o teclado virtual abrir no iOS, que só aceita foco dentro do toque. Com o
+    header fora da tela (celular deitado, onde ele não é sticky), a página rola até o campo.
+  */
+  function focusSearch() {
+    setIsNavOpen(false);
+    const input = searchInputRef.current;
+    input.focus({ preventScroll: true });
+    const { top, bottom } = input.getBoundingClientRect();
+    if (top < 0 || bottom > window.innerHeight) input.scrollIntoView({ block: 'center' });
   }
 
   function scrollToOffers() {
@@ -82,6 +103,7 @@ export default function HomePage() {
   }
 
   function toggleFavoriteOnly() {
+    setIsNavOpen(false);
     setIsFavoriteOnly((current) => !current);
     setCategory(ALL_CATEGORIES);
     scrollToOffers();
@@ -116,6 +138,7 @@ export default function HomePage() {
           query={query}
           onQueryChange={setQuery}
           onSearch={scrollToOffers}
+          searchInputRef={searchInputRef}
           isNavOpen={isNavOpen}
           onNavOpenChange={setIsNavOpen}
           onAccount={showAccountNotice}
@@ -123,7 +146,7 @@ export default function HomePage() {
           onToggleFavorites={toggleFavoriteOnly}
           favoriteCount={favorites.length}
           cartCount={cart.itemCount}
-          onOpenCart={() => setIsCartOpen(true)}
+          onOpenCart={openCart}
           theme={theme}
           onToggleTheme={toggleTheme}
         />
@@ -133,9 +156,6 @@ export default function HomePage() {
           isNavOpen={isNavOpen}
           onNavOpenChange={setIsNavOpen}
           onCoupon={() => toast.showToast('Conceito demonstrativo: nenhum cupom real disponível.')}
-          onAccount={showAccountNotice}
-          theme={theme}
-          onToggleTheme={toggleTheme}
           onOpenDepartment={openDepartment}
         />
       </SiteHeader>
@@ -204,6 +224,19 @@ export default function HomePage() {
         onOpenHelp={(topicId = null) => setHelp({ isOpen: true, topicId })}
         onOpenDepartment={openDepartment}
         onShowAllDepartments={() => setIsMenuOpen(true)}
+      />
+
+      <MobileNavBar
+        isMenuOpen={isMenuOpen}
+        onOpenMenu={() => setIsMenuOpen(true)}
+        onSearch={focusSearch}
+        onNavigate={() => setIsNavOpen(false)}
+        isFavoriteOnly={isFavoriteOnly}
+        onToggleFavorites={toggleFavoriteOnly}
+        favoriteCount={favorites.length}
+        isCartOpen={isCartOpen}
+        onOpenCart={openCart}
+        cartCount={cart.itemCount}
       />
 
       <CartDrawer

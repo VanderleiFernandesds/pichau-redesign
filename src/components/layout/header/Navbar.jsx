@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { ChevronDown, Cpu, Gamepad2, Headset, Menu, Moon, Sun, Tag, Ticket, User } from 'lucide-react';
+import { ChevronDown, Cpu, Gamepad2, Headset, Menu, Tag, Ticket } from 'lucide-react';
 import DepartmentMenu from './department-menu/DepartmentMenu';
 import { useActiveSection } from '../../../hooks/useActiveSection';
 
@@ -26,14 +26,10 @@ export default function Navbar({
   isNavOpen,
   onNavOpenChange,
   onCoupon,
-  onAccount,
-  theme,
-  onToggleTheme,
   onOpenDepartment,
 }) {
   const departmentsButtonRef = useRef(null);
   const activeSectionId = useActiveSection(SECTION_IDS);
-  const isDark = theme === 'dark';
 
   // Com o menu de departamentos aberto, o Esc é do <dialog> dele; a lista do mobile continua aberta por baixo.
   useEffect(() => {
@@ -114,12 +110,13 @@ export default function Navbar({
   ];
 
   return (
-    // Abaixo de 1001px a lista abre pelo botão de menu do Header.
+    // No tablet a lista abre pelo botão de menu do Header. No celular ela não aparece: o "Menu" da
+    // barra inferior abre direto o menu de departamentos.
     <nav aria-label="Navegação principal" className="relative mx-3 sm:mx-4 lg:mx-6 lg:border-t lg:border-line">
-      {/* A altura máxima impede que o painel sticky passe da tela em celulares na horizontal. */}
+      {/* A altura máxima impede que o painel sticky passe da tela em telas baixas. */}
       <ul
         id="main-nav-list"
-        className={`${isNavOpen ? 'flex' : 'hidden'} max-h-[calc(100dvh-170px)] flex-col overflow-y-auto border-t border-line py-1 lg:flex lg:max-h-none lg:flex-row lg:items-center lg:gap-2 lg:overflow-visible lg:border-0 lg:py-0`}
+        className={`${isNavOpen ? 'flex' : 'hidden'} max-h-[calc(100dvh-170px)] flex-col max-sm:hidden overflow-y-auto border-t border-line py-1 lg:flex lg:max-h-none lg:flex-row lg:items-center lg:gap-2 lg:overflow-visible lg:border-0 lg:py-0`}
       >
         {/* No desktop os itens dividem a linha, menos o Departamentos, que fica na largura do
             conteúdo e avança sobre a margem da nav (lg:mx-6) até a folga do canto do painel. */}
@@ -128,29 +125,6 @@ export default function Navbar({
             {navItem}
           </li>
         ))}
-        {/*
-          No celular conta e tema saem da primeira linha para as ações que ficam terem 44px de toque.
-          O tema não fecha a lista: dá para comparar os dois modos sem reabrir o menu.
-        */}
-        <li className="border-t border-line sm:hidden">
-          <button
-            type="button"
-            className={`${navItemClass} text-text`}
-            onClick={() => {
-              onAccount();
-              closeList();
-            }}
-          >
-            <User aria-hidden="true" className={iconClass} />
-            Minha Conta
-          </button>
-        </li>
-        <li className="sm:hidden">
-          <button type="button" className={`${navItemClass} text-text`} onClick={onToggleTheme}>
-            {isDark ? <Sun aria-hidden="true" className={iconClass} /> : <Moon aria-hidden="true" className={iconClass} />}
-            {isDark ? 'Ativar modo claro' : 'Ativar modo escuro'}
-          </button>
-        </li>
       </ul>
 
       <DepartmentMenu

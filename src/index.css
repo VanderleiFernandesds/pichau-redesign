@@ -396,6 +396,43 @@ html[data-theme='light'] .hero-copy h1 {
   --chamfer-border: var(--color-brand);
 }
 
+/*
+  No celular as setas pesavam no topo do card: a moldura desenhada encolhe para 30px (camadas do
+  chanfro recuadas 7px) e o ícone para 16px, mas o botão continua com 44px de área de toque.
+  Sem gap, o espaço entre as molduras vem dos próprios recuos.
+*/
+@media (width < 601px) {
+  .hero-arrows {
+    --arrow-size: 44px;
+    --arrow-inset: 7px;
+    gap: 0;
+    margin-right: calc(var(--box-padding) - var(--arrow-inset));
+  }
+
+  .hero-arrows .hero-arrow {
+    --cut: 6px;
+    --chamfer-fill: color-mix(in srgb, var(--color-page) 60%, transparent);
+    color: var(--color-soft);
+  }
+
+  .hero-arrows .hero-arrow::before {
+    inset: var(--arrow-inset);
+  }
+
+  .hero-arrows .hero-arrow::after {
+    inset: calc(var(--arrow-inset) + 1px);
+  }
+
+  .hero-arrows .hero-arrow svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .hero-arrows .hero-arrow:focus-visible {
+    outline-offset: -2px;
+  }
+}
+
 /* Moldura que agrupa pausar/retomar e os indicadores do hero: segue o tema, como o restante do hero. */
 .hero-control {
   --chamfer-fill: var(--color-surface);
@@ -569,16 +606,21 @@ html[data-theme='light'] .hero-copy h1 {
   }
 
   /*
-    Arte com objetos apoiados nos blocos (sceneMobile): o fundo cobre só a faixa dos objetos,
-    alinhado à direita e pela base, e some para cima no preenchimento do card, sob o texto.
-    --scene-unit é a escala do fundo (px na tela por px da arte); o cover usa a maior entre a
-    da altura da faixa e a da largura do card, e o card (.hero-frame) é o container.
+    O fundo cobre só a faixa dos objetos e some para cima no preenchimento do card, então o texto
+    de todas as campanhas fica sobre o mesmo fundo liso. Com objetos apoiados nos blocos
+    (sceneMobile), ele fica alinhado à direita e pela base: --scene-unit é a escala do fundo (px na
+    tela por px da arte); o cover usa a maior entre a da altura da faixa e a da largura do card, e
+    o card (.hero-frame) é o container.
   */
-  .hero-panel.has-mobile-scene .hero-panel-image {
+  .hero-panel .hero-panel-image {
     top: auto;
     height: var(--hero-art-height);
-    object-position: right bottom;
     mask-image: linear-gradient(to bottom, transparent, #000 35%);
+  }
+
+  /* Sem sceneMobile (Energy Drink), o fundo mantém o enquadramento da campanha dentro da faixa. */
+  .hero-panel.has-mobile-scene .hero-panel-image {
+    object-position: right bottom;
   }
 
   .hero-panel .campaign-object.is-on-mobile-scene {

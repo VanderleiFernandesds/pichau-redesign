@@ -41,16 +41,14 @@
   --breakpoint-2xl: 1500px;
 
   --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
-  /* Títulos do hero, das seções e dos cards. */
   --font-display: 'Rajdhani', 'Arial Narrow', Arial, sans-serif;
 
   --color-brand: #ed0024;
   /* Preto da marca: fundos escuros, texto principal e as fusões dos degradês com o fundo do hero. */
   --color-ink: #191a1f;
   /*
-    Cores do conteúdo da página (seções, cards, modais), no tema escuro, o padrão. O tema claro
-    troca esses mesmos valores em html[data-theme='light']; header, hero, rodapé e menu de
-    departamentos são escuros nos dois temas e não usam estas cores.
+    Cores do tema escuro, o padrão. O tema claro troca esses mesmos valores em
+    html[data-theme='light'].
   */
   --color-page: #191a1f;
   --color-text: #e9eaee;
@@ -121,7 +119,7 @@ html[data-theme='light'] .theme-dark-only {
 }
 
 /*
-  Margem lateral do container: 16px no mobile, 24px no tablet e, a partir do
+  Margem lateral do container: 16px no celular, 24px no tablet e, a partir do
   desktop, cresce linearmente até 185px em 1440px. O conteúdo para em 1550px,
   então acima de 1920px as margens aumentam em vez de esticar o layout.
 */
@@ -133,7 +131,7 @@ html[data-theme='light'] .theme-dark-only {
   --box-padding: 16px;
   /*
     Espaço ocupado pelo painel flutuante (16px do topo + altura do painel + folga):
-    logo/ações, busca e botão de menu até 1000px; duas linhas acima disso.
+    logo e ações, depois a busca, até 1000px; duas linhas acima disso.
   */
   --header-offset: 148px;
   /* Altura ocupada pela barra inferior do celular (MobileNavBar); zero a partir do tablet. */
@@ -242,7 +240,8 @@ html[data-theme='light'] .theme-dark-only {
   Moldura do carrossel do hero. Parâmetros:
   --frame-width    largura máxima de cada moldura (encolhe se o grupo não couber)
   --frame-height   altura; no desktop, o termo 100svh - 434px reserva espaço para o painel e os cards
-  --frame-slant    inclinação: deslocamento horizontal do topo por px de altura (0 = retângulo)
+  --frame-slant    inclinação: deslocamento horizontal do topo por px de altura (0 = retângulo,
+                   o valor usado hoje)
   --frame-line     espessura do contorno
   --frame-cut      tamanho do chanfro dos cantos, o mesmo do painel e dos cards do hero
 */
@@ -273,12 +272,12 @@ html[data-theme='light'] .theme-dark-only {
 }
 
 /*
-  Carrossel do hero. Mobile: o texto fica sobre a arte do card exibido, na mesma célula do grid
-  (stack), e os controles vêm logo abaixo. Desktop: texto e controles à esquerda, painéis à
-  direita ocupando as duas linhas.
+  Carrossel do hero. Abaixo de 1001px: o texto fica sobre a arte do card exibido, na mesma
+  célula do grid (stack), e os controles vêm logo abaixo. Desktop: texto e controles à esquerda,
+  painéis à direita ocupando as duas linhas.
 */
 .hero-carousel {
-  /* Altura da área da arte com os objetos no mobile; o card cresce além dela para caber o texto. */
+  /* Altura da arte com os objetos abaixo de 1001px; o card cresce além dela para caber o texto. */
   --hero-art-height: clamp(220px, 40svh, 340px);
   /* Curva comum das animações do carrossel: acelera e desacelera devagar, sem arranques. */
   --carousel-ease: cubic-bezier(0.65, 0, 0.35, 1);
@@ -366,9 +365,10 @@ html[data-theme='light'] .hero-copy h1 {
 }
 
 /*
-  Setas do mobile: juntas no canto superior direito do card (célula stack), centradas na linha da
-  chamada e acima do texto e do botão de seleção do card. O topo segue o padding do texto
-  (.hero-copy) para a linha central dos botões coincidir com a da chamada sem encostar no título.
+  Setas abaixo de 1001px: juntas no canto superior direito do card (célula stack), centradas na
+  linha da chamada e acima do texto e do botão de seleção do card. O topo segue o padding do
+  texto (.hero-copy) para a linha central dos botões coincidir com a da chamada sem encostar no
+  título.
 */
 .hero-arrows {
   --arrow-size: 40px;
@@ -502,14 +502,15 @@ html[data-theme='light'] .hero-copy h1 {
 
 /*
   Os painéis dividem a mesma célula do grid, então a célula sempre tem a altura de um painel.
-  Mobile: só o do slide exibido aparece. Desktop: cada um é deslocado conforme a posição na fila.
+  Abaixo de 1001px só o do slide exibido aparece; no desktop cada um é deslocado conforme a
+  posição na fila.
 */
 .hero-panels {
   grid-area: panels;
   display: grid;
 }
 
-/* No mobile só um painel aparece; o fade evita o corte seco na troca. */
+/* Abaixo de 1001px só um painel aparece; o fade evita o corte seco na troca. */
 .hero-panel {
   position: relative;
   grid-area: 1 / 1;
@@ -555,10 +556,10 @@ html[data-theme='light'] .hero-copy h1 {
 }
 
 /*
-  Mobile: os painéis ficam atrás do texto e ocupam a célula inteira. O z-index cria um contexto
-  de empilhamento, então o botão de seleção do card não cobre o CTA. A arte ganha um degradê no
-  topo para o texto ser legível, e os objetos ficam numa faixa na base com a altura que o card
-  tinha antes, mantendo o mesmo tamanho e as mesmas posições.
+  Abaixo de 1001px os painéis ficam atrás do texto e ocupam a célula inteira. O z-index cria um
+  contexto de empilhamento, então o botão de seleção do card não cobre o CTA. A arte ganha um
+  degradê no topo para o texto ser legível, e os objetos ficam numa faixa na base com a altura
+  que o card tinha antes, mantendo o mesmo tamanho e as mesmas posições.
 */
 @media (width < 1001px) {
   /* Sem conteúdo no fluxo, só tem altura esticando até a da célula, definida pelo texto. */
@@ -596,7 +597,7 @@ html[data-theme='light'] .hero-copy h1 {
     height: var(--hero-art-height);
   }
 
-  /* No celular o card é sempre o aberto; o logo da campanha já aparece acima do título. */
+  /* Abaixo de 1001px o card é sempre o aberto; o logo da campanha já aparece acima do título. */
   .hero-panel .campaign-object.is-collapsed-only {
     display: none;
   }
@@ -606,11 +607,10 @@ html[data-theme='light'] .hero-copy h1 {
   }
 
   /*
-    O fundo cobre só a faixa dos objetos e some para cima no preenchimento do card, então o texto
-    de todas as campanhas fica sobre o mesmo fundo liso. Com objetos apoiados nos blocos
-    (sceneMobile), ele fica alinhado à direita e pela base: --scene-unit é a escala do fundo (px na
-    tela por px da arte); o cover usa a maior entre a da altura da faixa e a da largura do card, e
-    o card (.hero-frame) é o container.
+    O fundo ocupa só a faixa dos objetos e some para cima, então o texto de todas as campanhas fica
+    sobre o mesmo fundo liso. Com sceneMobile ele se alinha à direita e pela base; --scene-unit é a
+    escala do cover (px na tela por px da arte): a maior entre a da altura da faixa e a da largura
+    do card, que é o container (.hero-frame).
   */
   .hero-panel .hero-panel-image {
     top: auto;
@@ -677,7 +677,8 @@ html[data-theme='light'] .hero-copy h1 {
 
 /*
   Fundo da campanha com object-fit: cover, sem deformar. O enquadramento vem do slide
-  (--position-collapsed/--position-expanded); no mobile o painel é largo e usa o do expandido.
+  (--position-collapsed/--position-expanded); abaixo de 1001px o painel é largo e usa o do
+  expandido.
 */
 .hero-panel-image {
   position: absolute;
@@ -702,7 +703,7 @@ html[data-theme='light'] .hero-copy h1 {
   Objetos transparentes da campanha. O wrapper ocupa o card inteiro, então o translate em % é
   relativo ao card; a imagem fica centrada nesse ponto.
   A largura base usa cqmin (menor lado do card) e height: auto, então a proporção nunca muda.
-  Sem estado (mobile, onde o card é largo) vale a configuração do expandido.
+  Sem estado (abaixo de 1001px, onde o card é largo) vale a configuração do expandido.
 */
 .campaign-object {
   position: absolute;
@@ -723,10 +724,9 @@ html[data-theme='light'] .hero-copy h1 {
 }
 
 /*
-  Desktop: a fila fica encostada à direita. O primeiro da fila é o único que expande e, como fica
-  alinhado pela borda direita, cresce para a esquerda; a largura expandida é o que sobra da coluna
-  depois dos estreitos, mais --panel-reach, que avança sobre o espaço entre a coluna e o texto.
-  O texto fica acima dos painéis (z-index), então o card nunca cobre o título nem o CTA.
+  Desktop: a fila encosta à direita e só o primeiro expande, crescendo para a esquerda até ocupar o
+  que sobra da coluna, mais --panel-reach sobre o espaço até o texto. O texto fica acima dos
+  painéis (z-index), então o card nunca cobre o título nem o CTA.
 */
 @media (width >= 1001px) {
   .hero-panels {
@@ -1119,7 +1119,6 @@ html[data-theme='light'] .hero-copy h1 {
     --chamfer-fill: linear-gradient(180deg, #f2122f, #a3001a);
   }
 
-  /* A moldura do Departamentos responde ao botão inteiro, que é mais alto que ela. */
   /*
     Carrinho com produtos. Verdes mais escuros que --color-success, para o texto branco manter
     contraste.
@@ -1133,6 +1132,7 @@ html[data-theme='light'] .hero-copy h1 {
     --chamfer-fill: linear-gradient(180deg, #1a9a45, #0e7331);
   }
 
+  /* A moldura do Departamentos responde ao botão inteiro, que é mais alto que ela. */
   .chamfer-accent:hover,
   .nav-departments:hover .chamfer-accent,
   .nav-departments[aria-expanded='true'] .chamfer-accent {
@@ -1580,8 +1580,8 @@ html[data-theme='light'] .hero-copy h1 {
   }
 
   /*
-    Celular: um nível por vez; o desktop mostra lista e subcategorias juntas. O display fica aqui,
-    e não em utilitários do Tailwind, que teriam prioridade sobre o display: none abaixo.
+    Abaixo de 1001px, um nível por vez; o desktop mostra lista e subcategorias juntas. O display
+    fica aqui, e não em utilitários do Tailwind, que teriam prioridade sobre o display: none abaixo.
   */
   .department-menu-list,
   .department-menu-detail {
@@ -1622,10 +1622,9 @@ html[data-theme='light'] .hero-copy h1 {
   }
 
   /*
-    Em telas largas o site anda para a direita até sair de baixo da lista, para o menu ficar ao
-    lado da página e não por cima. Abaixo de 1500px o deslocamento (de 180px a 340px) cortaria boa
-    parte da página, então a lista passa por cima dela. O <dialog> fica na camada superior e não
-    acompanha o deslocamento. O #root corta o que sai pela direita: com clip (e não hidden) não há
+    Em telas largas o site anda para a direita até sair de baixo da lista (o <dialog>, na camada
+    superior, não se desloca); abaixo de 1500px isso cortaria boa parte da página, então a lista
+    passa por cima. O #root corta o que sai pela direita com clip, e não hidden: assim não há
     rolagem horizontal nem por script, e o header sticky continua funcionando.
   */
   @media (width >= 1500px) {
@@ -2002,11 +2001,10 @@ html[data-theme='light'] .hero-copy h1 {
 }
 
 /*
-  Carrinho com o celular deitado: o rodapé empilhado deixava a lista com menos que um produto de
-  altura. Total e ação principal dividem uma linha; saem a contagem de itens (já está no
-  cabeçalho) e o "Continuar comprando" secundário (o fechar do cabeçalho mantém os itens do mesmo
-  jeito). Acima de 600px o painel alarga para os dois caberem. Fora das camadas para valer sobre os
-  utilitários (mb-3, w-full) do JSX.
+  Carrinho com o celular deitado: o rodapé empilhado deixava a lista sem altura nem para um
+  produto. Total e ação principal dividem uma linha, e saem os itens repetidos: a contagem (já no
+  cabeçalho) e o "Continuar comprando" secundário (o fechar faz o mesmo). Fora das camadas para
+  valer sobre os utilitários do JSX (mb-3, w-full).
 */
 @media (orientation: landscape) and (height < 500px) {
   .cart-drawer-footer {

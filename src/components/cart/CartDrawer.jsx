@@ -12,11 +12,9 @@ const secondaryButtonClass =
 const SIMULATION_NOTICE = 'Simulação — nenhuma compra ou cobrança será realizada.';
 
 /*
-  Carrinho em painel lateral, entrando pela direita. Como o menu de departamentos, é um <dialog>
-  que cobre a tela: o clique fora do painel cai nele e fecha, e o Esc passa pela saída animada.
-  Cabeçalho e rodapé ficam fixos; só a lista rola.
-  O checkout é só uma simulação em etapas no próprio painel (cart → checkout → done): resumo do
-  pedido e confirmação, sem pedir dados pessoais ou de pagamento e sem cobrar nada.
+  Painel lateral em <dialog>, como o menu de departamentos: o clique fora do painel cai no próprio
+  <dialog> e fecha, e o Esc passa pela saída animada. O checkout é só uma simulação em etapas
+  (cart → checkout → done), sem pedir dados pessoais ou de pagamento.
 */
 export default function CartDrawer({
   isOpen,

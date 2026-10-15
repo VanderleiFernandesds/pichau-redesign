@@ -22,12 +22,10 @@ function CampaignCta({ cta, label, onFilter, className }) {
 }
 
 /*
-  Textos da campanha do card expandido. Os de todas as campanhas ocupam a mesma célula do grid,
-  então a área reservada é a da maior: trocar de campanha não move o botão nem o resto da página.
-  As inativas ficam com visibility: hidden, fora do Tab e da árvore de acessibilidade.
-  No celular o botão fica dentro do bloco de cada campanha, logo abaixo da descrição: com ele fora,
-  a campanha de texto mais curto ficava com um vão até o botão. A célula continua com a altura da
-  maior, então a troca de slide também não move o resto da página.
+  Os textos de todas as campanhas ocupam a mesma célula do grid, que fica com a altura da maior:
+  trocar de campanha não move o resto da página. As inativas ficam com visibility: hidden, fora do
+  Tab e da árvore de acessibilidade. No celular o botão vai dentro de cada bloco, logo abaixo da
+  descrição, para a campanha de texto mais curto não ficar com um vão até ele.
 */
 export default function HeroCampaignCopy({ campaigns, shownId, isAnnounced, onFilter, theme }) {
   function visibility(campaignId) {

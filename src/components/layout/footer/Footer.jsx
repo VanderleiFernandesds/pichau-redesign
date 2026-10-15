@@ -14,11 +14,7 @@ const linkClass = `${linkBaseClass} text-soft hover:text-heading`;
 const externalLinkClass =
   'inline-flex min-h-11 items-center gap-1.5 text-[15px] font-semibold text-heading underline-offset-4 transition-colors hover:text-brand hover:underline';
 
-/*
-  Footer: ajuda e atendimento oficial (com o banner Pichau Empresas), o painel principal (marca,
-  links, newsletter e pagamentos) e o aviso do projeto. O id "support" é o destino do
-  "Atendimento" da navegação.
-*/
+// O id "support" é o destino do "Atendimento" da navegação.
 export default function Footer({ onOpenHelp, onOpenDepartment, onShowAllDepartments }) {
   // Volta ao topo e leva o foco ao logo do header, para o teclado continuar do começo da página.
   function scrollToTop() {

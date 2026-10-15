@@ -354,5 +354,5 @@ export const HERO_CAMPAIGNS = {
   },
 };
 
-// Ordem inicial do carrossel do hero.
+// O primeiro slide é o LCP: o index.html pré-carrega o fundo dele, então os dois mudam juntos.
 export const HERO_SLIDES = [HERO_CAMPAIGNS.energyDrink, HERO_CAMPAIGNS.corsair, HERO_CAMPAIGNS.asusRog];

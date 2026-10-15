@@ -53,7 +53,6 @@ export default function HeaderActions({
         type="button"
         onClick={onOpenCart}
         aria-label={`Carrinho, ${cartLabel}`}
-        // Fica verde enquanto houver produtos no carrinho e volta ao vermelho quando ele esvazia.
         className={`chamfer ${hasCartItems ? 'chamfer-success' : 'chamfer-accent'} header-cart ml-1 flex h-(--header-control) items-center justify-center gap-2.5 px-4 text-white lg:ml-0 lg:h-12 lg:px-5`}
       >
         <ShoppingCart aria-hidden="true" className="size-5" />

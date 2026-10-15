@@ -1397,6 +1397,26 @@ html[data-theme='light'] .hero-copy h1 {
     transition: translate 0.25s var(--carousel-ease, ease);
   }
 
+  /*
+    O lado encostado na borda da tela fica reto e sem contorno: chanfro e borda só no lado que
+    encontra a página. O carrinho, que entra pela direita, faz o espelho disso.
+  */
+  .department-menu-panel::before,
+  .department-menu-panel::after {
+    clip-path: polygon(
+      0 0,
+      calc(100% - var(--cut)) 0,
+      100% var(--cut),
+      100% calc(100% - var(--cut)),
+      calc(100% - var(--cut)) 100%,
+      0 100%
+    );
+  }
+
+  .department-menu-panel::after {
+    inset: 1px 1px 1px 0;
+  }
+
   /* No celular sobra uma faixa da página escurecida à direita, que também fecha o menu ao toque. */
   @media (width < 601px) {
     .department-menu-panel {
@@ -1482,6 +1502,22 @@ html[data-theme='light'] .hero-copy h1 {
     transition: translate 0.25s var(--carousel-ease, ease);
   }
 
+  .cart-drawer-panel::before,
+  .cart-drawer-panel::after {
+    clip-path: polygon(
+      var(--cut) 0,
+      100% 0,
+      100% 100%,
+      var(--cut) 100%,
+      0 calc(100% - var(--cut)),
+      0 var(--cut)
+    );
+  }
+
+  .cart-drawer-panel::after {
+    inset: 1px 0 1px 1px;
+  }
+
   /* No celular o painel ocupa a tela toda; chanfros e sombra só fazem sentido com a página atrás. */
   @media (width < 601px) {
     .cart-drawer-panel {
@@ -1494,6 +1530,13 @@ html[data-theme='light'] .hero-copy h1 {
 
   .cart-drawer-footer {
     padding-bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  /* Contador ao lado do título: a moldura dos botões secundários, sem o hover, porque não é clicável. */
+  .cart-count {
+    --cut: 6px;
+    --chamfer-border: var(--chip-border);
+    --chamfer-fill: var(--chip-fill);
   }
 
   @starting-style {
@@ -1948,5 +1991,57 @@ html[data-theme='light'] .hero-copy h1 {
 
   .eyebrow {
     @apply text-[8px] font-bold tracking-[2px] text-[#777e87] sm:text-[10px];
+  }
+}
+
+/*
+  Carrinho com o celular deitado: o rodapé empilhado deixava a lista com menos que um produto de
+  altura. Total e ação principal dividem uma linha; saem a contagem de itens (já está no
+  cabeçalho), a nota da revisão e o "Continuar explorando" secundário (o fechar do cabeçalho faz o
+  mesmo). Acima de 600px o painel alarga para os dois caberem. Fora das camadas para valer sobre os
+  utilitários (mb-3, w-full) do JSX.
+*/
+@media (orientation: landscape) and (height < 500px) {
+  .cart-drawer-footer {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding-top: 8px;
+    padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .cart-drawer-summary {
+    flex: 1;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+    margin-bottom: 0;
+  }
+
+  .cart-drawer-summary strong {
+    font-size: 20px;
+  }
+
+  .cart-drawer-summary-count,
+  .cart-drawer-note,
+  .cart-drawer-secondary {
+    display: none;
+  }
+
+  .cart-drawer-actions {
+    flex-shrink: 0;
+  }
+
+  .cart-drawer-actions > button {
+    width: auto;
+    flex-shrink: 0;
+    padding-inline: 20px;
+    white-space: nowrap;
+  }
+
+  @media (width >= 601px) {
+    .cart-drawer-panel {
+      width: min(520px, 100%);
+    }
   }
 }

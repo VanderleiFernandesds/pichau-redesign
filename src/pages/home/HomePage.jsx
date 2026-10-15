@@ -244,10 +244,12 @@ export default function HomePage() {
         onClose={() => setIsCartOpen(false)}
         onExploreProducts={scrollToOffers}
         cartItems={cart.cartItems}
+        itemCount={cart.itemCount}
         total={cart.total}
         onChangeQuantity={cart.changeQuantity}
         onRemove={cart.removeItem}
         onClear={cart.clearCart}
+        onRestore={cart.restoreItems}
       />
       <ConfigModal isOpen={isConfigOpen} onClose={() => setIsConfigOpen(false)} onSelectGoal={selectGoal} />
       <HelpCenterModal

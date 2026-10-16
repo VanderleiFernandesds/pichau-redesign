@@ -1,14 +1,6 @@
 import { useId, useRef, useState } from 'react';
 import { Mail } from 'lucide-react';
-
-// Mesma regra do type="email" do navegador, só que com mensagens próprias em português.
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-function validateEmail(email) {
-  if (!email) return 'Informe seu e-mail.';
-  if (!EMAIL_PATTERN.test(email)) return 'Digite um e-mail válido, como nome@exemplo.com.';
-  return '';
-}
+import { validateEmail } from '../../../utils/validation';
 
 /*
   Cadastro apenas simulado: o e-mail é validado e o campo é limpo, mas nada é enviado nem salvo.
@@ -51,7 +43,7 @@ export default function NewsletterForm() {
         <label htmlFor={inputId} className="sr-only">
           Seu e-mail
         </label>
-        <div className={`chamfer chamfer-field flex h-12 min-w-0 items-center min-[420px]:flex-1 gap-2.5 px-3.5 ${hasError ? 'newsletter-error' : ''}`}>
+        <div className={`chamfer chamfer-field flex h-12 min-w-0 items-center min-[420px]:flex-1 gap-2.5 px-3.5 ${hasError ? 'field-error' : ''}`}>
           <Mail aria-hidden="true" className="size-4.5 shrink-0 text-muted" strokeWidth={1.75} />
           <input
             ref={inputRef}

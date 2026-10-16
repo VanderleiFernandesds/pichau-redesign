@@ -299,7 +299,7 @@ export default function CartDrawer({
         </header>
 
         {step === 'checkout' && !isEmpty && (
-          <p className="chamfer checkout-notice mx-5 mt-3 flex items-start gap-2 px-3 py-2.5 text-[13px] leading-snug font-semibold text-heading">
+          <p className="chamfer simulation-notice mx-5 mt-3 flex items-start gap-2 px-3 py-2.5 text-[13px] leading-snug font-semibold text-heading">
             <ShieldCheck aria-hidden="true" className="mt-px size-4 text-brand" />
             {SIMULATION_NOTICE}
           </p>

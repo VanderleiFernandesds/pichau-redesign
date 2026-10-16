@@ -41,16 +41,14 @@
   --breakpoint-2xl: 1500px;
 
   --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
-  /* Títulos do hero, das seções e dos cards. */
   --font-display: 'Rajdhani', 'Arial Narrow', Arial, sans-serif;
 
   --color-brand: #ed0024;
   /* Preto da marca: fundos escuros, texto principal e as fusões dos degradês com o fundo do hero. */
   --color-ink: #191a1f;
   /*
-    Cores do conteúdo da página (seções, cards, modais), no tema escuro, o padrão. O tema claro
-    troca esses mesmos valores em html[data-theme='light']; header, hero, rodapé e menu de
-    departamentos são escuros nos dois temas e não usam estas cores.
+    Cores do tema escuro, o padrão. O tema claro troca esses mesmos valores em
+    html[data-theme='light'].
   */
   --color-page: #191a1f;
   --color-text: #e9eaee;
@@ -121,7 +119,7 @@ html[data-theme='light'] .theme-dark-only {
 }
 
 /*
-  Margem lateral do container: 16px no mobile, 24px no tablet e, a partir do
+  Margem lateral do container: 16px no celular, 24px no tablet e, a partir do
   desktop, cresce linearmente até 185px em 1440px. O conteúdo para em 1550px,
   então acima de 1920px as margens aumentam em vez de esticar o layout.
 */
@@ -133,9 +131,18 @@ html[data-theme='light'] .theme-dark-only {
   --box-padding: 16px;
   /*
     Espaço ocupado pelo painel flutuante (16px do topo + altura do painel + folga):
-    logo/ações, busca e botão de menu até 1000px; duas linhas acima disso.
+    logo e ações, depois a busca, até 1000px; duas linhas acima disso.
   */
   --header-offset: 148px;
+  /* Altura ocupada pela barra inferior do celular (MobileNavBar); zero a partir do tablet. */
+  --mobile-nav-space: 0px;
+}
+
+@media (width < 601px) {
+  :root {
+    --mobile-nav-height: 64px;
+    --mobile-nav-space: calc(var(--mobile-nav-height) + env(safe-area-inset-bottom, 0px));
+  }
 }
 
 @media (width >= 601px) {
@@ -161,6 +168,7 @@ html[data-theme='light'] .theme-dark-only {
     line-height: normal;
     scroll-behavior: smooth;
     scroll-padding-top: var(--header-offset);
+    scroll-padding-bottom: var(--mobile-nav-space);
     /*
       Espaço da barra de rolagem sempre reservado: ao travar a rolagem (menu de departamentos e
       carrinho) a barra some, e sem isso a página alarga e o layout pula.
@@ -176,9 +184,11 @@ html[data-theme='light'] .theme-dark-only {
     O body tem a cor da página no tema atual: é o que aparece atrás do menu de departamentos
     quando o site se desloca, nos cantos chanfrados do painel.
   */
+  /* O padding reserva o espaço da barra inferior do celular para ela não cobrir o fim do footer. */
   body {
     color: var(--color-text);
     background: var(--color-page);
+    padding-bottom: var(--mobile-nav-space);
   }
 
   button,
@@ -230,7 +240,8 @@ html[data-theme='light'] .theme-dark-only {
   Moldura do carrossel do hero. Parâmetros:
   --frame-width    largura máxima de cada moldura (encolhe se o grupo não couber)
   --frame-height   altura; no desktop, o termo 100svh - 434px reserva espaço para o painel e os cards
-  --frame-slant    inclinação: deslocamento horizontal do topo por px de altura (0 = retângulo)
+  --frame-slant    inclinação: deslocamento horizontal do topo por px de altura (0 = retângulo,
+                   o valor usado hoje)
   --frame-line     espessura do contorno
   --frame-cut      tamanho do chanfro dos cantos, o mesmo do painel e dos cards do hero
 */
@@ -261,12 +272,12 @@ html[data-theme='light'] .theme-dark-only {
 }
 
 /*
-  Carrossel do hero. Mobile: o texto fica sobre a arte do card exibido, na mesma célula do grid
-  (stack), e os controles vêm logo abaixo. Desktop: texto e controles à esquerda, painéis à
-  direita ocupando as duas linhas.
+  Carrossel do hero. Abaixo de 1001px: o texto fica sobre a arte do card exibido, na mesma
+  célula do grid (stack), e os controles vêm logo abaixo. Desktop: texto e controles à esquerda,
+  painéis à direita ocupando as duas linhas.
 */
 .hero-carousel {
-  /* Altura da área da arte com os objetos no mobile; o card cresce além dela para caber o texto. */
+  /* Altura da arte com os objetos abaixo de 1001px; o card cresce além dela para caber o texto. */
   --hero-art-height: clamp(220px, 40svh, 340px);
   /* Curva comum das animações do carrossel: acelera e desacelera devagar, sem arranques. */
   --carousel-ease: cubic-bezier(0.65, 0, 0.35, 1);
@@ -354,9 +365,10 @@ html[data-theme='light'] .hero-copy h1 {
 }
 
 /*
-  Setas do mobile: juntas no canto superior direito do card (célula stack), centradas na linha da
-  chamada e acima do texto e do botão de seleção do card. O topo segue o padding do texto
-  (.hero-copy) para a linha central dos botões coincidir com a da chamada sem encostar no título.
+  Setas abaixo de 1001px: juntas no canto superior direito do card (célula stack), centradas na
+  linha da chamada e acima do texto e do botão de seleção do card. O topo segue o padding do
+  texto (.hero-copy) para a linha central dos botões coincidir com a da chamada sem encostar no
+  título.
 */
 .hero-arrows {
   --arrow-size: 40px;
@@ -382,6 +394,43 @@ html[data-theme='light'] .hero-copy h1 {
 
 .hero-arrow:hover {
   --chamfer-border: var(--color-brand);
+}
+
+/*
+  No celular as setas pesavam no topo do card: a moldura desenhada encolhe para 30px (camadas do
+  chanfro recuadas 7px) e o ícone para 16px, mas o botão continua com 44px de área de toque.
+  Sem gap, o espaço entre as molduras vem dos próprios recuos.
+*/
+@media (width < 601px) {
+  .hero-arrows {
+    --arrow-size: 44px;
+    --arrow-inset: 7px;
+    gap: 0;
+    margin-right: calc(var(--box-padding) - var(--arrow-inset));
+  }
+
+  .hero-arrows .hero-arrow {
+    --cut: 6px;
+    --chamfer-fill: color-mix(in srgb, var(--color-page) 60%, transparent);
+    color: var(--color-soft);
+  }
+
+  .hero-arrows .hero-arrow::before {
+    inset: var(--arrow-inset);
+  }
+
+  .hero-arrows .hero-arrow::after {
+    inset: calc(var(--arrow-inset) + 1px);
+  }
+
+  .hero-arrows .hero-arrow svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .hero-arrows .hero-arrow:focus-visible {
+    outline-offset: -2px;
+  }
 }
 
 /* Moldura que agrupa pausar/retomar e os indicadores do hero: segue o tema, como o restante do hero. */
@@ -453,14 +502,15 @@ html[data-theme='light'] .hero-copy h1 {
 
 /*
   Os painéis dividem a mesma célula do grid, então a célula sempre tem a altura de um painel.
-  Mobile: só o do slide exibido aparece. Desktop: cada um é deslocado conforme a posição na fila.
+  Abaixo de 1001px só o do slide exibido aparece; no desktop cada um é deslocado conforme a
+  posição na fila.
 */
 .hero-panels {
   grid-area: panels;
   display: grid;
 }
 
-/* No mobile só um painel aparece; o fade evita o corte seco na troca. */
+/* Abaixo de 1001px só um painel aparece; o fade evita o corte seco na troca. */
 .hero-panel {
   position: relative;
   grid-area: 1 / 1;
@@ -506,10 +556,10 @@ html[data-theme='light'] .hero-copy h1 {
 }
 
 /*
-  Mobile: os painéis ficam atrás do texto e ocupam a célula inteira. O z-index cria um contexto
-  de empilhamento, então o botão de seleção do card não cobre o CTA. A arte ganha um degradê no
-  topo para o texto ser legível, e os objetos ficam numa faixa na base com a altura que o card
-  tinha antes, mantendo o mesmo tamanho e as mesmas posições.
+  Abaixo de 1001px os painéis ficam atrás do texto e ocupam a célula inteira. O z-index cria um
+  contexto de empilhamento, então o botão de seleção do card não cobre o CTA. A arte ganha um
+  degradê no topo para o texto ser legível, e os objetos ficam numa faixa na base com a altura
+  que o card tinha antes, mantendo o mesmo tamanho e as mesmas posições.
 */
 @media (width < 1001px) {
   /* Sem conteúdo no fluxo, só tem altura esticando até a da célula, definida pelo texto. */
@@ -547,7 +597,7 @@ html[data-theme='light'] .hero-copy h1 {
     height: var(--hero-art-height);
   }
 
-  /* No celular o card é sempre o aberto; o logo da campanha já aparece acima do título. */
+  /* Abaixo de 1001px o card é sempre o aberto; o logo da campanha já aparece acima do título. */
   .hero-panel .campaign-object.is-collapsed-only {
     display: none;
   }
@@ -557,16 +607,20 @@ html[data-theme='light'] .hero-copy h1 {
   }
 
   /*
-    Arte com objetos apoiados nos blocos (sceneMobile): o fundo cobre só a faixa dos objetos,
-    alinhado à direita e pela base, e some para cima no preenchimento do card, sob o texto.
-    --scene-unit é a escala do fundo (px na tela por px da arte); o cover usa a maior entre a
-    da altura da faixa e a da largura do card, e o card (.hero-frame) é o container.
+    O fundo ocupa só a faixa dos objetos e some para cima, então o texto de todas as campanhas fica
+    sobre o mesmo fundo liso. Com sceneMobile ele se alinha à direita e pela base; --scene-unit é a
+    escala do cover (px na tela por px da arte): a maior entre a da altura da faixa e a da largura
+    do card, que é o container (.hero-frame).
   */
-  .hero-panel.has-mobile-scene .hero-panel-image {
+  .hero-panel .hero-panel-image {
     top: auto;
     height: var(--hero-art-height);
-    object-position: right bottom;
     mask-image: linear-gradient(to bottom, transparent, #000 35%);
+  }
+
+  /* Sem sceneMobile (Energy Drink), o fundo mantém o enquadramento da campanha dentro da faixa. */
+  .hero-panel.has-mobile-scene .hero-panel-image {
+    object-position: right bottom;
   }
 
   .hero-panel .campaign-object.is-on-mobile-scene {
@@ -623,7 +677,8 @@ html[data-theme='light'] .hero-copy h1 {
 
 /*
   Fundo da campanha com object-fit: cover, sem deformar. O enquadramento vem do slide
-  (--position-collapsed/--position-expanded); no mobile o painel é largo e usa o do expandido.
+  (--position-collapsed/--position-expanded); abaixo de 1001px o painel é largo e usa o do
+  expandido.
 */
 .hero-panel-image {
   position: absolute;
@@ -648,7 +703,7 @@ html[data-theme='light'] .hero-copy h1 {
   Objetos transparentes da campanha. O wrapper ocupa o card inteiro, então o translate em % é
   relativo ao card; a imagem fica centrada nesse ponto.
   A largura base usa cqmin (menor lado do card) e height: auto, então a proporção nunca muda.
-  Sem estado (mobile, onde o card é largo) vale a configuração do expandido.
+  Sem estado (abaixo de 1001px, onde o card é largo) vale a configuração do expandido.
 */
 .campaign-object {
   position: absolute;
@@ -669,10 +724,9 @@ html[data-theme='light'] .hero-copy h1 {
 }
 
 /*
-  Desktop: a fila fica encostada à direita. O primeiro da fila é o único que expande e, como fica
-  alinhado pela borda direita, cresce para a esquerda; a largura expandida é o que sobra da coluna
-  depois dos estreitos, mais --panel-reach, que avança sobre o espaço entre a coluna e o texto.
-  O texto fica acima dos painéis (z-index), então o card nunca cobre o título nem o CTA.
+  Desktop: a fila encosta à direita e só o primeiro expande, crescendo para a esquerda até ocupar o
+  que sobra da coluna, mais --panel-reach sobre o espaço até o texto. O texto fica acima dos
+  painéis (z-index), então o card nunca cobre o título nem o CTA.
 */
 @media (width >= 1001px) {
   .hero-panels {
@@ -1065,7 +1119,6 @@ html[data-theme='light'] .hero-copy h1 {
     --chamfer-fill: linear-gradient(180deg, #f2122f, #a3001a);
   }
 
-  /* A moldura do Departamentos responde ao botão inteiro, que é mais alto que ela. */
   /*
     Carrinho com produtos. Verdes mais escuros que --color-success, para o texto branco manter
     contraste.
@@ -1079,6 +1132,7 @@ html[data-theme='light'] .hero-copy h1 {
     --chamfer-fill: linear-gradient(180deg, #1a9a45, #0e7331);
   }
 
+  /* A moldura do Departamentos responde ao botão inteiro, que é mais alto que ela. */
   .chamfer-accent:hover,
   .nav-departments:hover .chamfer-accent,
   .nav-departments[aria-expanded='true'] .chamfer-accent {
@@ -1137,9 +1191,142 @@ html[data-theme='light'] .hero-copy h1 {
   }
 
   /*
+    Barra inferior do celular. Como no .chamfer, o recorte fica nas camadas (::before = borda,
+    ::after = fundo), aqui só nos cantos de cima, e os traços vermelhos ficam fora do recorte.
+    Os modais são <dialog> na camada superior, então sempre ficam acima dela.
+  */
+  .mobile-nav {
+    --cut: 12px;
+    position: fixed;
+    inset-inline: 0;
+    bottom: 0;
+    z-index: 30;
+    isolation: isolate;
+    padding: 0 env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
+    filter: drop-shadow(0 -6px 18px var(--header-shadow));
+    transition:
+      translate 0.2s ease,
+      visibility 0.2s;
+  }
+
+  .mobile-nav::before,
+  .mobile-nav::after {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    clip-path: polygon(var(--cut) 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, 0 100%, 0 var(--cut));
+  }
+
+  .mobile-nav::before {
+    inset: 0;
+    background: var(--field-border);
+  }
+
+  .mobile-nav::after {
+    inset: 1px 0 0;
+    background: var(--color-surface);
+  }
+
+  .mobile-nav-accents {
+    --accent-length: calc(var(--cut) * 1.1);
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .mobile-nav-accents::before,
+  .mobile-nav-accents::after {
+    content: '';
+    position: absolute;
+    top: calc(var(--cut) / 2 - 1.5px);
+    width: var(--accent-length);
+    height: 3px;
+    background: var(--color-brand);
+  }
+
+  .mobile-nav-accents::before {
+    left: calc(var(--cut) / 2 - var(--accent-length) / 2);
+    transform: rotate(-45deg);
+  }
+
+  .mobile-nav-accents::after {
+    right: calc(var(--cut) / 2 - var(--accent-length) / 2);
+    transform: rotate(45deg);
+  }
+
+  /*
+    Com o teclado virtual aberto a barra só ocuparia espaço (e, no iOS, flutuaria sobre o campo);
+    ela sai enquanto um campo de texto tem o foco.
+  */
+  @media (pointer: coarse) {
+    :root:has(:is(input:not([type='checkbox'], [type='radio']), textarea, select):focus) .mobile-nav {
+      translate: 0 100%;
+      visibility: hidden;
+    }
+  }
+
+  /*
+    Até uns 380px "Monte seu PC" não cabe numa linha a 11px; a legenda quebra em duas em vez de
+    encolher. Os itens alinham pelo topo para os ícones ficarem na mesma altura.
+  */
+  .mobile-nav-item {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    width: 100%;
+    height: var(--mobile-nav-height);
+    padding: 9px 2px 0;
+    font-size: 11px;
+    line-height: 1.2;
+    font-weight: 500;
+    text-align: center;
+    text-wrap: balance;
+    color: var(--color-text);
+    transition: color 0.15s;
+  }
+
+  .mobile-nav-item:focus-visible {
+    outline-color: var(--color-brand);
+    outline-offset: -3px;
+  }
+
+  @media (hover: hover) {
+    .mobile-nav-item:hover {
+      color: var(--color-brand);
+    }
+  }
+
+  /*
+    Item com painel aberto ou filtro ligado: ícone vermelho, legenda em negrito e o traço chanfrado
+    no topo. A legenda não fica vermelha porque o vermelho da marca não tem contraste para 11px.
+  */
+  .mobile-nav-item:is([aria-expanded='true'], [aria-pressed='true']) {
+    color: var(--color-heading);
+    font-weight: 700;
+  }
+
+  .mobile-nav-item:is([aria-expanded='true'], [aria-pressed='true']) svg {
+    color: var(--color-brand);
+  }
+
+  .mobile-nav-item:is([aria-expanded='true'], [aria-pressed='true'])::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 28px;
+    height: 3px;
+    translate: -50% 0;
+    background: var(--color-brand);
+    clip-path: polygon(0 0, 100% 0, calc(100% - 3px) 100%, 3px 100%);
+  }
+
+  /*
     Menu de departamentos. O <dialog> cobre a tela (o clique fora do painel cai nele) e o painel
-    encosta à esquerda. Só com a lista a página continua rolando; com um departamento escolhido
-    ela trava.
+    encosta à esquerda. Em telas largas, só com a lista, a página continua rolando; com um
+    departamento escolhido (ou abaixo de 1500px) ela trava.
   */
   :root:has(.department-menu[open]:not([data-closing]) [data-has-detail]) {
     overflow: hidden;
@@ -1160,8 +1347,9 @@ html[data-theme='light'] .hero-copy h1 {
   }
 
   /*
-    Só com a lista aberta a página continua visível e a sombra separa o painel dela. Ao escolher um
-    departamento o fundo escurece; na saída ele clareia junto com o painel.
+    Em telas largas, só com a lista aberta, a página continua visível ao lado e a sombra separa o
+    painel dela. Ao escolher um departamento o fundo escurece; na saída ele clareia junto com o
+    painel.
   */
   .department-menu::backdrop {
     background: transparent;
@@ -1176,6 +1364,28 @@ html[data-theme='light'] .hero-copy h1 {
     backdrop-filter: blur(4px);
   }
 
+  /*
+    Abaixo de 1500px a lista passa por cima do site (só telas largas o empurram para o lado), então
+    já abre com o fundo escurecido e a página travada, como o carrinho.
+  */
+  @media (width < 1500px) {
+    :root:has(.department-menu[open]:not([data-closing])) {
+      overflow: hidden;
+    }
+
+    .department-menu:not([data-closing])::backdrop {
+      background: rgb(8 9 17 / 0.7);
+      backdrop-filter: blur(4px);
+    }
+
+    @starting-style {
+      .department-menu[open]::backdrop {
+        background: transparent;
+        backdrop-filter: blur(0);
+      }
+    }
+  }
+
   .department-menu-panel {
     --cut: 14px;
     --chamfer-fill: var(--color-surface);
@@ -1185,6 +1395,33 @@ html[data-theme='light'] .hero-copy h1 {
     /* drop-shadow acompanha o recorte chanfrado; box-shadow seria retangular. */
     filter: drop-shadow(12px 0 32px rgb(0 0 0 / 0.55));
     transition: translate 0.25s var(--carousel-ease, ease);
+  }
+
+  /*
+    O lado encostado na borda da tela fica reto e sem contorno: chanfro e borda só no lado que
+    encontra a página. O carrinho, que entra pela direita, faz o espelho disso.
+  */
+  .department-menu-panel::before,
+  .department-menu-panel::after {
+    clip-path: polygon(
+      0 0,
+      calc(100% - var(--cut)) 0,
+      100% var(--cut),
+      100% calc(100% - var(--cut)),
+      calc(100% - var(--cut)) 100%,
+      0 100%
+    );
+  }
+
+  .department-menu-panel::after {
+    inset: 1px 1px 1px 0;
+  }
+
+  /* No celular sobra uma faixa da página escurecida à direita, que também fecha o menu ao toque. */
+  @media (width < 601px) {
+    .department-menu-panel {
+      width: calc(100% - 56px);
+    }
   }
 
   /*
@@ -1265,6 +1502,22 @@ html[data-theme='light'] .hero-copy h1 {
     transition: translate 0.25s var(--carousel-ease, ease);
   }
 
+  .cart-drawer-panel::before,
+  .cart-drawer-panel::after {
+    clip-path: polygon(
+      var(--cut) 0,
+      100% 0,
+      100% 100%,
+      var(--cut) 100%,
+      0 calc(100% - var(--cut)),
+      0 var(--cut)
+    );
+  }
+
+  .cart-drawer-panel::after {
+    inset: 1px 0 1px 1px;
+  }
+
   /* No celular o painel ocupa a tela toda; chanfros e sombra só fazem sentido com a página atrás. */
   @media (width < 601px) {
     .cart-drawer-panel {
@@ -1277,6 +1530,20 @@ html[data-theme='light'] .hero-copy h1 {
 
   .cart-drawer-footer {
     padding-bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  /* Aviso fixo do checkout demonstrativo: borda vermelha e fundo levemente avermelhado. */
+  .checkout-notice {
+    --cut: 8px;
+    --chamfer-border: var(--color-brand);
+    --chamfer-fill: color-mix(in srgb, var(--color-brand) 10%, var(--color-surface));
+  }
+
+  /* Contador ao lado do título: a moldura dos botões secundários, sem o hover, porque não é clicável. */
+  .cart-count {
+    --cut: 6px;
+    --chamfer-border: var(--chip-border);
+    --chamfer-fill: var(--chip-fill);
   }
 
   @starting-style {
@@ -1313,8 +1580,8 @@ html[data-theme='light'] .hero-copy h1 {
   }
 
   /*
-    Celular: um nível por vez; o desktop mostra lista e subcategorias juntas. O display fica aqui,
-    e não em utilitários do Tailwind, que teriam prioridade sobre o display: none abaixo.
+    Abaixo de 1001px, um nível por vez; o desktop mostra lista e subcategorias juntas. O display
+    fica aqui, e não em utilitários do Tailwind, que teriam prioridade sobre o display: none abaixo.
   */
   .department-menu-list,
   .department-menu-detail {
@@ -1330,32 +1597,12 @@ html[data-theme='light'] .hero-copy h1 {
   }
 
   /*
-    Desktop: abre só com a lista e cresce para a direita quando um departamento é escolhido. O
-    site inteiro anda para a direita até sair de baixo da lista, para o menu ficar ao lado da página e
-    não por cima; o painel expandido passa por cima do site já deslocado, sob o fundo escurecido.
-    O <dialog> fica na camada superior e não acompanha o deslocamento. O #root corta o que sai
-    pela direita: com clip (e não hidden) não há rolagem horizontal nem por script, e o header
-    sticky continua funcionando.
+    Desktop: abre só com a lista e cresce para a direita quando um departamento é escolhido; o
+    painel expandido passa por cima do site, sob o fundo escurecido.
   */
   @media (width >= 1001px) {
     :root {
       --department-list-width: 340px;
-    }
-
-    #root {
-      overflow-x: clip;
-    }
-
-    #root > * {
-      transition: translate 0.25s var(--carousel-ease, ease);
-    }
-
-    /*
-      O deslocamento desconta a margem lateral do site (--container-start), para o conteúdo
-      começar logo depois da lista, com a folga mínima do desktop (24px), em qualquer largura.
-    */
-    #root:has(.department-menu[open]:not([data-closing])) > * {
-      translate: max(0px, var(--department-list-width) + 24px - (var(--container-start))) 0;
     }
 
     .department-menu-panel {
@@ -1375,6 +1622,30 @@ html[data-theme='light'] .hero-copy h1 {
   }
 
   /*
+    Em telas largas o site anda para a direita até sair de baixo da lista (o <dialog>, na camada
+    superior, não se desloca); abaixo de 1500px isso cortaria boa parte da página, então a lista
+    passa por cima. O #root corta o que sai pela direita com clip, e não hidden: assim não há
+    rolagem horizontal nem por script, e o header sticky continua funcionando.
+  */
+  @media (width >= 1500px) {
+    #root {
+      overflow-x: clip;
+    }
+
+    #root > * {
+      transition: translate 0.25s var(--carousel-ease, ease);
+    }
+
+    /*
+      O deslocamento desconta a margem lateral do site (--container-start), para o conteúdo
+      começar logo depois da lista, com a folga mínima do desktop (24px), em qualquer largura.
+    */
+    #root:has(.department-menu[open]:not([data-closing])) > * {
+      translate: max(0px, var(--department-list-width) + 24px - (var(--container-start))) 0;
+    }
+  }
+
+  /*
     Foto da placa-mãe do banner "Monte um PC" (JPG com fundo branco): no escuro o screen some com o
     branco; no claro o multiply faz o mesmo.
   */
@@ -1387,19 +1658,18 @@ html[data-theme='light'] .hero-copy h1 {
   }
 
   /*
-    A foto inteira, sem corte nem distorção (object-fit: contain), com altura limitada para a seção
-    não virar outro hero. O brilho é um pseudo-elemento borrado atrás da imagem, que fica nítida.
+    Gabinete e peças inteiros, sem corte nem distorção (object-fit: contain), com altura limitada
+    para a seção não virar outro hero. A área é 2:1: as peças (3:2) ocupam 75% da largura à esquerda
+    e o gabinete entra à direita, um pouco por trás delas. A altura sai da largura, então a
+    composição se mantém quando a coluna é mais estreita que --art-height pede.
   */
-  /* Mesmo formato da foto (3:2): o brilho fica exatamente atrás das peças e nada sobra nas bordas. */
   .builder-art {
+    --art-height: clamp(150px, 46vw, 260px);
     position: relative;
     isolation: isolate;
     justify-self: center;
-    aspect-ratio: 3 / 2;
-    height: clamp(150px, 46vw, 260px);
-    /* min-width: 0 deixa o max-width valer; sem ele o grid mantém a largura vinda da altura. */
-    min-width: 0;
-    max-width: 100%;
+    aspect-ratio: 2 / 1;
+    width: min(100%, var(--art-height) * 2);
   }
 
   .builder-art::before {
@@ -1412,13 +1682,24 @@ html[data-theme='light'] .hero-copy h1 {
     filter: blur(48px);
   }
 
-  /* Absoluta para ocupar a altura fixa do contêiner; numa linha de grid automática, height: 100% não vale. */
+  /* Absolutas para ocupar a altura do contêiner; numa linha de grid automática, height: 100% não vale. */
   .builder-art img {
     position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
+    bottom: 0;
     object-fit: contain;
+  }
+
+  .builder-art-case {
+    right: 2%;
+    width: auto;
+    height: 92%;
+  }
+
+  .builder-art-parts {
+    left: 0;
+    width: 75%;
+    height: 100%;
+    object-position: left bottom;
   }
 
   html[data-theme='light'] .builder-art::before {
@@ -1426,10 +1707,10 @@ html[data-theme='light'] .hero-copy h1 {
   }
 
   @media (width >= 1001px) {
-    /* No desktop as peças encostam à direita, como no banner original, e crescem em telas largas. */
+    /* No desktop a arte encosta à direita, como no banner original, e cresce em telas largas. */
     .builder-art {
+      --art-height: clamp(260px, 23vw, 400px);
       justify-self: end;
-      height: clamp(260px, 23vw, 400px);
     }
   }
 
@@ -1698,6 +1979,8 @@ html[data-theme='light'] .hero-copy h1 {
     O produto fica alinhado à direita e à base; a margem transparente que sobra é cortada.
   */
   .purpose-card-art {
+    /* Alinhamento horizontal do produto: 1 = direita, 0.5 = centro. */
+    --art-align-x: 1;
     position: relative;
     height: clamp(92px, 14svh, 170px);
     overflow: hidden;
@@ -1707,14 +1990,77 @@ html[data-theme='light'] .hero-copy h1 {
   .purpose-card-art img {
     --scale: min(100cqw / var(--frame-width), 100cqh / var(--frame-height));
     position: absolute;
-    left: calc(100cqw - (var(--frame-x) + var(--frame-width)) * var(--scale));
+    left: calc((100cqw - var(--frame-width) * var(--scale)) * var(--art-align-x) - var(--frame-x) * var(--scale));
     top: calc(100cqh - (var(--frame-y) + var(--frame-height)) * var(--scale));
     width: calc(var(--source-width) * var(--scale));
     max-width: none;
     height: auto;
   }
 
+  /*
+    Celular: área de imagem com a mesma proporção em todos os cards, presa à largura do card (e
+    não à altura da tela), com o produto centralizado e apoiado na base. Em 9:8 as torres (altas)
+    e os conjuntos largos ficam com peso visual parecido.
+  */
+  @media (width < 601px) {
+    .purpose-card-art {
+      --art-align-x: 0.5;
+      height: auto;
+      aspect-ratio: 9 / 8;
+    }
+  }
+
   .eyebrow {
     @apply text-[8px] font-bold tracking-[2px] text-[#777e87] sm:text-[10px];
+  }
+}
+
+/*
+  Carrinho com o celular deitado: o rodapé empilhado deixava a lista sem altura nem para um
+  produto. Total e ação principal dividem uma linha, e saem os itens repetidos: a contagem (já no
+  cabeçalho) e o "Continuar comprando" secundário (o fechar faz o mesmo). Fora das camadas para
+  valer sobre os utilitários do JSX (mb-3, w-full).
+*/
+@media (orientation: landscape) and (height < 500px) {
+  .cart-drawer-footer {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding-top: 8px;
+    padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .cart-drawer-summary {
+    flex: 1;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+    margin-bottom: 0;
+  }
+
+  .cart-drawer-summary strong {
+    font-size: 20px;
+  }
+
+  .cart-drawer-summary-count,
+  .cart-drawer-secondary {
+    display: none;
+  }
+
+  .cart-drawer-actions {
+    flex-shrink: 0;
+  }
+
+  .cart-drawer-actions > button {
+    width: auto;
+    flex-shrink: 0;
+    padding-inline: 20px;
+    white-space: nowrap;
+  }
+
+  @media (width >= 601px) {
+    .cart-drawer-panel {
+      width: min(520px, 100%);
+    }
   }
 }

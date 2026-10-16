@@ -1,13 +1,11 @@
 import { Heart, ShoppingCart, User } from 'lucide-react';
+import { formatProductCount } from '../../../utils/format';
 
-// Abaixo de 1001px conta e favoritos ficam só com ícone; o aria-label mantém o nome acessível.
+// No tablet conta e favoritos ficam só com ícone; o aria-label mantém o nome acessível. No celular
+// essas ações saem daqui: a conta vai para o Header e favoritos e carrinho para a barra inferior.
 // Sem moldura: o destaque fica no texto, para a linha não virar uma fileira de caixas.
 const actionClass =
   'relative flex h-(--header-control) min-w-(--header-control) items-center justify-center gap-2 text-[13px] transition-colors hover:text-brand lg:h-12 lg:px-2 lg:whitespace-nowrap';
-
-function countLabel(count) {
-  return `${count} ${count === 1 ? 'produto' : 'produtos'}`;
-}
 
 export default function HeaderActions({
   onAccount,
@@ -18,13 +16,12 @@ export default function HeaderActions({
   onOpenCart,
   className = '',
 }) {
-  const cartLabel = countLabel(cartCount);
+  const cartLabel = formatProductCount(cartCount);
   const hasCartItems = cartCount > 0;
 
   return (
     <div className={`flex items-center gap-2 lg:gap-5 ${className}`}>
-      {/* No celular a conta fica no menu, para as ações restantes manterem 44px de toque. */}
-      <button type="button" onClick={onAccount} aria-label="Minha Conta" className={`${actionClass} text-heading max-sm:hidden`}>
+      <button type="button" onClick={onAccount} aria-label="Minha Conta" className={`${actionClass} text-heading`}>
         <User aria-hidden="true" className="size-5" />
         <span className="hidden lg:inline">Minha Conta</span>
       </button>
@@ -33,7 +30,7 @@ export default function HeaderActions({
         type="button"
         onClick={onToggleFavorites}
         aria-pressed={isFavoriteOnly}
-        aria-label={`Favoritos, ${countLabel(favoriteCount)}`}
+        aria-label={`Favoritos, ${formatProductCount(favoriteCount)}`}
         className={`${actionClass} ${isFavoriteOnly ? 'text-brand' : 'text-heading'}`}
       >
         <Heart aria-hidden="true" className={`size-5 ${isFavoriteOnly ? 'fill-brand' : ''}`} />
@@ -56,18 +53,10 @@ export default function HeaderActions({
         type="button"
         onClick={onOpenCart}
         aria-label={`Carrinho, ${cartLabel}`}
-        // Fica verde enquanto houver produtos no carrinho e volta ao vermelho quando ele esvazia.
-        className={`chamfer ${hasCartItems ? 'chamfer-success' : 'chamfer-accent'} header-cart flex h-(--header-control) min-w-(--header-control) items-center justify-center gap-2.5 text-white min-[414px]:ml-1 sm:px-4 lg:ml-0 lg:h-12 lg:px-5`}
+        className={`chamfer ${hasCartItems ? 'chamfer-success' : 'chamfer-accent'} header-cart ml-1 flex h-(--header-control) items-center justify-center gap-2.5 px-4 text-white lg:ml-0 lg:h-12 lg:px-5`}
       >
-        <span className="relative">
-          <ShoppingCart aria-hidden="true" className="size-5" />
-          <i
-            className={`absolute -top-2 -right-2.5 rounded-full bg-white px-1.25 py-px text-[10px] font-bold not-italic sm:hidden ${hasCartItems ? 'text-[#0c652b]' : 'text-brand'}`}
-          >
-            {cartCount}
-          </i>
-        </span>
-        <span className="hidden flex-col text-left leading-tight sm:flex">
+        <ShoppingCart aria-hidden="true" className="size-5" />
+        <span className="flex flex-col text-left leading-tight">
           <b className="text-[13px] tracking-[0.5px] uppercase">Carrinho</b>
           <small className="text-[11px] text-white/80">{cartLabel}</small>
         </span>

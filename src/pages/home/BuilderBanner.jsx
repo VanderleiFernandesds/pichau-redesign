@@ -1,11 +1,13 @@
 import { ArrowRight } from 'lucide-react';
 import partsImage from '../../assets/images/purposes/monte-seu-pc-600.avif';
 import partsImageLarge from '../../assets/images/purposes/monte-seu-pc-1200.avif';
+import pcCaseImage from '../../assets/images/purposes/monte-seu-pc-gabinete.avif';
 
 /*
   Chamada para o modal de objetivos (ConfigModal). Ele recomenda por onde começar e filtra as
   ofertas, sem montar o PC peça por peça, então o botão promete "encontrar", e não "configurar".
-  Texto à esquerda e peças à direita no desktop; no celular o texto e o botão vêm antes da imagem.
+  Texto à esquerda e PC com as peças à direita no desktop; abaixo de 1001px o texto e o botão
+  vêm antes da imagem.
 */
 export default function BuilderBanner({ onStart }) {
   return (
@@ -19,7 +21,7 @@ export default function BuilderBanner({ onStart }) {
       <div className="relative z-[1]">
         <p className="text-[11px] font-semibold tracking-[3px] text-muted uppercase sm:text-[12px]">Cada peça faz a diferença</p>
         <h2 id="builder-title" className="mt-3 font-display text-[clamp(34px,4.2vw,58px)] leading-[0.95] font-bold">
-          Monte um PC <span className="block text-brand">do seu jeito</span>
+          Monte um PC <span className="block">do seu jeito</span>
         </h2>
         <p className="mt-4 max-w-[44ch] text-[15px] leading-relaxed text-soft sm:text-[17px]">
           Escolha um objetivo e encontre os componentes para começar seu próximo setup.
@@ -34,10 +36,15 @@ export default function BuilderBanner({ onStart }) {
         </button>
       </div>
 
-      {/* Decorativa: o título já diz do que se trata. O brilho fica num pseudo-elemento atrás da foto. */}
+      {/*
+        Decorativa: o título já diz do que se trata. O gabinete fica à direita, atrás das peças; o
+        brilho é um pseudo-elemento atrás das duas fotos.
+      */}
       <div className="builder-art">
-        {/* A arte ocupa no máximo 600 x 400 (desktop largo) e 390px de largura abaixo de 1001px. */}
+        <img className="builder-art-case" src={pcCaseImage} alt="" width="673" height="800" loading="lazy" decoding="async" />
+        {/* As peças ocupam no máximo 600 x 400 (desktop largo) e 390px de largura abaixo de 1001px. */}
         <img
+          className="builder-art-parts"
           src={partsImage}
           srcSet={`${partsImage} 600w, ${partsImageLarge} 1200w`}
           sizes="(min-width: 1001px) 600px, 390px"

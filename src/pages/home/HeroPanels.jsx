@@ -2,20 +2,19 @@ import HeroCampaignPanel from './HeroCampaignPanel';
 import { hideBrokenImage } from '../../utils/image';
 
 /*
-  Os painéis seguem a ordem da fila no DOM, para o Tab percorrer os cards na ordem visual. Com
-  key = id do slide, o React só move os nós que vão para o final, e isso só acontece no jumping,
-  com as transições desligadas, então nenhuma animação é cortada. A posição vem de --position: no desktop vira deslocamento horizontal; no
-  mobile os painéis dividem a mesma célula e só o do slide exibido aparece.
-*/
-/*
   O fundo do primeiro slide é o LCP (o index.html faz preload dele): fica com prioridade alta, e as
-  imagens dos outros slides com prioridade baixa. No celular elas nem aparecem até o carrossel girar;
-  no desktop os cards fechados aparecem, mas são pequenos e chegam logo depois.
+  imagens dos outros slides com prioridade baixa. Abaixo de 1001px elas nem aparecem até o
+  carrossel girar; no desktop os cards fechados aparecem, mas são pequenos e chegam logo depois.
 */
 function fetchPriority(slides, id) {
   return id === slides[0].id ? 'high' : 'low';
 }
 
+/*
+  Os painéis seguem a ordem da fila no DOM, para o Tab percorrer os cards na ordem visual. Com
+  key = id do slide, o React só move nós no jumping, quando as transições estão desligadas, então
+  nenhuma animação é cortada.
+*/
 export default function HeroPanels({ slides, order, shownId, isExpanded, isJumping, objectsHiddenIds, onSelect }) {
   return (
     <div className={`hero-panels ${isJumping ? 'is-jumping' : ''}`} style={{ '--slide-count': slides.length }}>

@@ -6,11 +6,10 @@ const PIX_DISCOUNT_FACTOR = 0.85;
 const INSTALLMENTS = 12;
 
 /*
-  Card no padrão chanfrado do site (purpose-card: borda, cantos vermelhos e brilho no hover, sem
-  deslocar o layout). As 5 linhas do card (imagem, nome, especificações, preço e botões) são um
-  subgrid da vitrine, então ficam alinhadas entre os cards da mesma linha mesmo quando um texto
-  quebra em mais linhas. Abaixo de 640px os cards são estreitos e ficam mais compactos; não dá para
-  usar container query aqui, porque a contenção de layout dela desativa o subgrid.
+  As 5 linhas do card (imagem, nome, especificações, preço e botões) são um subgrid da vitrine,
+  então ficam alinhadas entre os cards da mesma linha mesmo quando um texto quebra. Por isso o
+  card compacto usa media query (abaixo de 640px), e não container query: a contenção de layout
+  dela desativa o subgrid.
 */
 export default function ProductCard({ product, isFavorite, onToggleFavorite, onAddToCart, onView }) {
   const cardPrice = product.price / PIX_DISCOUNT_FACTOR;

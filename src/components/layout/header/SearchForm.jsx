@@ -1,6 +1,6 @@
 import { Search } from 'lucide-react';
 
-export default function SearchForm({ query, onQueryChange, onSearch, className = '' }) {
+export default function SearchForm({ query, onQueryChange, onSearch, inputRef, className = '' }) {
   function handleSubmit(event) {
     event.preventDefault();
     onSearch();
@@ -11,8 +11,9 @@ export default function SearchForm({ query, onQueryChange, onSearch, className =
       <label className="sr-only" htmlFor="query">
         Buscar produtos
       </label>
-      {/* 16px no mobile evita o zoom automático do iOS ao focar o campo. */}
+      {/* 16px abaixo de 1001px evita o zoom automático do iOS ao focar o campo. */}
       <input
+        ref={inputRef}
         id="query"
         value={query}
         onChange={(event) => onQueryChange(event.target.value)}

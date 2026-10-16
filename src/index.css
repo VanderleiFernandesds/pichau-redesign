@@ -82,6 +82,9 @@
   --banner-fill: radial-gradient(ellipse at right, #4c0816, #121216 65%);
   --scrollbar: #3a3c44;
   --header-shadow: #00000059;
+  /* Estrelas das avaliações: dourado cheio e a vazia no tom das bordas dos botões secundários. */
+  --star-full: #fbbf24;
+  --star-empty: #4a4c54;
 }
 
 html[data-theme='light'] {
@@ -110,6 +113,9 @@ html[data-theme='light'] {
   --banner-fill: radial-gradient(ellipse at right, #ffd3da, #f4f5f7 65%);
   --scrollbar: #c9ccd3;
   --header-shadow: #ffffffd9;
+  /* Dourado mais escuro, para a estrela não sumir no fundo claro. */
+  --star-full: #d18b00;
+  --star-empty: #cfd2d8;
 }
 
 /* Elementos com uma versão para cada tema (logos com texto branco ou escuro). */
@@ -2008,6 +2014,14 @@ html[data-theme='light'] .hero-copy h1 {
       height: auto;
       aspect-ratio: 9 / 8;
     }
+  }
+
+  .star-full {
+    color: var(--star-full);
+  }
+
+  .star-empty {
+    color: var(--star-empty);
   }
 
   .eyebrow {

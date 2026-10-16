@@ -95,4 +95,27 @@ const catalog = [
   { id: 78, name: 'Pichau Energy Drink Protein', spec: 'Lata 350 ml', category: 'Energéticos', price: 11.9, image: 'energetico-pichau-protein' },
 ];
 
-export const products = catalog.map((product) => ({ ...product, image: productImage(product.image) }));
+/*
+  Avaliações fictícias, só para demonstrar o componente: o card as identifica como ilustrativas.
+  `score` vai de 0 a 5 e `count` é o número de avaliações. Produtos fora daqui aparecem como
+  "Sem avaliações".
+*/
+const ILLUSTRATIVE_RATINGS = {
+  0: { score: 4.6, count: 212 },
+  1: { score: 4.9, count: 57 },
+  2: { score: 4.8, count: 128 },
+  3: { score: 5, count: 34 },
+  4: { score: 4.2, count: 389 },
+  6: { score: 4, count: 76 },
+  8: { score: 4.7, count: 91 },
+  9: { score: 4.5, count: 143 },
+};
+
+export const products = catalog.map((product) => {
+  const rating = ILLUSTRATIVE_RATINGS[product.id];
+  return {
+    ...product,
+    image: productImage(product.image),
+    rating: rating ? { ...rating, isIllustrative: true } : null,
+  };
+});

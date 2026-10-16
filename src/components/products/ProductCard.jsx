@@ -1,4 +1,5 @@
 import { ArrowUpRight, Heart, ShoppingCart } from 'lucide-react';
+import StarRating from '../ui/StarRating';
 import { formatMoney } from '../../utils/format';
 
 // O valor no Pix já tem 15% de desconto; o preço no cartão é calculado a partir dele.
@@ -6,8 +7,9 @@ const PIX_DISCOUNT_FACTOR = 0.85;
 const INSTALLMENTS = 12;
 
 /*
-  As 5 linhas do card (imagem, nome, especificações, preço e botões) são um subgrid da vitrine,
-  então ficam alinhadas entre os cards da mesma linha mesmo quando um texto quebra. Por isso o
+  As 6 linhas do card (imagem, nome, especificações, avaliação, preço e botões) são um subgrid da
+  vitrine, então ficam alinhadas entre os cards da mesma linha mesmo quando um texto quebra ou um
+  produto não tem avaliação. Por isso o
   card compacto usa media query (abaixo de 640px), e não container query: a contenção de layout
   dela desativa o subgrid.
 */
@@ -27,7 +29,7 @@ export default function ProductCard({ product, isFavorite, onToggleFavorite, onA
   return (
     <article
       onClick={handleCardClick}
-      className="chamfer purpose-card row-span-5 grid cursor-pointer grid-rows-subgrid gap-0 p-3 text-heading sm:p-4"
+      className="chamfer purpose-card row-span-6 grid cursor-pointer grid-rows-subgrid gap-0 p-3 text-heading sm:p-4"
     >
       <span aria-hidden="true" className="corner-accents" />
 
@@ -60,6 +62,7 @@ export default function ProductCard({ product, isFavorite, onToggleFavorite, onA
         {product.name}
       </h3>
       <p className="mt-1 text-[12px] leading-snug text-soft sm:text-[13px]">{product.spec}</p>
+      <StarRating rating={product.rating} className="mt-1.5 sm:mt-2" />
 
       <div className="pt-2 sm:pt-3">
         {/*

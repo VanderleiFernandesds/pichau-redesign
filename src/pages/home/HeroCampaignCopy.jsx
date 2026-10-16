@@ -2,10 +2,30 @@ import { ArrowUpRight, CalendarDays, MapPin, Tag } from 'lucide-react';
 
 const DETAIL_ICONS = { offer: Tag, date: CalendarDays, location: MapPin };
 
+// Chanfrado vermelho como o carrinho e o Departamentos. Não usa .button: o fundo dele apareceria
+// nos cantos recortados. Links para o site da marca abrem em outra aba, sem tirar o cliente da loja.
+function CampaignCta({ cta, label, onFilter, className }) {
+  const isExternal = cta.href.startsWith('http');
+  return (
+    <a
+      href={cta.href}
+      target={isExternal ? '_blank' : undefined}
+      rel={isExternal ? 'noopener noreferrer' : undefined}
+      onClick={cta.category ? () => onFilter(cta.category) : undefined}
+      className={`chamfer chamfer-accent inline-flex items-center justify-between font-bold whitespace-nowrap text-white ${className}`}
+    >
+      {label}
+      {isExternal && <span className="sr-only"> (abre em nova aba)</span>}
+      <ArrowUpRight aria-hidden="true" className="size-4" />
+    </a>
+  );
+}
+
 /*
-  Textos da campanha do card expandido. Os de todas as campanhas ocupam a mesma célula do grid,
-  então a área reservada é a da maior: trocar de campanha não move o botão nem o resto da página.
-  As inativas ficam com visibility: hidden, fora do Tab e da árvore de acessibilidade.
+  Os textos de todas as campanhas ocupam a mesma célula do grid, que fica com a altura da maior:
+  trocar de campanha não move o resto da página. As inativas ficam com visibility: hidden, fora do
+  Tab e da árvore de acessibilidade. No celular o botão vai dentro de cada bloco, logo abaixo da
+  descrição, para a campanha de texto mais curto não ficar com um vão até ele.
 */
 export default function HeroCampaignCopy({ campaigns, shownId, isAnnounced, onFilter, theme }) {
   function visibility(campaignId) {
@@ -15,7 +35,7 @@ export default function HeroCampaignCopy({ campaigns, shownId, isAnnounced, onFi
   return (
     <div className="hero-copy max-w-[590px]">
       <div className="grid" aria-live={isAnnounced ? 'polite' : 'off'}>
-        {campaigns.map(({ id, eyebrow, logo, title, isTitleStacked, description, details }) => (
+        {campaigns.map(({ id, eyebrow, logo, title, isTitleStacked, description, details, cta }) => (
           <div key={id} className={`hero-fade col-start-1 row-start-1 ${visibility(id)}`}>
             {logo ? (
               // Largura fixa e altura automática, para a proporção vir sempre da arte; no celular o logo
@@ -62,32 +82,28 @@ export default function HeroCampaignCopy({ campaigns, shownId, isAnnounced, onFi
                 })}
               </ul>
             )}
+
+            <CampaignCta
+              cta={cta}
+              label={cta.mobileLabel ?? cta.label}
+              onFilter={onFilter}
+              className="mt-(--hero-gap) min-h-11 gap-4 px-5 text-[14px] sm:hidden"
+            />
           </div>
         ))}
       </div>
 
-      <div className="mt-(--hero-gap) flex">
+      <div className="mt-(--hero-gap) flex max-sm:hidden">
         <div className="grid">
-          {campaigns.map(({ id, cta }) => {
-            // Links para o site da marca abrem em outra aba, sem tirar o cliente da loja.
-            const isExternal = cta.href.startsWith('http');
-            return (
-              <a
-                key={id}
-                href={cta.href}
-                target={isExternal ? '_blank' : undefined}
-                rel={isExternal ? 'noopener noreferrer' : undefined}
-                onClick={cta.category ? () => onFilter(cta.category) : undefined}
-                // Chanfrado vermelho como o carrinho e o Departamentos. Não usa .button: o fundo dele
-                // apareceria nos cantos recortados.
-                className={`chamfer chamfer-accent hero-fade col-start-1 row-start-1 inline-flex items-center justify-between gap-3 px-3.5 py-3 text-[11px] font-bold whitespace-nowrap text-white sm:gap-6 sm:px-5.5 sm:py-3.5 sm:text-[13px] ${visibility(id)}`}
-              >
-                {cta.label}
-                {isExternal && <span className="sr-only"> (abre em nova aba)</span>}
-                <ArrowUpRight aria-hidden="true" className="size-4" />
-              </a>
-            );
-          })}
+          {campaigns.map(({ id, cta }) => (
+            <CampaignCta
+              key={id}
+              cta={cta}
+              label={cta.label}
+              onFilter={onFilter}
+              className={`hero-fade col-start-1 row-start-1 gap-6 px-5.5 py-3.5 text-[13px] ${visibility(id)}`}
+            />
+          ))}
         </div>
       </div>
     </div>

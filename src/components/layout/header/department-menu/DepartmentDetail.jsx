@@ -3,7 +3,7 @@ import DepartmentLink from '../../../ui/DepartmentLink';
 
 /*
   Subcategorias do departamento selecionado. No desktop é o painel da direita, ao lado da lista;
-  no celular é o segundo nível, com "Voltar" e o fechar no topo.
+  abaixo de 1001px é o segundo nível, com "Voltar" e o fechar no topo.
 */
 export default function DepartmentDetail({ department, titleRef, onBack, onOpen, closeButton }) {
   return (

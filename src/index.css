@@ -82,6 +82,9 @@
   --banner-fill: radial-gradient(ellipse at right, #4c0816, #121216 65%);
   --scrollbar: #3a3c44;
   --header-shadow: #00000059;
+  /* Estrelas das avaliações: dourado cheio e a vazia no tom das bordas dos botões secundários. */
+  --star-full: #fbbf24;
+  --star-empty: #4a4c54;
 }
 
 html[data-theme='light'] {
@@ -110,6 +113,9 @@ html[data-theme='light'] {
   --banner-fill: radial-gradient(ellipse at right, #ffd3da, #f4f5f7 65%);
   --scrollbar: #c9ccd3;
   --header-shadow: #ffffffd9;
+  /* Dourado mais escuro, para a estrela não sumir no fundo claro. */
+  --star-full: #d18b00;
+  --star-empty: #cfd2d8;
 }
 
 /* Elementos com uma versão para cada tema (logos com texto branco ou escuro). */
@@ -1190,6 +1196,34 @@ html[data-theme='light'] .hero-copy h1 {
     outline-color: var(--color-brand);
   }
 
+  /* Painel da conta: o grafite, a borda fina e os traços vermelhos nos cantos do próprio header. */
+  .account-panel {
+    --cut: 12px;
+    --chamfer-border: var(--field-border);
+    --chamfer-fill: var(--panel-fill);
+    filter: drop-shadow(0 14px 28px rgb(0 0 0 / 0.5));
+  }
+
+  html[data-theme='light'] .account-panel {
+    filter: drop-shadow(0 12px 24px rgb(25 26 31 / 0.14));
+  }
+
+  /* Conta aberta: moldura vermelha no celular e traço vermelho sob o acionador a partir do tablet. */
+  .account-trigger[aria-expanded='true'] .chamfer-field {
+    --chamfer-border: var(--color-brand);
+  }
+
+  @media (width >= 601px) {
+    .account-trigger[aria-expanded='true']::after {
+      content: '';
+      position: absolute;
+      inset-inline: 4px;
+      bottom: 0;
+      height: 2px;
+      background: var(--color-brand);
+    }
+  }
+
   /*
     Barra inferior do celular. Como no .chamfer, o recorte fica nas camadas (::before = borda,
     ::after = fundo), aqui só nos cantos de cima, e os traços vermelhos ficam fora do recorte.
@@ -1532,8 +1566,8 @@ html[data-theme='light'] .hero-copy h1 {
     padding-bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px));
   }
 
-  /* Aviso fixo do checkout demonstrativo: borda vermelha e fundo levemente avermelhado. */
-  .checkout-notice {
+  /* Aviso das simulações (checkout, entrar e criar conta): borda vermelha e fundo levemente avermelhado. */
+  .simulation-notice {
     --cut: 8px;
     --chamfer-border: var(--color-brand);
     --chamfer-fill: color-mix(in srgb, var(--color-brand) 10%, var(--color-surface));
@@ -1803,15 +1837,14 @@ html[data-theme='light'] .hero-copy h1 {
 
   /*
     O foco usa a borda chanfrada vermelha, que segue o recorte; o outline padrão seria retangular e,
-    por fora, a trilha o cortaria. Sem o brilho e o fundo avermelhado do purpose-card: aqui são
-    muitos cards lado a lado, e só borda e nome já marcam o card.
+    por fora, a trilha o cortaria. Do hover do purpose-card fica o fundo avermelhado, sem o brilho,
+    que a trilha também cortaria.
   */
   .department-card:focus-visible {
     outline: none;
   }
 
   .purpose-card.department-card:is(:hover, :focus-visible) {
-    --chamfer-fill: var(--card-fill);
     filter: none;
   }
 
@@ -1898,7 +1931,7 @@ html[data-theme='light'] .hero-copy h1 {
     }
   }
 
-  .newsletter-error {
+  .field-error {
     --chamfer-border: var(--color-danger);
   }
 
@@ -2008,6 +2041,14 @@ html[data-theme='light'] .hero-copy h1 {
       height: auto;
       aspect-ratio: 9 / 8;
     }
+  }
+
+  .star-full {
+    color: var(--star-full);
+  }
+
+  .star-empty {
+    color: var(--star-empty);
   }
 
   .eyebrow {

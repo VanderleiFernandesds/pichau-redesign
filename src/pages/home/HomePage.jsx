@@ -58,11 +58,6 @@ export default function HomePage() {
   const hasActiveFilter = normalizedQuery !== '' || category !== ALL_CATEGORIES || isFavoriteOnly;
 
   // Conta, busca, favoritos e carrinho fecham a lista do menu: só um painel aberto por vez.
-  function showAccountNotice() {
-    setIsNavOpen(false);
-    toast.showToast('Conceito demonstrativo: área do cliente indisponível.');
-  }
-
   function openCart() {
     setIsNavOpen(false);
     setIsCartOpen(true);
@@ -141,7 +136,7 @@ export default function HomePage() {
           searchInputRef={searchInputRef}
           isNavOpen={isNavOpen}
           onNavOpenChange={setIsNavOpen}
-          onAccount={showAccountNotice}
+          onAccountOpen={() => setIsNavOpen(false)}
           isFavoriteOnly={isFavoriteOnly}
           onToggleFavorites={toggleFavoriteOnly}
           favoriteCount={favorites.length}

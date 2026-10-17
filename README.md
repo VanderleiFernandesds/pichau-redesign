@@ -14,6 +14,16 @@ Praticar a construção de uma interface de e-commerce com React, combinando ide
 
 O projeto explora a adaptação da navegação para desktop e mobile, a apresentação das informações de produto e o gerenciamento de estado compartilhado entre vitrines e painéis.
 
+## Referência original e proposta de redesign
+
+Comparação entre a interface original da Pichau e minha proposta independente de redesign.
+
+![Comparação entre o site original da Pichau e a proposta de redesign](docs/images/pichau-antes-depois.gif)
+
+A proposta reorganiza a primeira tela em torno de uma campanha principal, unifica a linguagem visual dos componentes e apresenta categorias por objetivo de uso.
+
+As mudanças representam decisões de design exploradas neste projeto de estudo. Seus efeitos na usabilidade e na conversão não foram medidos.
+
 ## Tecnologias
 
 - **React 19** — componentes e gerenciamento de estado.

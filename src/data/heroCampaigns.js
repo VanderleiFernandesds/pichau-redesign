@@ -114,7 +114,7 @@ export const HERO_CAMPAIGNS = {
     isTitleStacked: true,
     description: 'Pichau Energy Drink Protein: sabor Black Cherry para acompanhar seu próximo jogo.',
     details: [],
-    cta: { label: 'Conhecer a bebida', href: '#offers' },
+    cta: { label: 'Conhecer a bebida', href: 'https://www.pichau.com.br/energetico-pichau-protein-black-cherry-zero-350ml-pch-eng-probc-zero-un' },
   },
   corsair: {
     id: 'corsair',
@@ -212,7 +212,7 @@ export const HERO_CAMPAIGNS = {
     isTitleStacked: true,
     description: 'Explore componentes e periféricos para montar ou renovar seu setup.',
     details: [],
-    cta: { label: 'Explorar Corsair', href: '#offers', category: 'Hardware' },
+    cta: { label: 'Explorar Corsair', href: 'https://www.pichau.com.br/marca/corsair' },
   },
   /*
     scene segue a composição da referência (1192 x 475): placa no bloco alto, fone no degrau,
@@ -318,7 +318,7 @@ export const HERO_CAMPAIGNS = {
     isTitleStacked: true,
     description: 'Descubra notebooks, componentes e periféricos para seu próximo setup.',
     details: [],
-    cta: { label: 'Explorar ROG', href: 'https://rog.asus.com/br/' },
+    cta: { label: 'Explorar ROG', href: 'https://www.pichau.com.br/marca/asus' },
   },
   // Configurada para quando a campanha entrar no carrossel; hoje os três slides usam as demais.
   pichauArena: {

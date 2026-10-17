@@ -126,8 +126,9 @@ export const HERO_CAMPAIGNS = {
       position: { collapsed: '80% 50%', expanded: '62% 50%', stage: '100% 50%' },
     },
     /*
-      sceneMobile: tudo a partir de x 800 da arte, que já aparece no card de 320px. PC (bloco do
-      meio) e teclado (laje da frente) são os destaques; os demais ficam menores, nas pontas.
+      sceneMobile: cada objeto num bloco da arte: memórias no bloco alto, PC e fonte na plataforma,
+      teclado e mouse na laje da frente, headset no chão. As memórias (x ~755) ficam fora do card
+      só nos celulares de 320px com tela alta, que mostram a arte a partir de x ~790.
     */
     objects: [
       {
@@ -139,7 +140,7 @@ export const HERO_CAMPAIGNS = {
         collapsed: { x: '50%', base: '332px', scale: 0.85, layer: 1 },
         expanded: { x: '60%', y: '52%', scale: 0.42, layer: 1 },
         scene: { x: 900, bottom: 330, width: 190 },
-        sceneMobile: { x: 952, bottom: 324, width: 180 },
+        sceneMobile: { x: 905, bottom: 322, width: 170 },
       },
       {
         id: 'memorias',
@@ -150,7 +151,7 @@ export const HERO_CAMPAIGNS = {
         collapsed: null,
         expanded: { x: '35%', y: '60%', scale: 0.24, layer: 2 },
         scene: { x: 700, bottom: 281, width: 110 },
-        sceneMobile: { x: 846, bottom: 322, width: 74 },
+        sceneMobile: { x: 755, bottom: 273, width: 78 },
       },
       {
         id: 'fonte',
@@ -161,7 +162,7 @@ export const HERO_CAMPAIGNS = {
         collapsed: null,
         expanded: { x: '84%', y: '63%', scale: 0.28, layer: 2 },
         scene: { x: 1095, bottom: 334, width: 130 },
-        sceneMobile: { x: 1125, bottom: 334, width: 100 },
+        sceneMobile: { x: 1110, bottom: 334, width: 100 },
       },
       {
         id: 'headset',
@@ -172,7 +173,7 @@ export const HERO_CAMPAIGNS = {
         collapsed: { x: '50%', base: '430px', scale: 0.62, layer: 2 },
         expanded: { x: '14%', y: '57%', scale: 0.24, layer: 5 },
         scene: { x: 560, bottom: 304, width: 105 },
-        sceneMobile: { x: 1150, bottom: 452, width: 68 },
+        sceneMobile: { x: 1128, bottom: 456, width: 72 },
       },
       {
         id: 'teclado',
@@ -183,7 +184,7 @@ export const HERO_CAMPAIGNS = {
         collapsed: null,
         expanded: { x: '27%', y: '84%', scale: 0.6, layer: 4 },
         scene: { x: 700, bottom: 436, width: 300 },
-        sceneMobile: { x: 935, bottom: 440, width: 262 },
+        sceneMobile: { x: 880, bottom: 430, width: 210 },
       },
       {
         id: 'mouse',
@@ -194,7 +195,7 @@ export const HERO_CAMPAIGNS = {
         collapsed: null,
         expanded: { x: '56%', y: '88%', scale: 0.17, layer: 5 },
         scene: { x: 888, bottom: 436, width: 74 },
-        sceneMobile: { x: 1083, bottom: 452, width: 50 },
+        sceneMobile: { x: 1012, bottom: 410, width: 46 },
       },
       {
         id: 'logo',
@@ -239,7 +240,7 @@ export const HERO_CAMPAIGNS = {
         collapsed: { x: '50%', base: '222px', scale: 0.82, layer: 1 },
         expanded: { x: '72%', y: '30%', scale: 0.46, layer: 1 },
         scene: { x: 1015, bottom: 226, width: 310 },
-        sceneMobile: { x: 1080, bottom: 222, width: 190 },
+        sceneMobile: { x: 1060, bottom: 226, width: 180 },
         sceneNarrow: { x: 1065, bottom: 224, width: 220 },
       },
       {
@@ -251,7 +252,7 @@ export const HERO_CAMPAIGNS = {
         collapsed: { x: '50%', base: '336px', scale: 0.86, layer: 2 },
         expanded: { x: '40%', y: '45%', scale: 0.56, layer: 2 },
         scene: { x: 690, bottom: 295, width: 410 },
-        sceneMobile: { x: 848, bottom: 300, width: 230 },
+        sceneMobile: { x: 815, bottom: 280, width: 190 },
         sceneNarrow: { x: 925, bottom: 302, width: 270 },
       },
       {
@@ -263,7 +264,7 @@ export const HERO_CAMPAIGNS = {
         collapsed: null,
         expanded: { x: '85%', y: '62%', scale: 0.21, layer: 3 },
         scene: { x: 1058, bottom: 347, width: 137 },
-        sceneMobile: { x: 1115, bottom: 336, width: 92 },
+        sceneMobile: { x: 1130, bottom: 345, width: 85 },
         sceneNarrow: { x: 1122, bottom: 345, width: 100 },
       },
       {
@@ -275,7 +276,7 @@ export const HERO_CAMPAIGNS = {
         collapsed: null,
         expanded: { x: '26%', y: '74%', scale: 0.36, layer: 3 },
         scene: { x: 590, bottom: 398, width: 280 },
-        sceneMobile: { x: 805, bottom: 410, width: 150 },
+        sceneMobile: { x: 790, bottom: 405, width: 160 },
         sceneNarrow: { x: 880, bottom: 404, width: 165 },
       },
       {
@@ -287,7 +288,7 @@ export const HERO_CAMPAIGNS = {
         collapsed: { x: '50%', base: '440px', scale: 0.82, layer: 3 },
         expanded: { x: '50%', y: '80%', scale: 0.42, layer: 4 },
         scene: { x: 855, bottom: 410, width: 300 },
-        sceneMobile: { x: 960, bottom: 440, width: 170 },
+        sceneMobile: { x: 960, bottom: 330, width: 140 },
         sceneNarrow: { x: 1000, bottom: 430, width: 190 },
       },
       {
@@ -299,7 +300,7 @@ export const HERO_CAMPAIGNS = {
         collapsed: null,
         expanded: { x: '86%', y: '86%', scale: 0.17, layer: 4 },
         scene: { x: 1067, bottom: 428, width: 127 },
-        sceneMobile: { x: 1125, bottom: 450, width: 70 },
+        sceneMobile: { x: 1010, bottom: 452, width: 68 },
         sceneNarrow: { x: 1140, bottom: 444, width: 76 },
       },
       {

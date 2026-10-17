@@ -29,7 +29,7 @@ export default function ProductCard({ product, isFavorite, onToggleFavorite, onA
   return (
     <article
       onClick={handleCardClick}
-      className="chamfer purpose-card row-span-6 grid cursor-pointer grid-rows-subgrid gap-0 p-3 text-heading sm:p-4"
+      className="group chamfer purpose-card row-span-6 grid cursor-pointer grid-rows-subgrid gap-0 p-3 text-heading sm:p-4"
     >
       <span aria-hidden="true" className="corner-accents" />
 
@@ -42,7 +42,8 @@ export default function ProductCard({ product, isFavorite, onToggleFavorite, onA
           decoding="async"
           width="240"
           height="190"
-          className="h-full w-full object-contain"
+          // A ampliação no hover cabe no respiro (p-2/p-3) da área branca, sem encostar na borda.
+          className="h-full w-full object-contain transition-transform duration-300 ease-out motion-safe:group-hover:scale-106"
         />
         {/* No celular o chip é menor que o botão, para não cobrir a foto; a área de toque segue com 44px. */}
         <button

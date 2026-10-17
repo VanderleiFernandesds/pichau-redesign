@@ -1837,15 +1837,14 @@ html[data-theme='light'] .hero-copy h1 {
 
   /*
     O foco usa a borda chanfrada vermelha, que segue o recorte; o outline padrão seria retangular e,
-    por fora, a trilha o cortaria. Sem o brilho e o fundo avermelhado do purpose-card: aqui são
-    muitos cards lado a lado, e só borda e nome já marcam o card.
+    por fora, a trilha o cortaria. Do hover do purpose-card fica o fundo avermelhado, sem o brilho,
+    que a trilha também cortaria.
   */
   .department-card:focus-visible {
     outline: none;
   }
 
   .purpose-card.department-card:is(:hover, :focus-visible) {
-    --chamfer-fill: var(--card-fill);
     filter: none;
   }
 

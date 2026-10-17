@@ -1,14 +1,15 @@
-import { Heart, ShoppingCart, User } from 'lucide-react';
+import { Heart, ShoppingCart } from 'lucide-react';
+import AccountMenu from '../../account/AccountMenu';
 import { formatProductCount } from '../../../utils/format';
 
 // No tablet conta e favoritos ficam só com ícone; o aria-label mantém o nome acessível. No celular
-// essas ações saem daqui: a conta vai para o Header e favoritos e carrinho para a barra inferior.
+// fica só a conta: favoritos e carrinho vão para a barra inferior.
 // Sem moldura: o destaque fica no texto, para a linha não virar uma fileira de caixas.
 const actionClass =
   'relative flex h-(--header-control) min-w-(--header-control) items-center justify-center gap-2 text-[13px] transition-colors hover:text-brand lg:h-12 lg:px-2 lg:whitespace-nowrap';
 
 export default function HeaderActions({
-  onAccount,
+  onAccountOpen,
   isFavoriteOnly,
   onToggleFavorites,
   favoriteCount,
@@ -21,17 +22,14 @@ export default function HeaderActions({
 
   return (
     <div className={`flex items-center gap-2 lg:gap-5 ${className}`}>
-      <button type="button" onClick={onAccount} aria-label="Minha Conta" className={`${actionClass} text-heading`}>
-        <User aria-hidden="true" className="size-5" />
-        <span className="hidden lg:inline">Minha Conta</span>
-      </button>
+      <AccountMenu onOpen={onAccountOpen} />
 
       <button
         type="button"
         onClick={onToggleFavorites}
         aria-pressed={isFavoriteOnly}
         aria-label={`Favoritos, ${formatProductCount(favoriteCount)}`}
-        className={`${actionClass} ${isFavoriteOnly ? 'text-brand' : 'text-heading'}`}
+        className={`${actionClass} max-sm:hidden ${isFavoriteOnly ? 'text-brand' : 'text-heading'}`}
       >
         <Heart aria-hidden="true" className={`size-5 ${isFavoriteOnly ? 'fill-brand' : ''}`} />
         <span className="hidden lg:inline">Favoritos</span>
@@ -53,7 +51,7 @@ export default function HeaderActions({
         type="button"
         onClick={onOpenCart}
         aria-label={`Carrinho, ${cartLabel}`}
-        className={`chamfer ${hasCartItems ? 'chamfer-success' : 'chamfer-accent'} header-cart ml-1 flex h-(--header-control) items-center justify-center gap-2.5 px-4 text-white lg:ml-0 lg:h-12 lg:px-5`}
+        className={`chamfer ${hasCartItems ? 'chamfer-success' : 'chamfer-accent'} header-cart ml-1 flex max-sm:hidden h-(--header-control) items-center justify-center gap-2.5 px-4 text-white lg:ml-0 lg:h-12 lg:px-5`}
       >
         <ShoppingCart aria-hidden="true" className="size-5" />
         <span className="flex flex-col text-left leading-tight">

@@ -1,4 +1,4 @@
-import { Menu, Moon, Sun, User, X } from 'lucide-react';
+import { Menu, Moon, Sun, X } from 'lucide-react';
 import SearchForm from './SearchForm';
 import HeaderActions from './HeaderActions';
 import PichauLogo from '../../ui/PichauLogo';
@@ -13,7 +13,7 @@ export default function Header({
   searchInputRef,
   isNavOpen,
   onNavOpenChange,
-  onAccount,
+  onAccountOpen,
   isFavoriteOnly,
   onToggleFavorites,
   favoriteCount,
@@ -65,19 +65,13 @@ export default function Header({
         {isDark ? <Sun aria-hidden="true" className="size-5" /> : <Moon aria-hidden="true" className="size-5" />}
       </button>
 
-      {/* No celular a conta ganha a mesma moldura do tema; a partir do tablet ela volta para HeaderActions. */}
-      <button type="button" onClick={onAccount} aria-label="Minha Conta" title="Minha Conta" className={`${iconButtonClass} sm:hidden`}>
-        <User aria-hidden="true" className="size-5" />
-      </button>
-
       <HeaderActions
-        onAccount={onAccount}
+        onAccountOpen={onAccountOpen}
         isFavoriteOnly={isFavoriteOnly}
         onToggleFavorites={onToggleFavorites}
         favoriteCount={favoriteCount}
         cartCount={cartCount}
         onOpenCart={onOpenCart}
-        className="max-sm:hidden"
       />
     </div>
   );

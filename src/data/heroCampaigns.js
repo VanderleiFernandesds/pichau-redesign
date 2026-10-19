@@ -46,7 +46,9 @@ import arenaGamerGeek from '../assets/images/banners/pichau-arena/gamer-geek.avi
     logo         logo da marca acima do título, no lugar do eyebrow (texto curto acima do título);
                  width/height dão a proporção e displayWidth a largura no desktop (altura automática);
                  srcOnLight é a versão com texto escuro para o tema claro, quando o logo tem texto branco
-    title        partes do título; com isTitleStacked, cada uma ocupa uma linha
+    title        partes do título; com isTitleStacked, cada uma ocupa uma linha. Com
+                 isTitleInlineOnMobile, no celular as partes seguem na mesma linha e quebram
+                 naturalmente (para um título longo não ocupar três linhas)
     description  até três linhas
     details      oferta, data ou local; `type` escolhe o ícone (offer, date, location)
     cta          chamada (label, href e, opcional, a categoria que filtra as ofertas); mobileLabel
@@ -142,6 +144,7 @@ export const HERO_CAMPAIGNS = {
     logo: { src: corsairLogo, srcOnLight: corsairLogoDark, width: 800, height: 186, displayWidth: 189, alt: 'Corsair' },
     title: ['Seu setup.', 'Sua próxima conquista.'],
     isTitleStacked: true,
+    isTitleInlineOnMobile: true,
     description: 'Explore componentes e periféricos Corsair para completar seu espaço gamer.',
     details: [],
     cta: { label: 'Explorar Corsair', href: 'https://www.pichau.com.br/marca/corsair' },

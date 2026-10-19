@@ -294,9 +294,48 @@ html[data-theme='light'] .theme-dark-only {
   grid-template-areas: 'stack' 'controls';
 }
 
+/*
+  No celular a faixa dos produtos também é limitada pela altura da tela, para a base do card ficar
+  acima da barra inferior. --copy-estimate é a altura do texto mais longo das campanhas, em 360px;
+  em telas muito baixas a faixa não fica menor que 112px e a página rola.
+*/
 @media (width < 601px) {
   .hero-carousel {
     --band: var(--mobile-product-band, 0);
+    --copy-estimate: 310px;
+    --products-cap: max(
+      112px,
+      100svh - var(--header-offset) - var(--mobile-nav-space) - 8px - var(--copy-estimate)
+    );
+  }
+}
+
+/*
+  Celulares baixos: título, logo e espaçamentos encolhem com a altura da tela para sobrar mais
+  espaço para os produtos. Nos mais altos o texto fica como está. O logo mantém a proporção.
+*/
+@media (width < 601px) and (height < 760px) {
+  .hero-carousel {
+    --copy-estimate: 238px;
+  }
+
+  .hero-copy {
+    --hero-gap: clamp(12px, 2.5svh, 22px);
+  }
+
+  .hero-copy h1 {
+    margin-block: clamp(8px, 1.5svh, 16px);
+    font-size: clamp(28px, min(10.5vw, 5.2svh), 40px);
+  }
+
+  .hero-copy p {
+    line-height: 1.375;
+  }
+
+  .hero-logo {
+    max-height: clamp(24px, 4.5svh, 48px);
+    object-fit: contain;
+    object-position: left;
   }
 }
 
@@ -315,6 +354,12 @@ html[data-theme='light'] .theme-dark-only {
 
 .hero-copy h1.is-stacked .hero-title-part {
   display: block;
+}
+
+@media (width < 601px) {
+  .hero-copy h1.is-inline-mobile .hero-title-part {
+    display: inline;
+  }
 }
 
 /*
@@ -704,13 +749,40 @@ html[data-theme='light'] .hero-copy h1 {
   }
 }
 
-/* No celular, a arte própria (background.mobile), que o <picture> já trocou. */
+/*
+  No celular, a arte própria (background.mobile), que o <picture> já trocou. Com a faixa limitada
+  por --products-cap, a arte funciona como contain: os produtos cabem na faixa e a arte nunca passa
+  da largura do card, sem cortar as laterais. Mais estreita que o card, as bordas se fundem com o fundo.
+*/
 @media (width < 601px) {
+  .hero-copy {
+    padding-bottom: min(max(var(--hero-objects-height), 100% * var(--band) + var(--box-padding)), var(--products-cap));
+  }
+
   .hero-panel.has-product-art .hero-panel-image {
     --fit-ratio: var(--mobile-art-ratio, var(--art-ratio));
     --fit-scale: var(--mobile-art-scale, var(--art-scale));
     --fit-drop: var(--mobile-art-drop, var(--art-drop));
     --fit-fade: var(--mobile-art-fade, var(--art-fade));
+    --objects-space: min(max(var(--hero-objects-height), 100cqw * var(--band) + var(--box-padding)), var(--products-cap));
+    --art-height: min(100cqw * var(--fit-ratio), (var(--objects-space) - var(--box-padding)) * var(--fit-scale));
+    --side-fade: clamp(0px, (100cqw - var(--art-height) / var(--fit-ratio)) / 2, 20px);
+    height: var(--art-height);
+    /* Nesta ordem: com o degradê vertical por cima, o Chrome pinta uma linha no topo da arte. */
+    mask-image:
+      linear-gradient(to right, transparent, #000 var(--side-fade), #000 calc(100% - var(--side-fade)), transparent),
+      linear-gradient(to bottom, transparent, #000 var(--fit-fade));
+    mask-composite: intersect;
+  }
+
+  .hero-panel.has-product-art .hero-frame-content::after {
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-page) 90%, transparent),
+      color-mix(in srgb, var(--color-page) 65%, transparent) 45%,
+      transparent
+        calc(100% - min(max(var(--hero-objects-height), 100cqw * var(--band) + var(--box-padding)), var(--products-cap)))
+    );
   }
 }
 

@@ -1,33 +1,25 @@
-import energyDrinkBackground from '../assets/images/banners/energy-drink/fundo-1192x475.avif';
-import energyDrinkLogo from '../assets/images/banners/energy-drink/logo-pichau-drink-protein.svg';
-import energyDrinkCan from '../assets/images/banners/energy-drink/lata.avif';
-import energyDrinkMascot from '../assets/images/banners/energy-drink/mascote.avif';
-import energyDrinkSamurai from '../assets/images/banners/energy-drink/samurai.avif';
-import corsairBackground from '../assets/images/banners/corsair/fundo-1192x475.avif';
-import corsairCase from '../assets/images/banners/corsair/gabinete.avif';
-import corsairMemory from '../assets/images/banners/corsair/memorias.avif';
-import corsairPowerSupply from '../assets/images/banners/corsair/fonte.avif';
-import corsairHeadset from '../assets/images/banners/corsair/headset.avif';
-import corsairKeyboard from '../assets/images/banners/corsair/teclado.avif';
-import corsairMouse from '../assets/images/banners/corsair/mouse.avif';
+import energyDrinkBackground from '../assets/images/banners/energy-drink/fundo-1985x792.avif';
+import energyDrinkBackgroundMobile from '../assets/images/banners/energy-drink/fundo-celular-1122x1402.avif';
+import energyDrinkLogo from '../assets/images/banners/energy-drink/logo-pichau-energy-drink.svg';
+import energyDrinkBackgroundClosed from '../assets/images/banners/energy-drink/fundo-fechado-322x996.avif';
+import corsairBackground from '../assets/images/banners/corsair/fundo-1986x792.avif';
+import corsairBackgroundMobile from '../assets/images/banners/corsair/fundo-celular-1122x1402.avif';
+import corsairBackgroundClosed from '../assets/images/banners/corsair/fundo-fechado-322x892.avif';
 import corsairLogo from '../assets/images/banners/corsair/logo.avif';
 import corsairLogoDark from '../assets/images/banners/corsair/logo-escuro.avif';
-import rogBackground from '../assets/images/banners/rog/fundo-1192x475.avif';
+import rogBackground from '../assets/images/banners/rog/fundo-1986x792.avif';
+import rogBackgroundMobile from '../assets/images/banners/rog/fundo-celular-1122x1402.avif';
+import rogBackgroundClosed from '../assets/images/banners/rog/fundo-fechado-322x742.avif';
 import rogLogo from '../assets/images/banners/rog/logo.svg';
 import rogLogoDark from '../assets/images/banners/rog/logo-escuro.svg';
-import rogNotebook from '../assets/images/banners/rog/notebook.avif';
-import rogHandheld from '../assets/images/banners/rog/portatil.avif';
-import rogGraphicsCard from '../assets/images/banners/rog/placa-video.avif';
-import rogKeyboard from '../assets/images/banners/rog/teclado.avif';
-import rogHeadset from '../assets/images/banners/rog/headset.avif';
-import rogMouse from '../assets/images/banners/rog/mouse.avif';
 import arenaBackground from '../assets/images/banners/pichau-arena/fundo-684x475.avif';
 import arenaLogo from '../assets/images/banners/pichau-arena/logo-arena.avif';
 import arenaGamerGeek from '../assets/images/banners/pichau-arena/gamer-geek.avif';
 
 
 /*
-  Campanhas dos painéis do hero: fundo (475 de altura; 684 ou 1192 de largura), objetos transparentes e textos do card.
+  Campanhas dos painéis do hero: fundo (a arte da campanha, com ou sem os produtos), objetos
+  transparentes e textos do card.
 
   background.position  object-position do fundo no card fechado, no expandido e no fundo ampliado
                        (stage), que cobre o texto e o card expandido no desktop.
@@ -40,17 +32,15 @@ import arenaGamerGeek from '../assets/images/banners/pichau-arena/gamer-geek.avi
            num bloco do fundo: o card fechado tem a altura da arte, então o ponto não muda
     collapsed: null  o objeto aparece só no card expandido
     expanded: null   só no card fechado do desktop (logos: no aberto e no celular o logo fica acima do título)
-    scene  (desktop, card expandido) apoia o objeto num ponto do fundo, em px da imagem: x do
-           centro, bottom (onde a base encosta) e width. Exige background.width e o stage
-           alinhado à direita (100%), que coincide com a borda direita do card. O fundo tem a
-           altura do card e aparece em 1:1, então o objeto fica sobre o mesmo bloco da arte
-           em qualquer largura; o que passa da borda esquerda do card é cortado.
-    sceneMobile  o mesmo no celular, onde o texto fica sobre a arte: o fundo passa a ocupar só a
-           faixa dos objetos, na base, alinhado à direita (exige background.height). Até 600px a
-           faixa mostra só a parte direita da arte, então as posições são próprias; acima disso
-           ela mostra a arte quase inteira e usa as de scene.
-    sceneNarrow  (opcional) o mesmo no card expandido do desktop enquanto ele é estreito demais
-           para scene (abaixo de ~640px) e mostra só a parte direita da arte, em 1:1.
+  background.productArea  para artes que já trazem os produtos (top e bottom em px da imagem, do
+                       topo dos produtos até o fim da base onde se apoiam). Abaixo de 1001px a arte
+                       é dimensionada para essa faixa caber inteira sob o texto; o que fica abaixo
+                       de bottom é cortado. Exige background.width e background.height. A arte
+                       cobre a largura do card; com isWholeArt, ela fica no máximo com essa
+                       largura, sem cortar as laterais.
+  background.mobile    (opcional) arte própria até 600px: src, width, height e productArea.
+  background.closed    (opcional) arte própria do card fechado do desktop: src, width e height.
+                       Ocupa a largura do card, encostada na base, sem cortar os produtos.
   Textos da coluna à esquerda do hero, trocados junto com o card expandido. Só usam informações
   reais dos banners da campanha; sem specs, preços ou benefícios que eles não anunciam.
     logo         logo da marca acima do título, no lugar do eyebrow (texto curto acima do título);
@@ -63,140 +53,81 @@ import arenaGamerGeek from '../assets/images/banners/pichau-arena/gamer-geek.avi
                  é um texto mais curto para o botão do celular
 */
 export const HERO_CAMPAIGNS = {
+  /*
+    As artes já trazem as latas, então só o logo é objeto. closed é o painel vertical (Original,
+    Zero e Açaí) sem o logo, a seta e a moldura que vinham nele. stage centraliza a lata Original
+    (x ~1215, 134px à direita do centro da arte na altura do card) no trecho do card expandido, à
+    direita do texto; o clamp impede que a arte deixe uma faixa vazia nas bordas.
+  */
   energyDrink: {
     id: 'energy-drink',
-    name: 'Pichau Energy Drink Protein',
+    name: 'Pichau Energy Drink',
     background: {
       src: energyDrinkBackground,
-      width: 1192,
-      position: { collapsed: '64% 50%', expanded: '62% 50%', stage: '60% 50%' },
+      width: 1985,
+      height: 792,
+      position: {
+        collapsed: '50% 50%',
+        expanded: '50% 50%',
+        stage: 'clamp(100%, 50% + (var(--copy-width) + var(--copy-gap)) / 2 - 134px, 0%) 50%',
+      },
+      productArea: { top: 165, bottom: 700 },
+      mobile: {
+        src: energyDrinkBackgroundMobile,
+        width: 1122,
+        height: 1402,
+        productArea: { top: 610, bottom: 1260 },
+      },
+      closed: { src: energyDrinkBackgroundClosed, width: 322, height: 996 },
     },
     objects: [
       {
         id: 'logo',
         src: energyDrinkLogo,
         width: 1647,
-        height: 955,
+        height: 690,
         size: 100,
-        collapsed: { x: '50%', y: '12%', scale: 0.7, layer: 4 },
+        collapsed: { x: '50%', y: '10%', scale: 0.72, layer: 4 },
         expanded: null,
       },
-      {
-        id: 'samurai',
-        src: energyDrinkSamurai,
-        width: 856,
-        height: 900,
-        size: 100,
-        collapsed: null,
-        expanded: { x: '25%', y: '66%', scale: 0.42, layer: 1 },
-      },
-      {
-        id: 'lata',
-        src: energyDrinkCan,
-        width: 479,
-        height: 900,
-        size: 100,
-        collapsed: { x: '50%', y: '72%', scale: 0.75, layer: 3 },
-        expanded: { x: '53%', y: '65%', scale: 0.38, layer: 3 },
-      },
-      {
-        id: 'mascote',
-        src: energyDrinkMascot,
-        width: 607,
-        height: 900,
-        size: 100,
-        collapsed: { x: '38%', y: '60%', scale: 1.3, layer: 2 },
-        expanded: { x: '74%', y: '62%', scale: 0.5, layer: 2 },
-      },
     ],
-    logo: { src: energyDrinkLogo, width: 1647, height: 955, displayWidth: 112, alt: 'Pichau Energy Drink Protein' },
-    title: ['Conheça o', 'Black Cherry'],
+    logo: { src: energyDrinkLogo, width: 1647, height: 690, displayWidth: 150, alt: 'Pichau Energy Drink' },
+    title: ['Escolha seu sabor.', 'Entre no jogo.'],
     isTitleStacked: true,
-    description: 'Pichau Energy Drink Protein: sabor Black Cherry para acompanhar seu próximo jogo.',
+    description: 'Conheça a linha e encontre o seu favorito.',
     details: [],
-    cta: { label: 'Conhecer a bebida', href: 'https://www.pichau.com.br/energetico-pichau-protein-black-cherry-zero-350ml-pch-eng-probc-zero-un' },
+    cta: { label: 'Explorar sabores', href: 'https://www.pichau.com.br/search?q=energetico%20pichau' },
   },
+  /*
+    Como no ROG, as três artes já trazem os produtos (gabinete, cadeira, fonte, teclado, mouse e
+    headset), então só o logo é objeto. closed é a arte estreita sem o logo, a seta e a moldura que
+    vinham nela. stage põe o gabinete (x ~1140, 88px à direita do centro da arte na altura do
+    card) 100px à esquerda do centro do card expandido, para a cadeira e o headset caberem à
+    direita. Só a borda direita é limitada, e em telas largas a arte passa da
+    borda esquerda, sob a parte opaca do degradê. Em notebooks as pontas ficam cortadas.
+  */
   corsair: {
     id: 'corsair',
     name: 'Seleção Corsair',
     background: {
       src: corsairBackground,
-      width: 1192,
-      height: 475,
-      position: { collapsed: '80% 50%', expanded: '62% 50%', stage: '100% 50%' },
+      width: 1986,
+      height: 792,
+      position: {
+        collapsed: '50% 50%',
+        expanded: '50% 50%',
+        stage: 'max(100%, 50% + (var(--copy-width) + var(--copy-gap)) / 2 - 188px) 50%',
+      },
+      productArea: { top: 21, bottom: 775 },
+      mobile: {
+        src: corsairBackgroundMobile,
+        width: 1122,
+        height: 1402,
+        productArea: { top: 560, bottom: 1280 },
+      },
+      closed: { src: corsairBackgroundClosed, width: 322, height: 892 },
     },
-    /*
-      sceneMobile: cada objeto num bloco da arte: memórias no bloco alto, PC e fonte na plataforma,
-      teclado e mouse na laje da frente, headset no chão. As memórias (x ~755) ficam fora do card
-      só nos celulares de 320px com tela alta, que mostram a arte a partir de x ~790.
-    */
     objects: [
-      {
-        id: 'gabinete',
-        src: corsairCase,
-        width: 493,
-        height: 539,
-        size: 100,
-        collapsed: { x: '50%', base: '332px', scale: 0.85, layer: 1 },
-        expanded: { x: '60%', y: '52%', scale: 0.42, layer: 1 },
-        scene: { x: 900, bottom: 330, width: 190 },
-        sceneMobile: { x: 905, bottom: 322, width: 170 },
-      },
-      {
-        id: 'memorias',
-        src: corsairMemory,
-        width: 439,
-        height: 341,
-        size: 100,
-        collapsed: null,
-        expanded: { x: '35%', y: '60%', scale: 0.24, layer: 2 },
-        scene: { x: 700, bottom: 281, width: 110 },
-        sceneMobile: { x: 755, bottom: 273, width: 78 },
-      },
-      {
-        id: 'fonte',
-        src: corsairPowerSupply,
-        width: 393,
-        height: 337,
-        size: 100,
-        collapsed: null,
-        expanded: { x: '84%', y: '63%', scale: 0.28, layer: 2 },
-        scene: { x: 1095, bottom: 334, width: 130 },
-        sceneMobile: { x: 1110, bottom: 334, width: 100 },
-      },
-      {
-        id: 'headset',
-        src: corsairHeadset,
-        width: 368,
-        height: 496,
-        size: 100,
-        collapsed: { x: '50%', base: '430px', scale: 0.62, layer: 2 },
-        expanded: { x: '14%', y: '57%', scale: 0.24, layer: 5 },
-        scene: { x: 560, bottom: 304, width: 105 },
-        sceneMobile: { x: 1128, bottom: 456, width: 72 },
-      },
-      {
-        id: 'teclado',
-        src: corsairKeyboard,
-        width: 624,
-        height: 291,
-        size: 100,
-        collapsed: null,
-        expanded: { x: '27%', y: '84%', scale: 0.6, layer: 4 },
-        scene: { x: 700, bottom: 436, width: 300 },
-        sceneMobile: { x: 880, bottom: 430, width: 210 },
-      },
-      {
-        id: 'mouse',
-        src: corsairMouse,
-        width: 341,
-        height: 271,
-        size: 100,
-        collapsed: null,
-        expanded: { x: '56%', y: '88%', scale: 0.17, layer: 5 },
-        scene: { x: 888, bottom: 436, width: 74 },
-        sceneMobile: { x: 1012, bottom: 410, width: 46 },
-      },
       {
         id: 'logo',
         src: corsairLogo,
@@ -209,100 +140,45 @@ export const HERO_CAMPAIGNS = {
       },
     ],
     logo: { src: corsairLogo, srcOnLight: corsairLogoDark, width: 800, height: 186, displayWidth: 189, alt: 'Corsair' },
-    title: ['Seu setup', 'com Corsair'],
+    title: ['Seu setup.', 'Sua próxima conquista.'],
     isTitleStacked: true,
-    description: 'Explore componentes e periféricos para montar ou renovar seu setup.',
+    description: 'Explore componentes e periféricos Corsair para completar seu espaço gamer.',
     details: [],
     cta: { label: 'Explorar Corsair', href: 'https://www.pichau.com.br/marca/corsair' },
   },
   /*
-    scene segue a composição da referência (1192 x 475): placa no bloco alto, fone no degrau,
-    notebook na plataforma e o resto no chão. Ela só cabe no card largo; no card estreito (notebooks,
-    sceneNarrow) e no celular (sceneMobile), que mostram só a parte direita da arte, os produtos
-    ficam juntos ali, sobre os mesmos blocos; no celular, menores e mais espaçados.
+    As três artes já trazem os produtos (monitor, placa, ROG Ally, teclado e headset), então só o
+    logo é objeto. closed é a arte estreita sem o logo, a seta e a moldura que vinham nela. stage
+    põe o monitor (x ~1238, 147px à direita do centro da arte na altura do card) 100px à esquerda
+    do centro do card expandido, para a placa e o headset ganharem espaço, e a arte cobre o card. Só a borda direita é
+    limitada: em telas largas a arte passa da borda esquerda, onde o degradê do fundo ampliado já
+    é opaco, e o ROG Ally entra no card. Em notebooks o card não comporta todos os produtos e as
+    pontas (Ally e headset) ficam cortadas ou sob o texto.
   */
   asusRog: {
     id: 'asus-rog',
     name: 'ASUS ROG',
     background: {
       src: rogBackground,
-      width: 1192,
-      height: 475,
-      position: { collapsed: '90% 50%', expanded: '100% 50%', stage: '100% 50%' },
+      width: 1986,
+      height: 792,
+      position: {
+        collapsed: '50% 50%',
+        expanded: '50% 50%',
+        stage: 'max(100%, 50% + (var(--copy-width) + var(--copy-gap)) / 2 - 247px) 50%',
+      },
+      productArea: { top: 35, bottom: 700 },
+      mobile: {
+        src: rogBackgroundMobile,
+        width: 1122,
+        height: 1402,
+        productArea: { top: 585, bottom: 1190 },
+      },
+      closed: { src: rogBackgroundClosed, width: 322, height: 742 },
+      // No celular o Ally e o headset ficam na borda da arte: ela não pode ser cortada nas laterais.
+      isWholeArt: true,
     },
     objects: [
-      {
-        id: 'placa-video',
-        src: rogGraphicsCard,
-        width: 538,
-        height: 273,
-        size: 100,
-        collapsed: { x: '50%', base: '222px', scale: 0.82, layer: 1 },
-        expanded: { x: '72%', y: '30%', scale: 0.46, layer: 1 },
-        scene: { x: 1015, bottom: 226, width: 310 },
-        sceneMobile: { x: 1060, bottom: 226, width: 180 },
-        sceneNarrow: { x: 1065, bottom: 224, width: 220 },
-      },
-      {
-        id: 'notebook',
-        src: rogNotebook,
-        width: 637,
-        height: 412,
-        size: 100,
-        collapsed: { x: '50%', base: '336px', scale: 0.86, layer: 2 },
-        expanded: { x: '40%', y: '45%', scale: 0.56, layer: 2 },
-        scene: { x: 690, bottom: 295, width: 410 },
-        sceneMobile: { x: 815, bottom: 280, width: 190 },
-        sceneNarrow: { x: 925, bottom: 302, width: 270 },
-      },
-      {
-        id: 'headset',
-        src: rogHeadset,
-        width: 337,
-        height: 376,
-        size: 100,
-        collapsed: null,
-        expanded: { x: '85%', y: '62%', scale: 0.21, layer: 3 },
-        scene: { x: 1058, bottom: 347, width: 137 },
-        sceneMobile: { x: 1130, bottom: 345, width: 85 },
-        sceneNarrow: { x: 1122, bottom: 345, width: 100 },
-      },
-      {
-        id: 'teclado',
-        src: rogKeyboard,
-        width: 617,
-        height: 387,
-        size: 100,
-        collapsed: null,
-        expanded: { x: '26%', y: '74%', scale: 0.36, layer: 3 },
-        scene: { x: 590, bottom: 398, width: 280 },
-        sceneMobile: { x: 790, bottom: 405, width: 160 },
-        sceneNarrow: { x: 880, bottom: 404, width: 165 },
-      },
-      {
-        id: 'portatil',
-        src: rogHandheld,
-        width: 533,
-        height: 264,
-        size: 100,
-        collapsed: { x: '50%', base: '440px', scale: 0.82, layer: 3 },
-        expanded: { x: '50%', y: '80%', scale: 0.42, layer: 4 },
-        scene: { x: 855, bottom: 410, width: 300 },
-        sceneMobile: { x: 960, bottom: 330, width: 140 },
-        sceneNarrow: { x: 1000, bottom: 430, width: 190 },
-      },
-      {
-        id: 'mouse',
-        src: rogMouse,
-        width: 392,
-        height: 257,
-        size: 100,
-        collapsed: null,
-        expanded: { x: '86%', y: '86%', scale: 0.17, layer: 4 },
-        scene: { x: 1067, bottom: 428, width: 127 },
-        sceneMobile: { x: 1010, bottom: 452, width: 68 },
-        sceneNarrow: { x: 1140, bottom: 444, width: 76 },
-      },
       {
         id: 'logo',
         src: rogLogo,
@@ -315,11 +191,11 @@ export const HERO_CAMPAIGNS = {
       },
     ],
     logo: { src: rogLogo, srcOnLight: rogLogoDark, width: 200, height: 37, displayWidth: 220, alt: 'ASUS Republic of Gamers' },
-    title: ['Para quem', 'ousa jogar'],
+    title: ['Seu próximo nível', 'começa aqui.'],
     isTitleStacked: true,
-    description: 'Descubra notebooks, componentes e periféricos para seu próximo setup.',
+    description: 'Explore hardware e periféricos ASUS ROG para o seu setup.',
     details: [],
-    cta: { label: 'Explorar ROG', href: 'https://www.pichau.com.br/marca/asus' },
+    cta: { label: 'Explorar ASUS ROG', href: 'https://www.pichau.com.br/marca/asus' },
   },
   // Configurada para quando a campanha entrar no carrossel; hoje os três slides usam as demais.
   pichauArena: {

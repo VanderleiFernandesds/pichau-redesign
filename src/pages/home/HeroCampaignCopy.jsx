@@ -33,7 +33,7 @@ export default function HeroCampaignCopy({ campaigns, shownId, isAnnounced, onFi
   }
 
   return (
-    <div className="hero-copy max-w-[590px]">
+    <div className="hero-copy max-w-147.5">
       <div className="grid" aria-live={isAnnounced ? 'polite' : 'off'}>
         {campaigns.map(({ id, eyebrow, logo, title, isTitleStacked, description, details, cta }) => (
           <div key={id} className={`hero-fade col-start-1 row-start-1 ${visibility(id)}`}>
@@ -53,7 +53,7 @@ export default function HeroCampaignCopy({ campaigns, shownId, isAnnounced, onFi
             )}
             {/* No desktop o tamanho e a linha única vêm de .hero-copy h1 (index.css); abaixo disso quebra. */}
             <h1
-              className={`my-4 font-display text-[clamp(32px,10.5vw,40px)] leading-[1] font-bold sm:my-5 sm:text-[50px] ${isTitleStacked ? 'is-stacked' : ''}`}
+              className={`my-4 font-display text-[clamp(32px,10.5vw,40px)] leading-none font-bold sm:my-5 sm:text-[50px] ${isTitleStacked ? 'is-stacked' : ''}`}
             >
               {title.map((part, index) => (
                 <span key={part} className="hero-title-part">
@@ -62,7 +62,7 @@ export default function HeroCampaignCopy({ campaigns, shownId, isAnnounced, onFi
                 </span>
               ))}
             </h1>
-            <p className="line-clamp-3 max-w-[36ch] text-[14px] leading-[1.5] text-text sm:text-[16px]">{description}</p>
+            <p className="line-clamp-3 max-w-[36ch] text-[14px] leading-normal text-text sm:text-[16px]">{description}</p>
 
             {details.length > 0 && (
               <ul className="mt-3 grid gap-1.5 text-[13px] text-soft">

@@ -1,33 +1,29 @@
 import HeroCarouselFrame from '../../components/ui/HeroCarouselFrame';
+import CampaignBackground from './CampaignBackground';
+import CampaignArtLink from './CampaignArtLink';
 import { hideBrokenImage } from '../../utils/image';
+
+// Abaixo de 1001px, para artes com os produtos: proporção da arte (altura por largura), quantas
+// vezes ela é mais alta que a faixa dos produtos (que precisa caber sob o texto), quanto dela desce
+// abaixo do card e onde termina o degradê do topo, que só pode apagar o que está acima dos produtos.
+function productAreaVars(prefix, art) {
+  if (!art?.productArea) return null;
+  const { top, bottom } = art.productArea;
+  return {
+    [`--${prefix}-ratio`]: art.height / art.width,
+    [`--${prefix}-scale`]: art.height / (bottom - top),
+    [`--${prefix}-drop`]: `${((art.height - bottom) / art.height) * 100}%`,
+    [`--${prefix}-fade`]: `${(top / art.height) * 100}%`,
+  };
+}
 
 // Valores de cada estado viram variáveis CSS; o CSS escolhe o conjunto conforme o painel expande.
 // Sem `collapsed`, o objeto usa a posição do expandido e o CSS o esconde no card fechado; sem
 // `expanded`, o inverso.
-// `scene` vem em px do fundo e vai sem unidade: o CSS multiplica pela escala do fundo em cada
-// layout. A posição é a distância até a borda direita da arte e, abaixo de 1001px, também até a
-// base.
-function sceneVars(prefix, point, background) {
-  return (
-    point && {
-      [`--${prefix}-right`]: background.width - point.x,
-      [`--${prefix}-bottom`]: point.bottom,
-      [`--${prefix}-lift`]: background.height - point.bottom,
-      [`--${prefix}-width`]: point.width,
-    }
-  );
-}
-
-function objectStyle({ size, collapsed, expanded, scene, sceneMobile, sceneNarrow }, background) {
+function objectStyle({ size, collapsed, expanded }) {
   const collapsedState = collapsed ?? expanded;
   const expandedState = expanded ?? collapsed;
-  const sceneStyle = sceneVars('scene', scene, background);
-  const sceneMobileStyle = sceneVars('mobile-scene', sceneMobile, background);
-  const sceneNarrowStyle = sceneVars('narrow-scene', sceneNarrow, background);
   return {
-    ...sceneStyle,
-    ...sceneMobileStyle,
-    ...sceneNarrowStyle,
     '--size': size,
     '--collapsed-x': collapsedState.x,
     '--collapsed-y': collapsedState.base ?? collapsedState.y,
@@ -46,25 +42,33 @@ function objectStyle({ size, collapsed, expanded, scene, sceneMobile, sceneNarro
 */
 export default function HeroCampaignPanel({ campaign, position, stateClasses, isShown, fetchPriority, onSelect }) {
   const { name, background, objects } = campaign;
-  const hasMobileScene = objects.some((object) => object.sceneMobile);
+  const hasProductArt = Boolean(background.productArea);
+  const hasClosedArt = Boolean(background.closed);
 
   return (
     <div
-      className={['hero-panel', hasMobileScene && 'has-mobile-scene', ...stateClasses].filter(Boolean).join(' ')}
-      style={{ '--position': position, '--bg-width': background.width, '--bg-height': background.height }}
+      className={[
+        'hero-panel',
+        hasProductArt && 'has-product-art',
+        background.isWholeArt && 'keeps-whole-art',
+        hasClosedArt && 'has-closed-art',
+        ...stateClasses,
+      ]
+        .filter(Boolean)
+        .join(' ')}
+      style={{ '--position': position }}
     >
       <HeroCarouselFrame>
-        <img
-          src={background.src}
-          alt=""
+        <CampaignBackground
+          background={background}
+          closedArt={background.closed}
           className="hero-panel-image"
           style={{
             '--position-collapsed': background.position.collapsed,
             '--position-expanded': background.position.expanded,
-          }}
+            ...productAreaVars('art', background),
+            ...productAreaVars('mobile-art', background.mobile),          }}
           fetchPriority={fetchPriority}
-          decoding="async"
-          onError={hideBrokenImage}
         />
         {objects.map((object) => (
           <span
@@ -74,13 +78,10 @@ export default function HeroCampaignPanel({ campaign, position, stateClasses, is
               !object.collapsed && 'is-expanded-only',
               !object.expanded && 'is-collapsed-only',
               object.collapsed?.base && 'has-collapsed-base',
-              object.scene && 'is-on-scene',
-              object.sceneMobile && 'is-on-mobile-scene',
-              object.sceneNarrow && 'is-on-narrow-scene',
             ]
               .filter(Boolean)
               .join(' ')}
-            style={objectStyle(object, background)}
+            style={objectStyle(object)}
           >
             <img
               src={object.src}
@@ -110,6 +111,9 @@ export default function HeroCampaignPanel({ campaign, position, stateClasses, is
           </span>
         ))}
       </HeroCarouselFrame>
+
+      {/* Só abaixo de 1001px; no desktop a área de clique da arte fica no fundo ampliado. */}
+      {isShown && <CampaignArtLink cta={campaign.cta} className="hero-panel-link" />}
 
       <button
         type="button"

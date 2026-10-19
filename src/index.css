@@ -285,17 +285,32 @@ html[data-theme='light'] .theme-dark-only {
 .hero-carousel {
   /* Altura da arte com os objetos abaixo de 1001px; o card cresce além dela para caber o texto. */
   --hero-art-height: clamp(220px, 40svh, 340px);
+  /* Parte da arte que fica sob o texto, livre para os objetos (e os produtos das artes que já os trazem). */
+  --hero-objects-height: calc(var(--hero-art-height) * 0.7);
+  /* Maior faixa de produtos por largura do card (--product-band, calculada no Hero). */
+  --band: var(--product-band, 0);
   /* Curva comum das animações do carrossel: acelera e desacelera devagar, sem arranques. */
   --carousel-ease: cubic-bezier(0.65, 0, 0.35, 1);
   grid-template-areas: 'stack' 'controls';
 }
 
-/* Acima da arte. O padding de baixo deixa livre a parte do card onde ficam os objetos. */
+@media (width < 601px) {
+  .hero-carousel {
+    --band: var(--mobile-product-band, 0);
+  }
+}
+
+/*
+  Acima da arte. O padding de baixo deixa livre a parte do card onde ficam os objetos; quando a
+  arte com os produtos cobre a largura do card, ele cresce com ela (o % é da largura da célula,
+  que é a do card).
+*/
 .hero-copy {
   grid-area: stack;
   position: relative;
   z-index: 1;
-  padding: calc(var(--box-padding) * 1.5) var(--box-padding) calc(var(--hero-art-height) * 0.7);
+  padding: calc(var(--box-padding) * 1.5) var(--box-padding)
+    max(var(--hero-objects-height), 100% * var(--band) + var(--box-padding));
 }
 
 .hero-copy h1.is-stacked .hero-title-part {
@@ -535,6 +550,13 @@ html[data-theme='light'] .hero-copy h1 {
   initial-value: 0px;
 }
 
+/* Largura do card fechado, resolvida no .hero-panel pelo mesmo motivo de --object-unit. */
+@property --closed-width {
+  syntax: '<length>';
+  inherits: true;
+  initial-value: 0px;
+}
+
 /* Máscara do fundo ampliado: largura revelada a partir da borda direita e largura da borda suave. */
 @property --stage-reveal {
   syntax: '<length-percentage>';
@@ -559,6 +581,29 @@ html[data-theme='light'] .hero-copy h1 {
   position: absolute;
   inset: 0;
   z-index: 1;
+}
+
+/*
+  Área de clique da arte da campanha exibida, com o destino do CTA (CampaignArtLink). Abaixo de
+  1001px fica no card, acima do botão de seleção, que ali não tem efeito. No desktop ela fica no
+  fundo ampliado. Os blocos do texto e dos controles deixam passar o clique fora do próprio
+  conteúdo, que continua clicável e selecionável.
+*/
+.hero-panel-link,
+.hero-stage-link {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+
+.hero-copy,
+.hero-controls {
+  pointer-events: none;
+}
+
+.hero-copy > *,
+.hero-controls > * {
+  pointer-events: auto;
 }
 
 /*
@@ -614,9 +659,7 @@ html[data-theme='light'] .hero-copy h1 {
 
   /*
     O fundo ocupa só a faixa dos objetos e some para cima, então o texto de todas as campanhas fica
-    sobre o mesmo fundo liso. Com sceneMobile ele se alinha à direita e pela base; --scene-unit é a
-    escala do cover (px na tela por px da arte): a maior entre a da altura da faixa e a da largura
-    do card, que é o container (.hero-frame).
+    sobre o mesmo fundo liso.
   */
   .hero-panel .hero-panel-image {
     top: auto;
@@ -624,33 +667,50 @@ html[data-theme='light'] .hero-copy h1 {
     mask-image: linear-gradient(to bottom, transparent, #000 35%);
   }
 
-  /* Sem sceneMobile (Energy Drink), o fundo mantém o enquadramento da campanha dentro da faixa. */
-  .hero-panel.has-mobile-scene .hero-panel-image {
-    object-position: right bottom;
+  /*
+    Arte que já traz os produtos (background.productArea): sem cover. A altura faz a faixa dos
+    produtos ocupar o espaço livre sob o texto, menos um respiro, centralizada e encostada na base;
+    o piso abaixo dela sai do card. Ela nunca fica mais estreita que o card (100cqw), para não
+    deixar borda nas laterais; o espaço sob o texto (.hero-copy) já cresce para essa largura.
+    O degradê do topo termina antes dos produtos.
+  */
+  .hero-panel.has-product-art .hero-panel-image {
+    --fit-ratio: var(--art-ratio);
+    --fit-scale: var(--art-scale);
+    --fit-drop: var(--art-drop);
+    --fit-fade: var(--art-fade);
+    --objects-space: max(var(--hero-objects-height), 100cqw * var(--band) + var(--box-padding));
+    inset: auto auto 0 50%;
+    width: auto;
+    max-width: none;
+    height: max(100cqw * var(--fit-ratio), (var(--objects-space) - var(--box-padding)) * var(--fit-scale));
+    transform: translate(-50%, var(--fit-drop));
+    mask-image: linear-gradient(to bottom, transparent, #000 var(--fit-fade));
   }
 
-  .hero-panel .campaign-object.is-on-mobile-scene {
-    --scene-unit: calc(max(100cqw, var(--hero-art-height) * var(--bg-width) / var(--bg-height)) / var(--bg-width));
-    --point-right: var(--mobile-scene-right);
-    --point-lift: var(--mobile-scene-lift);
-    --point-width: var(--mobile-scene-width);
-    transform: none;
+  /* background.isWholeArt: a arte nunca passa da largura do card, para as laterais não serem cortadas. */
+  .hero-panel.keeps-whole-art .hero-panel-image {
+    height: min(100cqw * var(--fit-ratio), (var(--objects-space) - var(--box-padding)) * var(--fit-scale));
   }
 
-  .hero-panel .campaign-object.is-on-mobile-scene img {
-    top: calc(100% - var(--point-lift) * var(--scene-unit));
-    left: calc(100% - var(--point-right) * var(--scene-unit));
-    width: calc(var(--point-width) * var(--scene-unit));
-    transform: translate(-50%, -100%);
+  /* O degradê de leitura acaba onde começam os produtos, que aqui fazem parte da arte. */
+  .hero-panel.has-product-art .hero-frame-content::after {
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-page) 90%, transparent),
+      color-mix(in srgb, var(--color-page) 65%, transparent) 45%,
+      transparent calc(100% - max(var(--hero-objects-height), 100cqw * var(--band) + var(--box-padding)))
+    );
   }
 }
 
-/* A partir daqui a faixa já mostra a arte quase inteira, e a cena do desktop cabe nela. */
-@media (601px <= width < 1001px) {
-  .hero-panel .campaign-object.is-on-mobile-scene {
-    --point-right: var(--scene-right);
-    --point-lift: var(--scene-lift);
-    --point-width: var(--scene-width);
+/* No celular, a arte própria (background.mobile), que o <picture> já trocou. */
+@media (width < 601px) {
+  .hero-panel.has-product-art .hero-panel-image {
+    --fit-ratio: var(--mobile-art-ratio, var(--art-ratio));
+    --fit-scale: var(--mobile-art-scale, var(--art-scale));
+    --fit-drop: var(--mobile-art-drop, var(--art-drop));
+    --fit-fade: var(--mobile-art-fade, var(--art-fade));
   }
 }
 
@@ -831,6 +891,11 @@ html[data-theme='light'] .hero-copy h1 {
     pointer-events: none;
   }
 
+  /*
+    As sombras seguem uma curva suave (várias paradas, em vez de poucas retas), para não aparecer
+    a faixa onde a opacidade muda de ritmo. Em cima e embaixo são longas, mas leves: só fundem a
+    borda da arte com a página.
+  */
   .hero-stage::after {
     content: '';
     position: absolute;
@@ -839,13 +904,35 @@ html[data-theme='light'] .hero-copy h1 {
       linear-gradient(
         90deg,
         var(--color-page) 0%,
-        color-mix(in srgb, var(--color-page) 92%, transparent) 28%,
-        color-mix(in srgb, var(--color-page) 55%, transparent) 50%,
-        transparent 72%,
-        transparent 94%,
-        var(--color-page)
+        color-mix(in srgb, var(--color-page) 96%, transparent) 10%,
+        color-mix(in srgb, var(--color-page) 86%, transparent) 20%,
+        color-mix(in srgb, var(--color-page) 68%, transparent) 29%,
+        color-mix(in srgb, var(--color-page) 46%, transparent) 37%,
+        color-mix(in srgb, var(--color-page) 26%, transparent) 44%,
+        color-mix(in srgb, var(--color-page) 11%, transparent) 50%,
+        color-mix(in srgb, var(--color-page) 3%, transparent) 55%,
+        transparent 59%
       ),
-      linear-gradient(180deg, var(--color-page), transparent 12%, transparent 88%, var(--color-page));
+      linear-gradient(
+        270deg,
+        var(--color-page) 0%,
+        color-mix(in srgb, var(--color-page) 45%, transparent) 1.5%,
+        color-mix(in srgb, var(--color-page) 15%, transparent) 3%,
+        transparent 5%
+      ),
+      linear-gradient(
+        180deg,
+        var(--color-page) 0%,
+        color-mix(in srgb, var(--color-page) 55%, transparent) 2.5%,
+        color-mix(in srgb, var(--color-page) 22%, transparent) 5%,
+        color-mix(in srgb, var(--color-page) 6%, transparent) 8%,
+        transparent 11%,
+        transparent 89%,
+        color-mix(in srgb, var(--color-page) 6%, transparent) 92%,
+        color-mix(in srgb, var(--color-page) 22%, transparent) 95%,
+        color-mix(in srgb, var(--color-page) 55%, transparent) 97.5%,
+        var(--color-page) 100%
+      );
   }
 
   /*
@@ -891,9 +978,22 @@ html[data-theme='light'] .hero-copy h1 {
       opacity 0s;
   }
 
-  /* O card aberto não tem ação: a campanha segue pelo CTA e a pausa pelo botão próprio. */
-  .hero-panel.is-expanded .hero-panel-select {
-    cursor: default;
+  /*
+    O card aberto não tem ação própria: o clique passa para a área do fundo ampliado
+    (.hero-stage-link), que cobre a arte inteira, até a esquerda, e leva ao destino do CTA.
+  */
+  .hero-panel.is-expanded {
+    pointer-events: none;
+  }
+
+  .hero-panel-link {
+    display: none;
+  }
+
+  /* Na camada de baixo: o texto, os controles e os cards fechados continuam por cima dela. */
+  .hero-stage-link {
+    z-index: 0;
+    pointer-events: auto;
   }
 
   /*
@@ -922,6 +1022,28 @@ html[data-theme='light'] .hero-copy h1 {
       filter var(--carousel-transition) var(--carousel-ease),
       object-position var(--carousel-transition) var(--carousel-ease),
       opacity var(--frame-fade) var(--carousel-ease);
+  }
+
+  /*
+    Arte própria do card fechado (background.closed): na largura do card estreito, encostada na
+    base e à direita, sem cortar os produtos. Com a largura fixa, ela não cresce junto com o card
+    enquanto some na expansão.
+    Todas as campanhas usam a mesma caixa, com a proporção da arte mais baixa (ROG, 742 x 322):
+    as mais altas perdem só parede no topo (cover ancorado na base), então o topo da imagem e a
+    sombra atrás do logo ficam na mesma altura em todos os cards fechados.
+  */
+  .hero-panel.has-closed-art {
+    --closed-width: var(--panel-narrow);
+  }
+
+  .hero-panel.has-closed-art .hero-panel-image {
+    --closed-ratio: 2.3;
+    --closed-fade: 35%;
+    inset: auto 0 0 auto;
+    width: var(--closed-width);
+    height: min(var(--panel-height), var(--closed-width) * var(--closed-ratio));
+    object-position: 50% 100%;
+    mask-image: linear-gradient(to bottom, transparent, #000 var(--closed-fade));
   }
 
   /*
@@ -954,36 +1076,6 @@ html[data-theme='light'] .hero-copy h1 {
 
   .hero-panel.is-expanded .campaign-object img {
     width: calc(var(--size) * var(--object-unit) * var(--expanded-scale));
-  }
-
-  /*
-    Objetos apoiados nos blocos do fundo (scene): posição e largura em px da arte, contados da
-    borda direita do card, onde o fundo ampliado se alinha. O ponto de apoio é a base do objeto.
-    No card mais estreito a cena é cortada à esquerda, como o próprio fundo; a máscara suaviza o
-    corte dos objetos, que ali já ficam sob o degradê escuro do fundo ampliado.
-  */
-  .hero-panel.is-expanded .campaign-object.is-on-scene {
-    transform: none;
-    mask-image: linear-gradient(to right, transparent, #000 72px);
-  }
-
-  .hero-panel.is-expanded .campaign-object.is-on-scene img {
-    top: calc(var(--scene-bottom) * 1px);
-    left: calc(100% - var(--scene-right) * 1px);
-    width: calc(var(--scene-width) * 1px);
-    transform: translate(-50%, -100%);
-  }
-
-  /*
-    Abaixo de ~640px de card (fila com menos de 942px) a cena larga perde os produtos da esquerda.
-    Objetos com sceneNarrow usam ali posições feitas para a parte direita da arte.
-  */
-  @container hero-panels (width < 942px) {
-    .hero-panel.is-expanded .campaign-object.is-on-narrow-scene img {
-      top: calc(var(--narrow-scene-bottom) * 1px);
-      left: calc(100% - var(--narrow-scene-right) * 1px);
-      width: calc(var(--narrow-scene-width) * 1px);
-    }
   }
 
   .hero-panel.is-hiding-objects .campaign-object,
@@ -1061,7 +1153,7 @@ html[data-theme='light'] .hero-copy h1 {
   }
 
   .button {
-    @apply inline-flex items-center justify-center gap-3 rounded-[5px] bg-brand whitespace-nowrap px-3.5 py-3 text-[11px] font-bold text-white transition-[transform,background-color] duration-150 hover:-translate-y-0.5 hover:bg-[#bf001e] sm:gap-6 sm:px-[22px] sm:py-3.5 sm:text-[13px];
+    @apply inline-flex items-center justify-center gap-3 rounded-[5px] bg-brand whitespace-nowrap px-3.5 py-3 text-[11px] font-bold text-white transition-[transform,background-color] duration-150 hover:-translate-y-0.5 hover:bg-[#bf001e] sm:gap-6 sm:px-5.5 sm:py-3.5 sm:text-[13px];
   }
 
   /*
@@ -1194,34 +1286,6 @@ html[data-theme='light'] .hero-copy h1 {
 
   .header-bar :focus-visible {
     outline-color: var(--color-brand);
-  }
-
-  /* Painel da conta: o grafite, a borda fina e os traços vermelhos nos cantos do próprio header. */
-  .account-panel {
-    --cut: 12px;
-    --chamfer-border: var(--field-border);
-    --chamfer-fill: var(--panel-fill);
-    filter: drop-shadow(0 14px 28px rgb(0 0 0 / 0.5));
-  }
-
-  html[data-theme='light'] .account-panel {
-    filter: drop-shadow(0 12px 24px rgb(25 26 31 / 0.14));
-  }
-
-  /* Conta aberta: moldura vermelha no celular e traço vermelho sob o acionador a partir do tablet. */
-  .account-trigger[aria-expanded='true'] .chamfer-field {
-    --chamfer-border: var(--color-brand);
-  }
-
-  @media (width >= 601px) {
-    .account-trigger[aria-expanded='true']::after {
-      content: '';
-      position: absolute;
-      inset-inline: 4px;
-      bottom: 0;
-      height: 2px;
-      background: var(--color-brand);
-    }
   }
 
   /*

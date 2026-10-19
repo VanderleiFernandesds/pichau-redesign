@@ -1,5 +1,6 @@
 import HeroCampaignPanel from './HeroCampaignPanel';
-import { hideBrokenImage } from '../../utils/image';
+import CampaignBackground from './CampaignBackground';
+import CampaignArtLink from './CampaignArtLink';
 
 /*
   O fundo do primeiro slide é o LCP (o index.html faz preload dele): fica com prioridade alta, e as
@@ -16,6 +17,8 @@ function fetchPriority(slides, id) {
   nenhuma animação é cortada.
 */
 export default function HeroPanels({ slides, order, shownId, isExpanded, isJumping, objectsHiddenIds, onSelect }) {
+  const shownSlide = slides.find(({ id }) => id === shownId);
+
   return (
     <div className={`hero-panels ${isJumping ? 'is-jumping' : ''}`} style={{ '--slide-count': slides.length }}>
       {/*
@@ -24,17 +27,15 @@ export default function HeroPanels({ slides, order, shownId, isExpanded, isJumpi
       */}
       <div aria-hidden="true" className="hero-stage">
         {slides.map(({ id, background }) => (
-          <img
+          <CampaignBackground
             key={id}
-            src={background.src}
-            alt=""
+            background={background}
             className={`hero-stage-image ${id === shownId && isExpanded ? 'is-visible' : ''}`}
             style={{ objectPosition: background.position.stage }}
             fetchPriority={fetchPriority(slides, id)}
-            decoding="async"
-            onError={hideBrokenImage}
           />
         ))}
+        {isExpanded && <CampaignArtLink cta={shownSlide.cta} className="hero-stage-link" />}
       </div>
 
       {order.map((slideId, position) => {

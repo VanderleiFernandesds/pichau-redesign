@@ -20,16 +20,27 @@
       As fontes (declaradas em src/index.css) e o fundo do primeiro slide do hero, que é o LCP, só
       seriam descobertos depois do CSS e do JavaScript. O preload começa o download junto com o HTML;
       o Vite troca os caminhos pelos arquivos com hash no build. Ao mudar o primeiro slide
-      (HERO_SLIDES em src/data/heroCampaigns.js), troque o fundo abaixo.
+      (HERO_SLIDES em src/data/heroCampaigns.js), troque o fundo abaixo. Com arte própria para o
+      celular (background.mobile), cada preload leva a media do <source> do CampaignBackground, para
+      só a arte usada ser baixada.
     -->
     <link rel="preload" href="/src/assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/src/assets/fonts/rajdhani-700-latin.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/src/assets/fonts/rajdhani-600-latin.woff2" as="font" type="font/woff2" crossorigin />
     <link
       rel="preload"
-      href="/src/assets/images/banners/energy-drink/fundo-1192x475.avif"
+      href="/src/assets/images/banners/energy-drink/fundo-1985x792.avif"
       as="image"
       type="image/avif"
+      media="(width >= 601px)"
+      fetchpriority="high"
+    />
+    <link
+      rel="preload"
+      href="/src/assets/images/banners/energy-drink/fundo-celular-1122x1402.avif"
+      as="image"
+      type="image/avif"
+      media="(width < 601px)"
       fetchpriority="high"
     />
   </head>

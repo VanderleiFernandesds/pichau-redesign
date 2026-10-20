@@ -750,29 +750,28 @@ html[data-theme='light'] .hero-copy h1 {
 }
 
 /*
-  No celular, a arte própria (background.mobile), que o <picture> já trocou. Com a faixa limitada
-  por --products-cap, a arte funciona como contain: os produtos cabem na faixa e a arte nunca passa
-  da largura do card, sem cortar as laterais. Mais estreita que o card, as bordas se fundem com o fundo.
+  No celular, a arte própria (background.mobile), que o <picture> já trocou. Ela tem sempre a
+  largura exata do card, encostada na base: cobre de ponta a ponta sem cortar os produtos das
+  laterais. Quando a faixa sob o texto (limitada por --products-cap) é menor que a dos produtos
+  nessa largura, o topo dos produtos sobe um pouco atrás do texto.
 */
 @media (width < 601px) {
   .hero-copy {
     padding-bottom: min(max(var(--hero-objects-height), 100% * var(--band) + var(--box-padding)), var(--products-cap));
   }
 
-  .hero-panel.has-product-art .hero-panel-image {
+  /* Resolvida dentro da moldura, onde cqw é a largura do card. */
+  .hero-panel.has-product-art {
+    --mobile-objects-space: min(max(var(--hero-objects-height), 100cqw * var(--band) + var(--box-padding)), var(--products-cap));
+  }
+
+  .hero-panel.has-product-art .hero-panel-image,
+  .hero-panel.keeps-whole-art .hero-panel-image {
     --fit-ratio: var(--mobile-art-ratio, var(--art-ratio));
     --fit-scale: var(--mobile-art-scale, var(--art-scale));
     --fit-drop: var(--mobile-art-drop, var(--art-drop));
     --fit-fade: var(--mobile-art-fade, var(--art-fade));
-    --objects-space: min(max(var(--hero-objects-height), 100cqw * var(--band) + var(--box-padding)), var(--products-cap));
-    --art-height: min(100cqw * var(--fit-ratio), (var(--objects-space) - var(--box-padding)) * var(--fit-scale));
-    --side-fade: clamp(0px, (100cqw - var(--art-height) / var(--fit-ratio)) / 2, 20px);
-    height: var(--art-height);
-    /* Nesta ordem: com o degradê vertical por cima, o Chrome pinta uma linha no topo da arte. */
-    mask-image:
-      linear-gradient(to right, transparent, #000 var(--side-fade), #000 calc(100% - var(--side-fade)), transparent),
-      linear-gradient(to bottom, transparent, #000 var(--fit-fade));
-    mask-composite: intersect;
+    height: calc(100cqw * var(--fit-ratio));
   }
 
   .hero-panel.has-product-art .hero-frame-content::after {
@@ -780,8 +779,7 @@ html[data-theme='light'] .hero-copy h1 {
       180deg,
       color-mix(in srgb, var(--color-page) 90%, transparent),
       color-mix(in srgb, var(--color-page) 65%, transparent) 45%,
-      transparent
-        calc(100% - min(max(var(--hero-objects-height), 100cqw * var(--band) + var(--box-padding)), var(--products-cap)))
+      transparent calc(100% - var(--mobile-objects-space))
     );
   }
 }

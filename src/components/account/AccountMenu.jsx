@@ -1,6 +1,6 @@
 import { User } from 'lucide-react';
 
-const linkClass = 'font-bold underline underline-offset-2 transition-colors hover:text-brand';
+const linkClass = 'font-bold transition-colors hover:text-brand';
 
 /*
   Sem painel intermediário: cada link abre o modal direto na tela certa (onOpenAuth recebe 'login'

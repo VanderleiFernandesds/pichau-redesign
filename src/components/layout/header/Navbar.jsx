@@ -1,12 +1,14 @@
-import { useEffect, useRef } from 'react';
+import { Fragment, useEffect, useRef } from 'react';
 import { Building2, ChevronDown, Cpu, Gamepad2, Headset, Menu, Tag, Ticket } from 'lucide-react';
 import DepartmentMenu from './department-menu/DepartmentMenu';
+import NavSeparator from './NavSeparator';
 import { useActiveSection } from '../../../hooks/useActiveSection';
 
 // No tablet a lista rola dentro do painel, então o foco é desenhado para dentro para não ser cortado.
 const navItemClass =
   'relative isolate flex min-h-11 w-full items-center gap-2 px-3 text-[13px] transition-colors hover:text-brand focus-visible:-outline-offset-3 lg:h-16 lg:whitespace-nowrap lg:focus-visible:outline-offset-4';
-const centeredItemClass = 'lg:justify-center lg:px-2 xl:px-4';
+// No desktop o espaço entre os itens vem dos separadores (NavSeparator); o padding só amplia o clique.
+const centeredItemClass = 'lg:justify-center lg:px-1 xl:px-2';
 // Traço vermelho à esquerda no tablet e embaixo no desktop, sem moldura, para não pesar na linha.
 const activeClass =
   'text-brand after:absolute after:inset-y-2 after:left-0 after:w-0.5 after:bg-brand lg:after:top-auto lg:after:bottom-3 lg:after:left-1/2 lg:after:h-0.5 lg:after:w-12 lg:after:-translate-x-1/2';
@@ -118,14 +120,21 @@ export default function Navbar({
       {/* A altura máxima impede que o painel sticky passe da tela em telas baixas. */}
       <ul
         id="main-nav-list"
-        className={`${isNavOpen ? 'flex' : 'hidden'} max-h-[calc(100dvh-170px)] flex-col max-sm:hidden overflow-y-auto border-t border-line py-1 lg:flex lg:max-h-none lg:flex-row lg:items-center lg:gap-1 xl:gap-2 lg:overflow-visible lg:border-0 lg:py-0`}
+        className={`${isNavOpen ? 'flex' : 'hidden'} max-h-[calc(100dvh-170px)] flex-col max-sm:hidden overflow-y-auto border-t border-line py-1 lg:flex lg:max-h-none lg:flex-row lg:items-center lg:justify-between lg:overflow-visible lg:border-0 lg:py-0`}
       >
-        {/* No desktop os itens dividem a linha, menos o Departamentos, que fica na largura do
-            conteúdo e avança sobre a margem da nav (lg:mx-6) até a folga do canto do painel. */}
+        {/* No desktop itens e separadores ficam na largura do conteúdo e o justify-between reparte a
+            sobra, então cada separador fica no meio entre dois itens. O Departamentos avança sobre a
+            margem da nav (lg:mx-6) até a folga do canto do painel. */}
         {navItems.map((navItem, index) => (
-          <li key={index} className={`lg:flex ${index === 0 ? 'lg:-ml-3' : 'lg:flex-1'}`}>
-            {navItem}
-          </li>
+          <Fragment key={index}>
+            {/* Separador só no desktop e só entre os itens depois do Departamentos, que já se destaca pela moldura. */}
+            {index > 1 && (
+              <li aria-hidden="true" className="pointer-events-none hidden shrink-0 items-center lg:flex">
+                <NavSeparator />
+              </li>
+            )}
+            <li className={`lg:flex ${index === 0 ? 'lg:-ml-3' : ''}`}>{navItem}</li>
+          </Fragment>
         ))}
       </ul>
 

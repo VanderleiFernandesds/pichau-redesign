@@ -67,7 +67,8 @@ export default function HeroCampaignPanel({ campaign, position, stateClasses, is
             '--position-collapsed': background.position.collapsed,
             '--position-expanded': background.position.expanded,
             ...productAreaVars('art', background),
-            ...productAreaVars('mobile-art', background.mobile),          }}
+            ...productAreaVars('mobile-art', background.mobile),
+          }}
           fetchPriority={fetchPriority}
         />
         {objects.map((object) => (

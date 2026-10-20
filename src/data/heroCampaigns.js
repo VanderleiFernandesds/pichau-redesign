@@ -35,7 +35,7 @@ import rogLogoDark from '../assets/images/banners/rog/logo-escuro.svg';
                        de bottom é cortado. Exige background.width e background.height. A arte
                        cobre a largura do card; com isWholeArt, ela fica no máximo com essa
                        largura, sem cortar as laterais.
-  background.mobile    (opcional) arte própria até 600px: src, width, height e productArea.
+  background.mobile    (opcional) arte própria abaixo de 1001px (celular e tablet): src, width, height e productArea.
   background.closed    (opcional) arte própria do card fechado do desktop: src, width e height.
                        Ocupa a largura do card, encostada na base, sem cortar os produtos.
   Textos da coluna à esquerda do hero, trocados junto com o card expandido. Só usam informações

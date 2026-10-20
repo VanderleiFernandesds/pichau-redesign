@@ -230,6 +230,13 @@ html[data-theme='light'] .theme-dark-only {
       transition: none !important;
     }
   }
+
+  /* Durante a troca de tema (useTheme), tudo muda de uma vez. */
+  html.is-switching-theme *,
+  html.is-switching-theme *::before,
+  html.is-switching-theme *::after {
+    transition: none !important;
+  }
 }
 
 .hero {
@@ -295,13 +302,22 @@ html[data-theme='light'] .theme-dark-only {
 }
 
 /*
-  No celular a faixa dos produtos também é limitada pela altura da tela, para a base do card ficar
-  acima da barra inferior. --copy-estimate é a altura do texto mais longo das campanhas, em 360px;
-  em telas muito baixas a faixa não fica menor que 112px e a página rola.
+  Teto da faixa dos produtos. No tablet é só a altura da tela: em telas deitadas o card passa da
+  dobra, mas os produtos não sobem atrás do texto.
+*/
+@media (width < 1001px) {
+  .hero-carousel {
+    --products-cap: 100svh;
+  }
+}
+
+/*
+  No celular o teto também desconta o texto, para a base do card ficar acima da barra inferior.
+  --copy-estimate é a altura do texto mais longo das campanhas, em 360px; em telas muito baixas a
+  faixa não fica menor que 112px e a página rola.
 */
 @media (width < 601px) {
   .hero-carousel {
-    --band: var(--mobile-product-band, 0);
     --copy-estimate: 310px;
     --products-cap: max(
       112px,
@@ -731,24 +747,29 @@ html[data-theme='light'] .hero-copy h1 {
     height: min(100cqw * var(--fit-ratio), (var(--objects-space) - var(--box-padding)) * var(--fit-scale));
   }
 
-  /* O degradê de leitura acaba onde começam os produtos, que aqui fazem parte da arte. */
+  /*
+    O degradê de leitura acaba onde começam os produtos, que aqui fazem parte da arte. A parada do
+    meio é proporcional a esse fim (a mesma do degradê padrão, 45% de 75%): fixa em 45%, ela ficava
+    depois do fim quando a faixa dos produtos passa da metade do card, e o degradê virava um corte.
+  */
   .hero-panel.has-product-art .hero-frame-content::after {
+    --fade-end: calc(100% - max(var(--hero-objects-height), 100cqw * var(--band) + var(--box-padding)));
     background: linear-gradient(
       180deg,
       color-mix(in srgb, var(--color-page) 90%, transparent),
-      color-mix(in srgb, var(--color-page) 65%, transparent) 45%,
-      transparent calc(100% - max(var(--hero-objects-height), 100cqw * var(--band) + var(--box-padding)))
+      color-mix(in srgb, var(--color-page) 65%, transparent) calc(var(--fade-end) * 0.6),
+      transparent var(--fade-end)
     );
   }
 }
 
 /*
-  No celular, a arte própria (background.mobile), que o <picture> já trocou. Ela tem sempre a
-  largura exata do card, encostada na base: cobre de ponta a ponta sem cortar os produtos das
-  laterais. Quando a faixa sob o texto (limitada por --products-cap) é menor que a dos produtos
+  No celular e no tablet, a arte própria (background.mobile), que o <picture> já trocou. Ela tem
+  sempre a largura exata do card, encostada na base: cobre de ponta a ponta sem cortar os produtos
+  das laterais. Quando a faixa sob o texto (limitada por --products-cap) é menor que a dos produtos
   nessa largura, o topo dos produtos sobe um pouco atrás do texto.
 */
-@media (width < 601px) {
+@media (width < 1001px) {
   .hero-copy {
     padding-bottom: min(max(var(--hero-objects-height), 100% * var(--band) + var(--box-padding)), var(--products-cap));
   }
@@ -768,12 +789,7 @@ html[data-theme='light'] .hero-copy h1 {
   }
 
   .hero-panel.has-product-art .hero-frame-content::after {
-    background: linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--color-page) 90%, transparent),
-      color-mix(in srgb, var(--color-page) 65%, transparent) 45%,
-      transparent calc(100% - var(--mobile-objects-space))
-    );
+    --fade-end: calc(100% - var(--mobile-objects-space));
   }
 }
 
@@ -902,8 +918,10 @@ html[data-theme='light'] .hero-copy h1 {
     filter: brightness(0.55) saturate(0.85);
   }
 
+  /* No tema claro o escurecimento deixava a arte acinzentada sobre o fundo branco. */
   .hero-panel:hover .hero-panel-image,
-  .hero-panel.is-expanded .hero-panel-image {
+  .hero-panel.is-expanded .hero-panel-image,
+  html[data-theme='light'] .hero-panel-image {
     filter: none;
   }
 
@@ -1089,24 +1107,31 @@ html[data-theme='light'] .hero-copy h1 {
 
   /*
     Arte própria do card fechado (background.closed): na largura do card estreito, encostada na
-    base e à direita, sem cortar os produtos. Com a largura fixa, ela não cresce junto com o card
-    enquanto some na expansão.
-    Todas as campanhas usam a mesma caixa, com a proporção da arte mais baixa (ROG, 742 x 322):
-    as mais altas perdem só parede no topo (cover ancorado na base), então o topo da imagem e a
-    sombra atrás do logo ficam na mesma altura em todos os cards fechados.
+    base e à direita. Com a largura fixa, ela não cresce junto com o card enquanto some na expansão.
+    Ela vai da base até logo abaixo do logo (--closed-top), igual em todos os cards fechados; para
+    isso o cover corta um pouco das laterais, mais na ROG, que é a arte mais baixa.
   */
   .hero-panel.has-closed-art {
     --closed-width: var(--panel-narrow);
   }
 
   .hero-panel.has-closed-art .hero-panel-image {
-    --closed-ratio: 2.3;
-    --closed-fade: 35%;
+    --closed-top: 48px;
+    --closed-fade: 110px;
     inset: auto 0 0 auto;
     width: var(--closed-width);
-    height: min(var(--panel-height), var(--closed-width) * var(--closed-ratio));
+    height: calc(var(--panel-height) - var(--closed-top));
     object-position: 50% 100%;
-    mask-image: linear-gradient(to bottom, transparent, #000 var(--closed-fade));
+    /* Paradas em curva (ease-in-out): o degradê linear deixava uma faixa visível no início e no fim. */
+    mask-image: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(0 0 0 / 0.08) calc(var(--closed-fade) * 0.2),
+      rgb(0 0 0 / 0.3) calc(var(--closed-fade) * 0.4),
+      rgb(0 0 0 / 0.65) calc(var(--closed-fade) * 0.6),
+      rgb(0 0 0 / 0.9) calc(var(--closed-fade) * 0.8),
+      #000 var(--closed-fade)
+    );
   }
 
   /*
@@ -1158,15 +1183,15 @@ html[data-theme='light'] .hero-copy h1 {
     position: absolute;
     inset: 0 0 auto;
     z-index: 0;
-    height: 200px;
-    background: linear-gradient(180deg, rgb(0 0 0 / 0.9), rgb(0 0 0 / 0.6) 45%, transparent);
+    height: 70px;
+    background: linear-gradient(180deg, rgb(0 0 0 / 0.45), rgb(0 0 0 / 0.2) 45%, transparent);
     pointer-events: none;
     transition: opacity calc(var(--carousel-transition) * 0.4) var(--carousel-ease) calc(var(--carousel-transition) * 0.6);
   }
 
   /* No tema claro o degradê é branco; os logos de texto branco trocam pela versão escura (srcOnLight). */
   html[data-theme='light'] .hero-panel .hero-frame-content::after {
-    background: linear-gradient(180deg, rgb(255 255 255 / 0.95), rgb(255 255 255 / 0.7) 45%, transparent);
+    background: linear-gradient(180deg, rgb(255 255 255 / 0.55), rgb(255 255 255 / 0.25) 45%, transparent);
   }
 
   .hero-panel.is-expanded .hero-frame-content::after {

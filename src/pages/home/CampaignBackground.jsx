@@ -1,7 +1,7 @@
 import { hideBrokenImage } from '../../utils/image';
 
 // Mesmas media queries do CSS (index.css) e do preload do index.html.
-const MOBILE_MEDIA = '(width < 601px)';
+const MOBILE_MEDIA = '(width < 1001px)';
 const DESKTOP_MEDIA = '(width >= 1001px)';
 
 /*

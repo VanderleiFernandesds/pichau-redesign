@@ -9,20 +9,17 @@ import { useHeroCarousel } from '../../hooks/useHeroCarousel';
 const CAROUSEL_TIMING = { readingTime: 7000, transitionTime: 500, selectTransitionTime: 450 };
 const SLIDE_IDS = HERO_SLIDES.map((slide) => slide.id);
 
-// Abaixo de 1001px a arte com os produtos cobre a largura do card, então a faixa dos produtos tem
-// altura proporcional à largura. O espaço sob o texto é comum a todas as campanhas e reserva a
-// maior delas: na arte do tablet (horizontal) e na do celular.
-function maxProductBand(getArt) {
-  const ratios = HERO_SLIDES.map((slide) => getArt(slide.background))
-    .filter((art) => art?.productArea)
+// Abaixo de 1001px a arte com os produtos (a do celular, quando a campanha tem) cobre a largura do
+// card, então a faixa dos produtos tem altura proporcional à largura. O espaço sob o texto é comum a
+// todas as campanhas e reserva a maior delas.
+function maxProductBand() {
+  const ratios = HERO_SLIDES.map((slide) => slide.background.mobile ?? slide.background)
+    .filter((art) => art.productArea)
     .map(({ productArea, width }) => (productArea.bottom - productArea.top) / width);
   return Math.max(0, ...ratios);
 }
 
-const PRODUCT_BAND_STYLE = {
-  '--product-band': maxProductBand((background) => background),
-  '--mobile-product-band': maxProductBand((background) => background.mobile ?? background),
-};
+const PRODUCT_BAND_STYLE = { '--product-band': maxProductBand() };
 
 export default function Hero({ onFilter, theme, children }) {
   const carousel = useHeroCarousel(SLIDE_IDS, CAROUSEL_TIMING);

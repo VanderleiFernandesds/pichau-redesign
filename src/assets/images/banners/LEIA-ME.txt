@@ -8,5 +8,4 @@ Logos, textos e botões são elementos HTML separados, nunca parte da arte.
 energy-drink: o logo é o da linha Protein sem a palavra "Protein".
 rog: logos em logo.svg e logo-escuro.svg (tema claro).
 corsair: logos em logo.avif e logo-escuro.avif (tema claro).
-pichau-arena: campanha no formato antigo (fundo 684 x 475 e objetos transparentes), ainda fora do carrossel.
 As artes originais em PNG não ficam no projeto.

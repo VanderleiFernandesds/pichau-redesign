@@ -12,9 +12,6 @@ import rogBackgroundMobile from '../assets/images/banners/rog/fundo-celular-1122
 import rogBackgroundClosed from '../assets/images/banners/rog/fundo-fechado-322x742.avif';
 import rogLogo from '../assets/images/banners/rog/logo.svg';
 import rogLogoDark from '../assets/images/banners/rog/logo-escuro.svg';
-import arenaBackground from '../assets/images/banners/pichau-arena/fundo-684x475.avif';
-import arenaLogo from '../assets/images/banners/pichau-arena/logo-arena.avif';
-import arenaGamerGeek from '../assets/images/banners/pichau-arena/gamer-geek.avif';
 
 
 /*
@@ -196,40 +193,6 @@ export const HERO_CAMPAIGNS = {
     description: 'Explore hardware e periféricos ASUS ROG para o seu setup.',
     details: [],
     cta: { label: 'Explorar ASUS ROG', href: 'https://www.pichau.com.br/marca/asus' },
-  },
-  // Configurada para quando a campanha entrar no carrossel; hoje os três slides usam as demais.
-  pichauArena: {
-    id: 'pichau-arena',
-    name: 'Pichau Arena',
-    background: { src: arenaBackground, position: { collapsed: '50% 50%', expanded: '50% 50%', stage: '50% 40%' } },
-    objects: [
-      {
-        id: 'logo-arena',
-        src: arenaLogo,
-        width: 903,
-        height: 785,
-        size: 112,
-        collapsed: { x: '50%', y: '34%', scale: 1, layer: 2 },
-        expanded: { x: '24%', y: '79%', scale: 0.44, layer: 2 },
-      },
-      {
-        id: 'gamer-geek',
-        src: arenaGamerGeek,
-        width: 847,
-        height: 894,
-        size: 108,
-        collapsed: { x: '50%', y: '62%', scale: 1, layer: 1 },
-        expanded: { x: '74%', y: '76%', scale: 0.48, layer: 1 },
-      },
-    ],
-    logo: { src: arenaLogo, width: 903, height: 785, displayWidth: 51, alt: 'Pichau Arena' },
-    title: ['Gamer', '& Geek'],
-    description: 'O evento gamer e geek da Pichau Arena em Joinville–SC.',
-    details: [
-      { type: 'date', text: '10 a 12 de outubro' },
-      { type: 'location', text: 'Joinville Square Garden, Joinville–SC' },
-    ],
-    cta: { label: 'Saiba mais sobre o evento', href: '#offers' },
   },
 };
 

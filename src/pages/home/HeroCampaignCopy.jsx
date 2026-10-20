@@ -35,7 +35,7 @@ export default function HeroCampaignCopy({ campaigns, shownId, isAnnounced, onFi
   return (
     <div className="hero-copy max-w-147.5">
       <div className="grid" aria-live={isAnnounced ? 'polite' : 'off'}>
-        {campaigns.map(({ id, eyebrow, logo, title, isTitleStacked, isTitleInlineOnMobile, description, details, cta }) => (
+        {campaigns.map(({ id, eyebrow, logo, title, isTitleStacked, description, details, cta }) => (
           <div key={id} className={`hero-fade col-start-1 row-start-1 ${visibility(id)}`}>
             {logo ? (
               // Largura fixa e altura automática, para a proporção vir sempre da arte; no celular o logo
@@ -53,7 +53,7 @@ export default function HeroCampaignCopy({ campaigns, shownId, isAnnounced, onFi
             )}
             {/* No desktop o tamanho e a linha única vêm de .hero-copy h1 (index.css); abaixo disso quebra. */}
             <h1
-              className={`my-4 font-display text-[clamp(32px,10.5vw,40px)] leading-none font-bold sm:my-5 sm:text-[50px] ${isTitleStacked ? 'is-stacked' : ''} ${isTitleInlineOnMobile ? 'is-inline-mobile' : ''}`}
+              className={`my-4 font-display text-[clamp(32px,10.5vw,40px)] leading-none font-bold sm:my-5 sm:text-[50px] ${isTitleStacked ? 'is-stacked' : ''}`}
             >
               {title.map((part, index) => (
                 <span key={part} className="hero-title-part">

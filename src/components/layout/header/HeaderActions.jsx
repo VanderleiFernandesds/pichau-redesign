@@ -3,13 +3,13 @@ import AccountMenu from '../../account/AccountMenu';
 import { formatProductCount } from '../../../utils/format';
 
 // No tablet conta e favoritos ficam só com ícone; o aria-label mantém o nome acessível. No celular
-// fica só a conta: favoritos e carrinho vão para a barra inferior.
+// fica só o carrinho, sem o texto: conta e favoritos vão para a barra inferior.
 // Sem moldura: o destaque fica no texto, para a linha não virar uma fileira de caixas.
 const actionClass =
   'relative flex h-(--header-control) min-w-(--header-control) items-center justify-center gap-2 text-[13px] transition-colors hover:text-brand lg:h-12 lg:px-2 lg:whitespace-nowrap';
 
 export default function HeaderActions({
-  onAccountOpen,
+  onOpenAuth,
   isFavoriteOnly,
   onToggleFavorites,
   favoriteCount,
@@ -22,7 +22,7 @@ export default function HeaderActions({
 
   return (
     <div className={`flex items-center gap-2 lg:gap-5 ${className}`}>
-      <AccountMenu onOpen={onAccountOpen} />
+      <AccountMenu onOpenAuth={onOpenAuth} />
 
       <button
         type="button"
@@ -51,10 +51,16 @@ export default function HeaderActions({
         type="button"
         onClick={onOpenCart}
         aria-label={`Carrinho, ${cartLabel}`}
-        className={`chamfer ${hasCartItems ? 'chamfer-success' : 'chamfer-accent'} header-cart ml-1 flex max-sm:hidden h-(--header-control) items-center justify-center gap-2.5 px-4 text-white lg:ml-0 lg:h-12 lg:px-5`}
+        className={`chamfer ${hasCartItems ? 'chamfer-success' : 'chamfer-accent'} header-cart relative ml-1 flex h-(--header-control) min-w-(--header-control) items-center justify-center gap-2.5 px-3 text-white sm:px-4 lg:ml-0 lg:h-12 lg:px-5`}
       >
         <ShoppingCart aria-hidden="true" className="size-5" />
-        <span className="flex flex-col text-left leading-tight">
+        {/* No celular sem o texto: só o ícone e a quantidade. */}
+        {hasCartItems && (
+          <i aria-hidden="true" className="text-[13px] leading-none font-bold not-italic sm:hidden">
+            {cartCount}
+          </i>
+        )}
+        <span className="flex flex-col text-left leading-tight max-sm:hidden">
           <b className="text-[13px] tracking-[0.5px] uppercase">Carrinho</b>
           <small className="text-[11px] text-white/80">{cartLabel}</small>
         </span>

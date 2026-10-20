@@ -1,4 +1,4 @@
-import { Cpu, Heart, Menu, Search, ShoppingCart } from 'lucide-react';
+import { Cpu, Heart, Menu, Search, User } from 'lucide-react';
 import { formatProductCount } from '../../utils/format';
 
 function CountBadge({ count }) {
@@ -16,7 +16,8 @@ function CountBadge({ count }) {
 
 /*
   Atalhos do celular (abaixo de 601px). Menu abre o menu de departamentos e a busca reaproveita o campo do header;
-  favoritos e carrinho usam o mesmo estado das ações do header no tablet e no desktop. O destaque
+  favoritos e perfil usam o mesmo estado das ações do header no tablet e no desktop. O carrinho
+  fica no header. O destaque
   do item ativo vem do CSS, pelos atributos aria-expanded e aria-pressed, então a aparência
   acompanha o estado anunciado aos leitores de tela.
 */
@@ -28,9 +29,8 @@ export default function MobileNavBar({
   isFavoriteOnly,
   onToggleFavorites,
   favoriteCount,
-  isCartOpen,
-  onOpenCart,
-  cartCount,
+  isAccountOpen,
+  onOpenAccount,
 }) {
   return (
     <nav aria-label="Atalhos" className="mobile-nav sm:hidden">
@@ -79,17 +79,14 @@ export default function MobileNavBar({
         <li>
           <button
             type="button"
-            onClick={onOpenCart}
+            onClick={onOpenAccount}
             aria-haspopup="dialog"
-            aria-expanded={isCartOpen}
-            aria-label={`Carrinho, ${formatProductCount(cartCount)}`}
+            aria-expanded={isAccountOpen}
+            aria-label="Perfil: entrar ou cadastrar-se"
             className="mobile-nav-item"
           >
-            <span className="relative">
-              <ShoppingCart aria-hidden="true" className="size-6" />
-              <CountBadge count={cartCount} />
-            </span>
-            Carrinho
+            <User aria-hidden="true" className="size-6" />
+            Perfil
           </button>
         </li>
       </ul>

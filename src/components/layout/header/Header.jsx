@@ -13,7 +13,7 @@ export default function Header({
   searchInputRef,
   isNavOpen,
   onNavOpenChange,
-  onAccountOpen,
+  onOpenAuth,
   isFavoriteOnly,
   onToggleFavorites,
   favoriteCount,
@@ -48,7 +48,7 @@ export default function Header({
         onQueryChange={onQueryChange}
         onSearch={onSearch}
         inputRef={searchInputRef}
-        className="order-last min-w-0 basis-full lg:order-0 lg:basis-auto lg:flex-1"
+        className="header-search order-last min-w-0 basis-full lg:order-0 lg:basis-auto lg:flex-1"
       />
 
       {/*
@@ -66,7 +66,7 @@ export default function Header({
       </button>
 
       <HeaderActions
-        onAccountOpen={onAccountOpen}
+        onOpenAuth={onOpenAuth}
         isFavoriteOnly={isFavoriteOnly}
         onToggleFavorites={onToggleFavorites}
         favoriteCount={favoriteCount}

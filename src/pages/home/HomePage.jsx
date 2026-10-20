@@ -6,6 +6,7 @@ import Footer from '../../components/layout/footer/Footer';
 import MobileNavBar from '../../components/layout/MobileNavBar';
 import ProductSection from '../../components/products/ProductSection';
 import CartDrawer from '../../components/cart/CartDrawer';
+import AccountDialog from '../../components/account/AccountDialog';
 import EmptyState from '../../components/ui/EmptyState';
 import Toast from '../../components/ui/Toast';
 import Hero from './Hero';
@@ -20,6 +21,8 @@ import { useCart } from '../../hooks/useCart';
 import { useFavorites } from '../../hooks/useFavorites';
 import { useToast } from '../../hooks/useToast';
 import { useTheme } from '../../hooks/useTheme';
+import { useIsScrolledPast } from '../../hooks/useIsScrolledPast';
+import { useBlurOnScroll } from '../../hooks/useBlurOnScroll';
 
 // Sem filtro, as ofertas mostram só os primeiros produtos; os demais aparecem aos poucos na outra vitrine.
 const FEATURED_COUNT = 10;
@@ -37,6 +40,8 @@ export default function HomePage() {
   const [isNavOpen, setIsNavOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isConfigOpen, setIsConfigOpen] = useState(false);
+  // 'login' ou 'signup' com o modal de conta aberto; null fechado.
+  const [authView, setAuthView] = useState(null);
   // topicId leva a Central de ajuda direto a um tópico; sem ele, ela abre do começo.
   const [help, setHelp] = useState({ isOpen: false, topicId: null });
   const [otherVisibleCount, setOtherVisibleCount] = useState(OTHER_PAGE_SIZE);
@@ -47,6 +52,10 @@ export default function HomePage() {
   const { favorites, toggleFavorite } = useFavorites();
   const toast = useToast();
   const { theme, toggleTheme } = useTheme();
+  // No celular a busca do header só aparece no topo da página, sobre o hero, ou enquanto está em
+  // uso; ao rolar depois de usá-la, o campo perde o foco e a busca recolhe de novo.
+  const isSearchHidden = useIsScrolledPast(24);
+  useBlurOnScroll(searchInputRef, 64);
 
   const normalizedQuery = query.trim().toLocaleLowerCase('pt-BR');
   const filteredProducts = products.filter(
@@ -61,6 +70,11 @@ export default function HomePage() {
   function openCart() {
     setIsNavOpen(false);
     setIsCartOpen(true);
+  }
+
+  function openAuth(view) {
+    setIsNavOpen(false);
+    setAuthView(view);
   }
 
   /*
@@ -128,7 +142,7 @@ export default function HomePage() {
         Pular para o conteúdo
       </a>
 
-      <SiteHeader>
+      <SiteHeader isSearchHidden={isSearchHidden && !isMenuOpen}>
         <Header
           query={query}
           onQueryChange={setQuery}
@@ -136,7 +150,7 @@ export default function HomePage() {
           searchInputRef={searchInputRef}
           isNavOpen={isNavOpen}
           onNavOpenChange={setIsNavOpen}
-          onAccountOpen={() => setIsNavOpen(false)}
+          onOpenAuth={openAuth}
           isFavoriteOnly={isFavoriteOnly}
           onToggleFavorites={toggleFavoriteOnly}
           favoriteCount={favorites.length}
@@ -229,11 +243,11 @@ export default function HomePage() {
         isFavoriteOnly={isFavoriteOnly}
         onToggleFavorites={toggleFavoriteOnly}
         favoriteCount={favorites.length}
-        isCartOpen={isCartOpen}
-        onOpenCart={openCart}
-        cartCount={cart.itemCount}
+        isAccountOpen={authView !== null}
+        onOpenAccount={() => openAuth('login')}
       />
 
+      <AccountDialog view={authView} onViewChange={setAuthView} onClose={() => setAuthView(null)} />
       <CartDrawer
         isOpen={isCartOpen}
         onClose={() => setIsCartOpen(false)}

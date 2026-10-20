@@ -17,7 +17,7 @@ export default function SearchForm({ query, onQueryChange, onSearch, inputRef, c
         id="query"
         value={query}
         onChange={(event) => onQueryChange(event.target.value)}
-        placeholder="O que você está procurando?"
+        placeholder="Buscar produtos"
         autoComplete="off"
         className="h-full min-w-0 flex-1 bg-transparent text-base text-heading outline-0 placeholder:text-muted lg:text-[14px]"
       />

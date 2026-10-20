@@ -355,13 +355,6 @@ html[data-theme='light'] .theme-dark-only {
 .hero-copy h1.is-stacked .hero-title-part {
   display: block;
 }
-
-@media (width < 601px) {
-  .hero-copy h1.is-inline-mobile .hero-title-part {
-    display: inline;
-  }
-}
-
 /*
   No tema claro os títulos das campanhas ficam no vermelho da marca, como os logos, com contorno
   branco. O paint-order pinta o contorno por baixo do preenchimento: só a metade de fora aparece e
@@ -1217,6 +1210,32 @@ html[data-theme='light'] .hero-copy h1 {
   background: var(--frame-fill);
 }
 
+/*
+  No celular a linha da busca só aparece no topo da página, sobre o hero: ao rolar, ela recolhe e
+  logo e botões continuam no painel. Fora das layers para vencer o h-11 do formulário. Com o
+  foco no campo, como ao tocar em Busca na barra inferior, ela reaparece. O gap entre as linhas
+  também zera, senão sobraria um vão sob o logo.
+*/
+@media (width < 601px) {
+  .header-search,
+  .header-bar > :has(> .header-search) {
+    transition:
+      height 0.25s ease,
+      row-gap 0.25s ease,
+      opacity 0.2s ease;
+  }
+
+  .site-header.is-hidden .header-search:not(:focus-within) {
+    height: 0;
+    overflow: hidden;
+    opacity: 0;
+  }
+
+  .site-header.is-hidden .header-bar > :has(> .header-search:not(:focus-within)) {
+    row-gap: 0;
+  }
+}
+
 @layer components {
   .wrap {
     @apply mx-auto max-w-(--container-max) px-(--container-gutter);
@@ -1634,8 +1653,12 @@ html[data-theme='light'] .hero-copy h1 {
     margin: 0;
     padding: 0;
     border: 0;
-    /* O painel sai pela direita ao abrir e fechar; sem isso o <dialog> ganharia rolagem horizontal. */
-    overflow: hidden;
+    /*
+      O painel sai pela direita ao abrir e fechar; sem isso o <dialog> ganharia rolagem horizontal.
+      clip, e não hidden: com hidden o <dialog> ainda rola por script, e o foco no título ao abrir
+      o rolava até o painel, que pulava para dentro em vez de deslizar.
+    */
+    overflow: clip;
     background: transparent;
     color: var(--color-text);
   }
@@ -1686,13 +1709,13 @@ html[data-theme='light'] .hero-copy h1 {
     inset: 1px 0 1px 1px;
   }
 
-  /* No celular o painel ocupa a tela toda; chanfros e sombra só fazem sentido com a página atrás. */
+  /*
+    No celular sobra uma faixa da página escurecida à esquerda, como a do menu de departamentos à
+    direita; o toque nela fecha o carrinho.
+  */
   @media (width < 601px) {
     .cart-drawer-panel {
-      --cut: 0px;
-      width: 100%;
-      padding-left: env(safe-area-inset-left, 0);
-      filter: none;
+      width: calc(100% - 56px);
     }
   }
 

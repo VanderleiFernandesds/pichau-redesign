@@ -50,7 +50,7 @@
     Cores do tema escuro, o padrão. O tema claro troca esses mesmos valores em
     html[data-theme='light'].
   */
-  --color-page: #191a1f;
+  --color-page: #121212;
   --color-text: #e9eaee;
   --color-heading: #ffffff;
   --color-soft: #b8b9bf;
@@ -65,13 +65,13 @@
   /* Fundo de botões e opções neutras (abas, quantidade, objetivos). */
   --color-fill: rgb(255 255 255 / 0.08);
   --color-fill-hover: rgb(255 255 255 / 0.14);
-  --color-footer: #191a1f;
+  --color-footer: #121212;
 }
 
 /* Fundos de componentes (degradês e bordas dos chanfros), trocados pelo tema claro como as cores. */
 :root {
-  --panel-fill: linear-gradient(180deg, #1a1b20, #191a1f);
-  --field-fill: #191a1f;
+  --panel-fill: linear-gradient(180deg, #141414, #121212);
+  --field-fill: #121212;
   --field-fill-focus: #202128;
   --field-border: #34363d;
   --card-border: #34363d;
@@ -88,7 +88,7 @@
 }
 
 html[data-theme='light'] {
-  --color-page: #ffffff;
+  --color-page: #f8f9fa;
   --color-text: #191a1f;
   --color-heading: #191a1f;
   --color-soft: #5b606a;

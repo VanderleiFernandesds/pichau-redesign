@@ -2124,6 +2124,27 @@ html[data-theme='light'] .hero-copy h1 {
     --chamfer-fill: var(--color-surface);
   }
 
+  /* Com um modal aberto a página não rola por trás; só o conteúdo do modal, quando passa da tela. */
+  :root:has(.modal[open]) {
+    overflow: hidden;
+  }
+
+  /*
+    Painel dos modais (Modal): a mesma moldura dos painéis do footer. O dialog só centraliza e rola;
+    a sombra fica nele, com drop-shadow, para seguir o chanfro do painel.
+  */
+  .modal {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    filter: drop-shadow(0 18px 40px rgb(0 0 0 / 0.5));
+  }
+
+  .modal-panel {
+    --cut: 16px;
+    --chamfer-border: var(--card-border);
+    --chamfer-fill: var(--color-surface);
+  }
+
   /* Botão secundário com contorno vermelho (ex.: "Ver loja"); o fundo avermelha no hover. */
   .chamfer-outline {
     --chamfer-border: var(--color-brand);

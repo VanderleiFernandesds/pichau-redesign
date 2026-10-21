@@ -41,7 +41,11 @@ export default function Hero({ onFilter, theme, children }) {
           aria-roledescription="carrossel"
           aria-label="Destaques"
           className="hero-carousel wrap grid w-full content-center items-center gap-x-10 pt-(--header-offset)"
-          style={{ ...PRODUCT_BAND_STYLE, "--carousel-transition": `${carousel.transitionTime}ms` }}
+          style={{
+            ...PRODUCT_BAND_STYLE,
+            '--carousel-transition': `${carousel.transitionTime}ms`,
+            '--conceal-time': `${carousel.concealTime}ms`,
+          }}
           {...carousel.pauseHandlers}
         >
           <HeroCampaignCopy
@@ -57,7 +61,9 @@ export default function Hero({ onFilter, theme, children }) {
             order={carousel.order}
             shownId={shownId}
             isExpanded={carousel.isExpanded}
+            isConcealing={carousel.isConcealing}
             isJumping={carousel.isJumping}
+            leavingIds={carousel.leavingIds}
             objectsHiddenIds={carousel.objectsHiddenIds}
             onSelect={carousel.select}
           />

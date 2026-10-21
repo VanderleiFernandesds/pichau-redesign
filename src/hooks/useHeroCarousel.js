@@ -8,10 +8,21 @@ function getPrefersReducedMotion() {
 
 // Tempo para o navegador pintar a fila já reordenada, sem transições, antes de expandir o novo primeiro.
 const JUMP_FRAME_DELAY = 40;
+// Na seleção manual o card aberto some rápido antes do pulo, para o clique responder logo.
+const QUICK_CONCEAL_TIME = 150;
 
 // Leva os `count` primeiros da fila para o final, mantendo a ordem relativa.
 function rotate(order, count) {
   return [...order.slice(count), ...order.slice(0, count)];
+}
+
+/*
+  Cards à frente do alvo: no pulo eles dão a volta para o final da fila. São os nós que o React
+  move no DOM, e um nó movido não anima a mudança de posição, então eles saem de cena antes do
+  pulo e reaparecem já no lugar novo.
+*/
+function wrappedBefore(current, targetId) {
+  return current.order.slice(0, current.order.indexOf(targetId));
 }
 
 // Termina a troca na hora, com o alvo na frente e expandido (usado sem animação).
@@ -22,11 +33,12 @@ function settleOn(current, targetId) {
 /*
   Fila de slides: só o primeiro expande, e o primeiro slide já começa aberto. Etapas:
     expanded    o primeiro fica aberto pelo tempo de leitura
-    concealing  (só no automático) os objetos do aberto e do próximo somem, com o card ainda aberto
+    concealing  o card aberto e o fundo ampliado somem (rápido na seleção manual), junto com os
+                objetos do aberto e do escolhido
     jumping     a fila pula de uma vez para o escolhido na frente, com as transições desligadas no
-                CSS: o card que estava aberto fecha sem animação e vai para o final
-  Depois do jumping, só a expansão do novo primeiro é animada. Os objetos nunca são vistos mudando
-  de posição: trocam de lugar enquanto estão invisíveis e reaparecem com o card já aberto ou fechado.
+                CSS: o card que estava aberto fecha sem animação, ainda invisível, e vai para o final
+  Depois do jumping, a expansão do novo primeiro é animada e o card que fechou reaparece no final.
+  Nem os cards nem os objetos são vistos mudando de tamanho ou de posição de uma vez.
   Só a leitura respeita a pausa; uma troca já iniciada termina e para no slide expandido, para
   nunca ficar presa no meio.
 */
@@ -72,25 +84,26 @@ export function useHeroCarousel(slideIds, { readingTime, transitionTime, selectT
     return () => query.removeEventListener('change', handleChange);
   }, []);
 
-  // Sem animação (movimento reduzido) a fila gira direto, sem as etapas intermediárias.
-  function startRotation(current, targetId) {
-    return isReducedMotion ? settleOn(current, targetId) : { ...current, phase: 'concealing', targetId, isQuick: false };
+  // Sem animação (movimento reduzido) a fila gira direto, sem as etapas intermediárias. Na seleção
+  // manual, isQuick deixa a troca inteira (e a do texto) com as durações curtas da seleção.
+  function startRotation(current, targetId, isQuick) {
+    return isReducedMotion ? settleOn(current, targetId) : { ...current, phase: 'concealing', targetId, isQuick };
   }
 
-  // Reordena a fila de uma vez, de qualquer etapa, com o escolhido na frente. Na seleção manual,
-  // isQuick deixa a expansão dele (e a troca do texto) com a duração curta da seleção.
-  // previousId é quem estava na frente: ele fecha de uma vez e os objetos dele precisam sumir junto.
-  function jumpTo(current, targetId, isQuick) {
+  // Reordena a fila de uma vez, com o escolhido na frente. previousId é quem estava na frente: ele
+  // fecha de uma vez, então os objetos dele somem junto.
+  function jumpTo(current, targetId) {
     const order = rotate(current.order, current.order.indexOf(targetId));
-    return { ...current, order, phase: 'jumping', targetId, isQuick, previousId: current.order[0] };
+    const previousId = current.order[0] === targetId ? null : current.order[0];
+    return { ...current, order, phase: 'jumping', targetId, previousId, wrappedIds: wrappedBefore(current, targetId) };
   }
 
   function nextStep(current) {
     switch (current.phase) {
       case 'expanded':
-        return startRotation(current, current.order[1]);
+        return startRotation(current, current.order[1], false);
       case 'concealing':
-        return jumpTo(current, current.targetId, false);
+        return jumpTo(current, current.targetId);
       default:
         return { ...current, phase: 'expanded', shownId: current.targetId };
     }
@@ -115,6 +128,7 @@ export function useHeroCarousel(slideIds, { readingTime, transitionTime, selectT
 
     let delay = cycle.isQuick ? selectTransitionTime : transitionTime;
     if (cycle.phase === 'jumping') delay = JUMP_FRAME_DELAY;
+    else if (cycle.phase === 'concealing' && cycle.isQuick) delay = QUICK_CONCEAL_TIME;
     else if (isReading) delay = readingTime - readingElapsedRef.current;
 
     const startedAt = performance.now();
@@ -132,7 +146,7 @@ export function useHeroCarousel(slideIds, { readingTime, transitionTime, selectT
     const isAlreadyOpen = cycle.phase === 'expanded' && cycle.order[0] === slideId;
     if (isAlreadyOpen) return;
 
-    setCycle((current) => jumpTo(current, slideId, true));
+    setCycle((current) => startRotation(current, slideId, true));
   }
 
   function togglePlaying() {
@@ -161,16 +175,24 @@ export function useHeroCarousel(slideIds, { readingTime, transitionTime, selectT
   if (cycle.phase === 'concealing') objectsHiddenIds = [cycle.order[0], cycle.targetId];
   else if (cycle.phase === 'jumping') objectsHiddenIds = [cycle.order[0], cycle.previousId];
 
+  // Cards que dão a volta na fila: somem no concealing e continuam ocultos no pulo.
+  let leavingIds = [];
+  if (cycle.phase === 'concealing') leavingIds = wrappedBefore(cycle, cycle.targetId);
+  else if (cycle.phase === 'jumping') leavingIds = cycle.wrappedIds;
+
   return {
     order: cycle.order,
     shownId: cycle.shownId,
     // Em concealing o card continua aberto; só os objetos estão saindo.
     isExpanded: cycle.phase === 'expanded' || cycle.phase === 'concealing',
+    isConcealing: cycle.phase === 'concealing',
     isJumping: cycle.phase === 'jumping',
+    leavingIds,
     isReading,
     readingTime,
-    // A duração vai para o CSS, para as animações acompanharem o ritmo das etapas.
+    // As durações vão para o CSS, para as animações acompanharem o ritmo das etapas.
     transitionTime: cycle.isQuick ? selectTransitionTime : transitionTime,
+    concealTime: cycle.isQuick ? QUICK_CONCEAL_TIME : transitionTime,
     objectsHiddenIds,
     isPlaying,
     isRunning,

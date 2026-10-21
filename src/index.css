@@ -898,8 +898,40 @@ html[data-theme='light'] .hero-copy h1 {
     justify-self: end;
     width: var(--panel-narrow);
     transform: translateX(calc((var(--position) - var(--slide-count) + 1) * (var(--panel-narrow) + var(--panel-gap))));
-    /* A fila só muda de ordem no jumping, sem animação; o que anima é a expansão do primeiro. */
-    transition: width var(--carousel-transition) var(--carousel-ease);
+    /*
+      A fila só muda de ordem no jumping. Animam a expansão do primeiro, o deslize dos cards que
+      andam na fila (transform) e a volta (opacity) dos que deram a volta, que espera o deslize
+      passar da posição deles.
+    */
+    transition:
+      width var(--carousel-transition) var(--carousel-ease),
+      transform var(--carousel-transition) var(--carousel-ease),
+      opacity calc(var(--carousel-transition) * 0.6) var(--carousel-ease) calc(var(--carousel-transition) * 0.6);
+  }
+
+  /*
+    Antes do pulo (concealing), o fundo ampliado e os cards que vão dar a volta na fila (is-leaving,
+    entre eles o aberto) somem. No pulo eles chegam ao final ainda ocultos e reaparecem depois, já
+    estreitos; os demais deslizam até a nova posição. Assim nenhum card é visto encolhendo ou
+    mudando de lugar de uma vez.
+  */
+  .hero-panels .hero-panel.is-leaving,
+  .hero-panels.is-concealing .hero-stage-image.is-visible {
+    opacity: 0;
+    transition: opacity var(--conceal-time) var(--carousel-ease);
+  }
+
+  /*
+    No jumping as transições ficam desligadas, menos o deslize dos cards que continuam fechados. O
+    novo primeiro (logo após o .hero-stage no DOM) vai direto para a posição vaga do aberto: o
+    fundo ampliado é revelado a partir dela, e com ele deslizando os dois ficariam desalinhados.
+  */
+  .hero-panels.is-jumping .hero-stage ~ .hero-panel:not(.is-leaving) {
+    transition: transform var(--carousel-transition) var(--carousel-ease) !important;
+  }
+
+  .hero-panels.is-jumping .hero-stage + .hero-panel {
+    transition: none !important;
   }
 
   .hero-panel:not(.is-shown) {

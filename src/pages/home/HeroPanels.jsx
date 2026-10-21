@@ -16,11 +16,24 @@ function fetchPriority(slides, id) {
   key = id do slide, o React só move nós no jumping, quando as transições estão desligadas, então
   nenhuma animação é cortada.
 */
-export default function HeroPanels({ slides, order, shownId, isExpanded, isJumping, objectsHiddenIds, onSelect }) {
+export default function HeroPanels({
+  slides,
+  order,
+  shownId,
+  isExpanded,
+  isConcealing,
+  isJumping,
+  leavingIds,
+  objectsHiddenIds,
+  onSelect,
+}) {
   const shownSlide = slides.find(({ id }) => id === shownId);
+  const panelsClassName = ['hero-panels', isConcealing && 'is-concealing', isJumping && 'is-jumping']
+    .filter(Boolean)
+    .join(' ');
 
   return (
-    <div className={`hero-panels ${isJumping ? 'is-jumping' : ''}`} style={{ '--slide-count': slides.length }}>
+    <div className={panelsClassName} style={{ '--slide-count': slides.length }}>
       {/*
         Fundo ampliado (só desktop): cobre o texto à esquerda e o card expandido. Mostra a campanha
         exibida enquanto o card dela está aberto; o card fica transparente e mantém só os objetos.
@@ -51,6 +64,7 @@ export default function HeroPanels({ slides, order, shownId, isExpanded, isJumpi
               isShown && 'is-shown',
               position === 0 && isExpanded && 'is-expanded',
               objectsHiddenIds.includes(slide.id) && 'is-hiding-objects',
+              leavingIds.includes(slide.id) && 'is-leaving',
             ]}
             isShown={isShown}
             fetchPriority={fetchPriority(slides, slide.id)}

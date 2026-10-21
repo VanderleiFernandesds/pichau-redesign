@@ -1940,12 +1940,11 @@ html[data-theme='light'] .hero-copy h1 {
   }
 
   /*
-    Carrossel "Na Pichau Tem!". --cards é quantos cabem na largura: fracionado no celular, para o
-    próximo card aparecer cortado e indicar que dá para deslizar; cinco ou seis inteiros no desktop.
+    Trilhas dos carrosséis (useCarouselTrack). --cards é quantos cabem na largura: fracionado no
+    celular e no tablet, para o próximo card aparecer cortado e indicar que dá para deslizar.
   */
-  .department-showcase-track {
-    --cards: 2.3;
-    --gap: 12px;
+  .department-showcase-track,
+  .product-carousel-track {
     display: grid;
     grid-auto-flow: column;
     grid-auto-columns: calc((100% - (var(--cards) - 1) * var(--gap)) / var(--cards));
@@ -1954,6 +1953,17 @@ html[data-theme='light'] .hero-copy h1 {
     overscroll-behavior-x: contain;
     scroll-snap-type: x mandatory;
     scrollbar-width: none;
+  }
+
+  .department-showcase-track > li,
+  .product-carousel-track > li {
+    scroll-snap-align: start;
+  }
+
+  /* "Na Pichau Tem!": cinco ou seis departamentos inteiros no desktop. */
+  .department-showcase-track {
+    --cards: 2.3;
+    --gap: 12px;
   }
 
   /* Celulares bem estreitos: menos cards, para "Computadores" caber numa linha. */
@@ -1989,8 +1999,46 @@ html[data-theme='light'] .hero-copy h1 {
     }
   }
 
-  .department-showcase-track > li {
-    scroll-snap-align: start;
+  /*
+    "Conheça outros produtos": duas fileiras, com os mesmos cards por linha da grade das ofertas no
+    desktop. As 6 linhas do ProductCard são um subgrid; o li repassa as linhas da trilha para elas
+    ficarem alinhadas entre os cards, como na grade. A linha do meio (--gap) separa as fileiras, e
+    os cards alternam entre elas, preenchendo coluna por coluna.
+  */
+  .product-carousel-track {
+    --cards: 2.2;
+    --gap: 10px;
+    grid-template-rows: repeat(6, auto) var(--gap) repeat(6, auto);
+    row-gap: 0;
+  }
+
+  .product-carousel-track > li {
+    display: grid;
+    grid-row: 1 / span 6;
+    grid-template-rows: subgrid;
+  }
+
+  .product-carousel-track > li:nth-child(even) {
+    grid-row: 8 / span 6;
+  }
+
+  @media (width >= 601px) {
+    .product-carousel-track {
+      --cards: 3.3;
+      --gap: 16px;
+    }
+  }
+
+  @media (width >= 1001px) {
+    .product-carousel-track {
+      --cards: 4;
+    }
+  }
+
+  @media (width >= 1640px) {
+    .product-carousel-track {
+      --cards: 5;
+    }
   }
 
   /* Card no padrão do purpose-card (chanfro e cantos); aqui o miolo e um destaque mais contido. */
@@ -2049,7 +2097,7 @@ html[data-theme='light'] .hero-copy h1 {
     --chamfer-border: #c8001f;
   }
 
-  /* Botão secundário chanfrado (favoritar, carrinho, "mostrar mais"), no estilo das setas dos cards. */
+  /* Botão secundário chanfrado (favoritar, carrinho), no estilo das setas dos cards. */
   .chip-button {
     --cut: 6px;
     --chamfer-border: var(--chip-border);

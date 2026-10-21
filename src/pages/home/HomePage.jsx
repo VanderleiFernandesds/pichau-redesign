@@ -5,6 +5,7 @@ import SiteHeader from '../../components/layout/header/SiteHeader';
 import Footer from '../../components/layout/footer/Footer';
 import MobileNavBar from '../../components/layout/MobileNavBar';
 import ProductSection from '../../components/products/ProductSection';
+import ProductCarousel from '../../components/products/ProductCarousel';
 import CartDrawer from '../../components/cart/CartDrawer';
 import AccountDialog from '../../components/account/AccountDialog';
 import EmptyState from '../../components/ui/EmptyState';
@@ -24,9 +25,8 @@ import { useTheme } from '../../hooks/useTheme';
 import { useIsScrolledPast } from '../../hooks/useIsScrolledPast';
 import { useBlurOnScroll } from '../../hooks/useBlurOnScroll';
 
-// Sem filtro, as ofertas mostram só os primeiros produtos; os demais aparecem aos poucos na outra vitrine.
+// Sem filtro, as ofertas mostram só os primeiros produtos; os demais ficam no carrossel da outra vitrine.
 const FEATURED_COUNT = 10;
-const OTHER_PAGE_SIZE = 10;
 const FEATURED_PRODUCTS = products.slice(0, FEATURED_COUNT);
 const OTHER_PRODUCTS = products.slice(FEATURED_COUNT);
 
@@ -44,7 +44,6 @@ export default function HomePage() {
   const [authView, setAuthView] = useState(null);
   // topicId leva a Central de ajuda direto a um tópico; sem ele, ela abre do começo.
   const [help, setHelp] = useState({ isOpen: false, topicId: null });
-  const [otherVisibleCount, setOtherVisibleCount] = useState(OTHER_PAGE_SIZE);
   const offersRef = useRef(null);
   const searchInputRef = useRef(null);
 
@@ -206,25 +205,14 @@ export default function HomePage() {
 
           <BuilderBanner onStart={() => setIsConfigOpen(true)} />
 
-          <ProductSection
+          <ProductCarousel
             eyebrow="NOVAS POSSIBILIDADES"
             title="Conheça outros produtos"
-            products={OTHER_PRODUCTS.slice(0, otherVisibleCount)}
+            products={OTHER_PRODUCTS}
             favorites={favorites}
             onToggleFavorite={toggleFavorite}
             onAddToCart={addToCart}
             onViewProduct={viewProduct}
-            footer={
-              otherVisibleCount < OTHER_PRODUCTS.length && (
-                <button
-                  type="button"
-                  onClick={() => setOtherVisibleCount((count) => count + OTHER_PAGE_SIZE)}
-                  className="chamfer chip-button mx-auto mt-6 flex h-11 items-center px-6 text-[13px] font-semibold"
-                >
-                  Mostrar mais produtos ({OTHER_PRODUCTS.length - otherVisibleCount} restantes)
-                </button>
-              )
-            }
           />
         </div>
       </main>

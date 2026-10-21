@@ -12,7 +12,6 @@ export default function ProductSection({
   onAddToCart,
   onViewProduct,
   emptyState,
-  footer,
   children,
 }) {
   const hasProducts = products.length > 0;
@@ -46,7 +45,6 @@ export default function ProductSection({
         emptyState
       )}
 
-      {footer}
     </section>
   );
 }

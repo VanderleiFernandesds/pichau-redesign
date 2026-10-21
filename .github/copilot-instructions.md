@@ -1,0 +1,1 @@
+Não adicione atribuição de IA em mensagens de commit ou descrições de pull request: nada de `Co-authored-by` do Copilot ou do Claude, nem linhas como "Generated with". A mensagem tem só o assunto e o corpo.

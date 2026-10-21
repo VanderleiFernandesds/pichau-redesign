@@ -1,7 +1,8 @@
 import { Fragment, useEffect, useRef } from 'react';
-import { Building2, ChevronDown, Cpu, Gamepad2, Headset, Menu, Tag, Ticket } from 'lucide-react';
+import { ChevronDown, Cpu, Gamepad2, Headset, Menu, Tag, Ticket } from 'lucide-react';
 import DepartmentMenu from './department-menu/DepartmentMenu';
 import NavSeparator from './NavSeparator';
+import PichauMarkIcon from './PichauMarkIcon';
 import { useActiveSection } from '../../../hooks/useActiveSection';
 
 // No tablet a lista rola dentro do painel, então o foco é desenhado para dentro para não ser cortado.
@@ -19,7 +20,7 @@ const SECTION_LINKS = [
   { href: '#offers', label: 'Ofertas', Icon: Tag },
   { href: '#choose', label: 'PCs gamers', Icon: Gamepad2 },
   // O banner de empresas fica dentro do rodapé (#support); vir antes no array o faz vencer o desempate.
-  { href: '#business', label: 'Empresas', Icon: Building2 },
+  { href: '#business', label: 'Empresas', Icon: PichauMarkIcon },
   { href: '#support', label: 'Atendimento', Icon: Headset },
 ];
 const SECTION_IDS = SECTION_LINKS.map(({ href }) => href.slice(1));

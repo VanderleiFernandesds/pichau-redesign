@@ -20,7 +20,6 @@ export default function HeroPanels({
   slides,
   order,
   shownId,
-  isExpanded,
   isConcealing,
   isJumping,
   leavingIds,
@@ -43,12 +42,12 @@ export default function HeroPanels({
           <CampaignBackground
             key={id}
             background={background}
-            className={`hero-stage-image ${id === shownId && isExpanded ? 'is-visible' : ''}`}
+            className={`hero-stage-image ${id === shownId ? 'is-visible' : ''}`}
             style={{ objectPosition: background.position.stage }}
             fetchPriority={fetchPriority(slides, id)}
           />
         ))}
-        {isExpanded && <CampaignArtLink cta={shownSlide.cta} className="hero-stage-link" />}
+        <CampaignArtLink cta={shownSlide.cta} className="hero-stage-link" />
       </div>
 
       {order.map((slideId, position) => {
@@ -62,7 +61,7 @@ export default function HeroPanels({
             position={position}
             stateClasses={[
               isShown && 'is-shown',
-              position === 0 && isExpanded && 'is-expanded',
+              position === 0 && 'is-expanded',
               objectsHiddenIds.includes(slide.id) && 'is-hiding-objects',
               leavingIds.includes(slide.id) && 'is-leaving',
             ]}

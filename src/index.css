@@ -611,19 +611,6 @@ html[data-theme='light'] .hero-copy h1 {
   initial-value: 0px;
 }
 
-/* Máscara do fundo ampliado: largura revelada a partir da borda direita e largura da borda suave. */
-@property --stage-reveal {
-  syntax: '<length-percentage>';
-  inherits: false;
-  initial-value: 0px;
-}
-
-@property --stage-soft {
-  syntax: '<length-percentage>';
-  inherits: false;
-  initial-value: 0px;
-}
-
 /* Seleção manual: a fila e o card que estava aberto mudam de uma vez, sem animação. */
 .hero-panels.is-jumping *,
 .hero-panels.is-jumping *::before,
@@ -899,12 +886,11 @@ html[data-theme='light'] .hero-copy h1 {
     width: var(--panel-narrow);
     transform: translateX(calc((var(--position) - var(--slide-count) + 1) * (var(--panel-narrow) + var(--panel-gap))));
     /*
-      A fila só muda de ordem no jumping. Animam a expansão do primeiro, o deslize dos cards que
-      andam na fila (transform) e a volta (opacity) dos que deram a volta, que espera o deslize
-      passar da posição deles.
+      A fila só muda de ordem no jumping. O primeiro abre na hora, sem crescer para a esquerda;
+      animam o deslize dos cards que andam na fila (transform) e a volta (opacity) dos que deram a
+      volta, que espera o deslize passar da posição deles.
     */
     transition:
-      width var(--carousel-transition) var(--carousel-ease),
       transform var(--carousel-transition) var(--carousel-ease),
       opacity calc(var(--carousel-transition) * 0.6) var(--carousel-ease) calc(var(--carousel-transition) * 0.6);
   }
@@ -923,15 +909,21 @@ html[data-theme='light'] .hero-copy h1 {
 
   /*
     No jumping as transições ficam desligadas, menos o deslize dos cards que continuam fechados. O
-    novo primeiro (logo após o .hero-stage no DOM) vai direto para a posição vaga do aberto: o
-    fundo ampliado é revelado a partir dela, e com ele deslizando os dois ficariam desalinhados.
+    novo primeiro (logo após o .hero-stage no DOM) vai direto para a posição vaga do aberto, onde
+    abre na hora, alinhado com o fundo ampliado.
   */
   .hero-panels.is-jumping .hero-stage ~ .hero-panel:not(.is-leaving) {
     transition: transform var(--carousel-transition) var(--carousel-ease) !important;
   }
 
-  .hero-panels.is-jumping .hero-stage + .hero-panel {
+  /* Mesmo seletor do deslize (com o :not), para vencer pela ordem e não pela especificidade. */
+  .hero-panels.is-jumping .hero-stage + .hero-panel:not(.is-leaving) {
     transition: none !important;
+  }
+
+  /* O novo primeiro já abre no pulo: o fundo ampliado dele entra em fade desde esse quadro. */
+  .hero-panels.is-jumping .hero-stage-image {
+    transition: opacity calc(var(--carousel-transition) * 0.7) ease-out !important;
   }
 
   .hero-panel:not(.is-shown) {
@@ -982,10 +974,14 @@ html[data-theme='light'] .hero-copy h1 {
     transition-delay: 0s;
   }
 
+  /*
+    O card abre já na largura final: moldura e fundo somem na hora, senão apareceria por um instante
+    um card vazio do tamanho do aberto antes do fundo ampliado entrar.
+  */
   .hero-panel.is-expanded .hero-frame-line,
   .hero-panel.is-expanded .corner-accents {
     opacity: 0;
-    transition-delay: 0s;
+    transition: none;
   }
 
   /*
@@ -1049,14 +1045,10 @@ html[data-theme='light'] .hero-copy h1 {
   }
 
   /*
-    O fundo ampliado é revelado da direita para a esquerda junto com a expansão. Fechado, a área
-    revelada é exatamente o card (que fica encostado na mesma borda direita) e fica por baixo dele;
-    ao expandir, ela avança para a esquerda e ganha uma borda suave, então nunca há um limite
-    nítido sobre a área do texto nem crossfade entre dois enquadramentos na área inteira.
+    O fundo ampliado entra em fade com o card já aberto, em vez de ser revelado da direita para a
+    esquerda junto com uma expansão. Ele sai no concealing, antes do pulo da fila.
   */
   .hero-stage-image {
-    --stage-reveal: var(--panel-narrow);
-    --stage-soft: 0%;
     position: absolute;
     inset: 0;
     width: 100%;
@@ -1064,31 +1056,12 @@ html[data-theme='light'] .hero-copy h1 {
     max-width: none;
     object-fit: cover;
     opacity: 0;
-    mask-image: linear-gradient(to left, #000 var(--stage-reveal), transparent calc(var(--stage-reveal) + var(--stage-soft)));
-    /*
-      Ao fechar, a máscara chega ao tamanho do card um pouco antes do fim, quando o fundo do card
-      volta por cima, e o fundo ampliado só some depois disso.
-    */
-    --reveal-return: calc(var(--carousel-transition) - var(--frame-fade) / 2);
-    transition:
-      --stage-reveal var(--reveal-return) var(--carousel-ease),
-      --stage-soft var(--reveal-return) var(--carousel-ease),
-      opacity 0s var(--carousel-transition);
+    /* ease-out: aparece logo, enquanto a arte do card fechado ainda está saindo, sem deixar o card vazio. */
+    transition: opacity calc(var(--carousel-transition) * 0.7) ease-out;
   }
 
-  /*
-    Entra opaco na hora, ainda todo sob o fundo do card. A revelação espera metade de --frame-fade
-    para não passar da borda do card enquanto o fundo dele ainda está saindo.
-  */
   .hero-stage-image.is-visible {
-    --stage-reveal: 100%;
-    --stage-soft: 30%;
-    --reveal-delay: calc(var(--frame-fade) / 2);
     opacity: 1;
-    transition:
-      --stage-reveal calc(var(--carousel-transition) - var(--reveal-delay)) var(--carousel-ease) var(--reveal-delay),
-      --stage-soft calc(var(--carousel-transition) - var(--reveal-delay)) var(--carousel-ease) var(--reveal-delay),
-      opacity 0s;
   }
 
   /*
@@ -1126,15 +1099,16 @@ html[data-theme='light'] .hero-copy h1 {
 
   .hero-panel.is-expanded .hero-frame-content {
     background-color: transparent;
-    transition-delay: 0s;
+    transition: none;
   }
 
+  /*
+    A arte de card fechado some na hora em que o card abre: em fade, ela ficava por um instante como
+    uma coluna estreita sobre o fundo ampliado que está entrando.
+  */
   .hero-panel.is-expanded .hero-panel-image {
     opacity: 0;
-    transition:
-      filter var(--carousel-transition) var(--carousel-ease),
-      object-position var(--carousel-transition) var(--carousel-ease),
-      opacity var(--frame-fade) var(--carousel-ease);
+    transition: none;
   }
 
   /*

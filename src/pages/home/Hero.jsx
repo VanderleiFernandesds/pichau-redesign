@@ -60,7 +60,6 @@ export default function Hero({ onFilter, theme, children }) {
             slides={HERO_SLIDES}
             order={carousel.order}
             shownId={shownId}
-            isExpanded={carousel.isExpanded}
             isConcealing={carousel.isConcealing}
             isJumping={carousel.isJumping}
             leavingIds={carousel.leavingIds}

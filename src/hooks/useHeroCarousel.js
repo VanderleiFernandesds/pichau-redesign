@@ -31,14 +31,14 @@ function settleOn(current, targetId) {
 }
 
 /*
-  Fila de slides: só o primeiro expande, e o primeiro slide já começa aberto. Etapas:
+  Fila de slides: o primeiro da fila é sempre o card aberto. Etapas:
     expanded    o primeiro fica aberto pelo tempo de leitura
     concealing  o card aberto e o fundo ampliado somem (rápido na seleção manual), junto com os
                 objetos do aberto e do escolhido
-    jumping     a fila pula de uma vez para o escolhido na frente, com as transições desligadas no
-                CSS: o card que estava aberto fecha sem animação, ainda invisível, e vai para o final
-  Depois do jumping, a expansão do novo primeiro é animada e o card que fechou reaparece no final.
-  Nem os cards nem os objetos são vistos mudando de tamanho ou de posição de uma vez.
+    jumping     a fila pula de uma vez para o escolhido na frente, que já abre e passa a ser o
+                exibido; o card que estava aberto fecha, ainda invisível, e vai para o final
+  O fundo ampliado e o texto do novo exibido entram em fade a partir do pulo, e o card que fechou
+  reaparece no final. Nem os cards nem os objetos são vistos mudando de tamanho ou de lugar.
   Só a leitura respeita a pausa; uma troca já iniciada termina e para no slide expandido, para
   nunca ficar presa no meio.
 */
@@ -95,7 +95,15 @@ export function useHeroCarousel(slideIds, { readingTime, transitionTime, selectT
   function jumpTo(current, targetId) {
     const order = rotate(current.order, current.order.indexOf(targetId));
     const previousId = current.order[0] === targetId ? null : current.order[0];
-    return { ...current, order, phase: 'jumping', targetId, previousId, wrappedIds: wrappedBefore(current, targetId) };
+    return {
+      ...current,
+      order,
+      phase: 'jumping',
+      targetId,
+      shownId: targetId,
+      previousId,
+      wrappedIds: wrappedBefore(current, targetId),
+    };
   }
 
   function nextStep(current) {
@@ -105,7 +113,7 @@ export function useHeroCarousel(slideIds, { readingTime, transitionTime, selectT
       case 'concealing':
         return jumpTo(current, current.targetId);
       default:
-        return { ...current, phase: 'expanded', shownId: current.targetId };
+        return { ...current, phase: 'expanded' };
     }
   }
 
@@ -183,8 +191,6 @@ export function useHeroCarousel(slideIds, { readingTime, transitionTime, selectT
   return {
     order: cycle.order,
     shownId: cycle.shownId,
-    // Em concealing o card continua aberto; só os objetos estão saindo.
-    isExpanded: cycle.phase === 'expanded' || cycle.phase === 'concealing',
     isConcealing: cycle.phase === 'concealing',
     isJumping: cycle.phase === 'jumping',
     leavingIds,

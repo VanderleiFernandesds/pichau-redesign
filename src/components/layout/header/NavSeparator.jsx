@@ -1,4 +1,4 @@
-import separatorSource from '../../../assets/images/nav-separator-penas.svg?raw';
+import separatorSource from '../../../assets/images/logos/nav-separator-penas.svg?raw';
 
 /*
   Separador decorativo do navbar desktop (três penas). O desenho vem do arquivo SVG; aqui só lemos o

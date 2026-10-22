@@ -160,7 +160,7 @@ O workflow também pode ser iniciado manualmente pela aba **Actions**.
 src/
 ├── assets/
 │   ├── fonts/              Inter e Rajdhani servidas localmente
-│   └── images/             Banners, categorias, logos, produtos e cards de objetivo
+│   └── images/             Banners, categorias, logos, produtos, objetivos e conta
 ├── components/
 │   ├── account/            Acesso à conta e formulários demonstrativos
 │   ├── cart/               Carrinho e etapas do checkout

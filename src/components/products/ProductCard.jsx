@@ -33,7 +33,7 @@ export default function ProductCard({ product, isFavorite, onToggleFavorite, onA
     >
       <span aria-hidden="true" className="corner-accents" />
 
-      {/* As fotos são JPG com fundo branco; ficam numa área clara, em vez de um recorte sobre o grafite. */}
+      {/* As fotos têm fundo branco; ficam numa área clara, em vez de um recorte sobre o grafite. */}
       <div className="chamfer product-media relative flex h-30 items-center justify-center p-2 sm:h-48 sm:p-3">
         <img
           src={product.image}

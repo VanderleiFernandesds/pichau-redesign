@@ -1,9 +1,9 @@
 // As fotos ficam em assets/images/products e são referenciadas pelo nome do arquivo, sem a extensão.
-const productImages = import.meta.glob('../assets/images/products/*.jpg', { eager: true, import: 'default' });
+const productImages = import.meta.glob('../assets/images/products/*.avif', { eager: true, import: 'default' });
 
 function productImage(fileName) {
-  const image = productImages[`../assets/images/products/${fileName}.jpg`];
-  if (!image) throw new Error(`Foto de produto não encontrada: ${fileName}.jpg`);
+  const image = productImages[`../assets/images/products/${fileName}.avif`];
+  if (!image) throw new Error(`Foto de produto não encontrada: ${fileName}.avif`);
   return image;
 }
 

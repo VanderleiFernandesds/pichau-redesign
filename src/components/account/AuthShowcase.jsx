@@ -1,5 +1,5 @@
 import logo from '../../assets/images/logos/logo-pichau.svg';
-import pigeonImage from '../../assets/images/account/pombo-gamer-login.png';
+import pigeonImage from '../../assets/images/account/pombo-gamer-login.avif';
 
 /*
   Coluna da imagem: faixa curta no topo abaixo de 1001px, para o formulário vir logo; no desktop,

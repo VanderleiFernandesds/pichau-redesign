@@ -1,18 +1,16 @@
 import markSource from '../../../assets/images/logos/pichau-marca.svg?raw';
 
 /*
-  Símbolo da Pichau (as penas) no item "Empresas" do navbar. Como no NavSeparator, o desenho vem do
-  arquivo SVG e é renderizado inline com currentColor, para seguir a cor do item como os outros
-  ícones, em vez do preenchimento escuro fixo do arquivo. O símbolo não ocupa o viewBox inteiro,
-  então a caixa é um pouco maior que a dos ícones do lucide (24px contra 20px) para o peso visual
-  ficar parecido.
+  Símbolo da Pichau no item "Empresas" do navbar. Como no NavSeparator, o SVG é renderizado inline
+  com currentColor para seguir a cor do item. O desenho não ocupa o viewBox inteiro, então a caixa
+  tem 24px, contra 20px dos ícones do lucide, para o peso visual ficar parecido.
 */
 const VIEW_BOX = markSource.match(/viewBox="([^"]+)"/)[1];
 const PATHS = [...markSource.matchAll(/\sd="([^"]+)"/g)].map((match) => match[1]);
 
 /*
-  O texto do link já o identifica: o símbolo é decorativo. O tamanho é fixo, sem a classe que o
-  Navbar passa aos ícones (size-5), justamente por ser o que precisa ser diferente aqui.
+  Decorativo: o texto do link já o identifica. O tamanho é fixo e ignora o size-5 que o Navbar
+  passa aos outros ícones.
 */
 export default function PichauMarkIcon() {
   return (

@@ -2,10 +2,8 @@ import logo from '../../assets/images/logos/logo-pichau.svg';
 import pigeonImage from '../../assets/images/account/pombo-gamer-login.avif';
 
 /*
-  Coluna da imagem: faixa curta no topo abaixo de 1001px, para o formulário vir logo; no desktop,
-  meia tela com o texto da tela atual na base. Logo e textos ficam no HTML, sobre a imagem. O painel
-  é sempre escuro, nos dois temas, e por isso usa a versão branca do logo. lazy: o modal fica no
-  DOM desde o carregamento, e a imagem só é baixada quando ele abre.
+  O painel é escuro nos dois temas, por isso usa sempre a versão branca do logo. O loading lazy
+  evita baixar a imagem com a página: o modal fica no DOM desde o carregamento.
 */
 export default function AuthShowcase({ title, description, isLeaving }) {
   return (

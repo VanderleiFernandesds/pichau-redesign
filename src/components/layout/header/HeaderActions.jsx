@@ -54,7 +54,6 @@ export default function HeaderActions({
         className={`chamfer ${hasCartItems ? 'chamfer-success' : 'chamfer-accent'} header-cart relative ml-1 flex h-(--header-control) min-w-(--header-control) items-center justify-center gap-2.5 px-3 text-white sm:px-4 lg:ml-0 lg:h-12 lg:px-5`}
       >
         <ShoppingCart aria-hidden="true" className="size-5" />
-        {/* No celular sem o texto: só o ícone e a quantidade. */}
         {hasCartItems && (
           <i aria-hidden="true" className="text-[13px] leading-none font-bold not-italic sm:hidden">
             {cartCount}

@@ -2,8 +2,8 @@ import { ArrowUpRight, CalendarDays, MapPin, Tag } from 'lucide-react';
 
 const DETAIL_ICONS = { offer: Tag, date: CalendarDays, location: MapPin };
 
-// Chanfrado vermelho como o carrinho e o Departamentos. Não usa .button: o fundo dele apareceria
-// nos cantos recortados. Links externos (loja oficial da Pichau) abrem em outra aba, sem fechar o conceito.
+// Não usa .button: o fundo dele apareceria nos cantos recortados. Links para a loja oficial abrem em
+// outra aba, para o site conceito continuar aberto.
 function CampaignCta({ cta, label, onFilter, className }) {
   const isExternal = cta.href.startsWith('http');
   return (

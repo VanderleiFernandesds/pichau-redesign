@@ -478,7 +478,7 @@ html[data-theme='light'] .hero-copy h1 {
 }
 
 /*
-  No celular as setas pesavam no topo do card: a moldura desenhada encolhe para 30px (camadas do
+  No celular as setas ocupavam muito do topo do card: a moldura desenhada encolhe para 30px (camadas do
   chanfro recuadas 7px) e o ícone para 16px, mas o botão continua com 44px de área de toque.
   Sem gap, o espaço entre as molduras vem dos próprios recuos.
 */
@@ -1495,7 +1495,7 @@ html[data-theme='light'] .hero-copy h1 {
   }
 
   /*
-    Até uns 380px "Monte seu PC" não cabe numa linha a 11px; a legenda quebra em duas em vez de
+    Até cerca de 380px "Monte seu PC" não cabe numa linha a 11px; a legenda quebra em duas em vez de
     encolher. Os itens alinham pelo topo para os ícones ficarem na mesma altura.
   */
   .mobile-nav-item {
@@ -1878,11 +1878,7 @@ html[data-theme='light'] .hero-copy h1 {
     }
   }
 
-  /*
-    Foto da placa-mãe do banner "Monte um PC" (JPG com fundo branco): no escuro o screen some com o
-    branco; no claro o multiply faz o mesmo.
-  */
-  /* As pontas ficam com 20% de opacidade, como no degradê do divisoria-pichau.svg. */
+  /* Pontas da divisória com 20% de opacidade. */
   .section-divider {
     @apply pointer-events-none mt-7 mb-5 flex h-7 sm:mt-11 sm:mb-6;
     mask-image: linear-gradient(to right, rgb(0 0 0 / 0.2), #000 8%, #000 90%, rgb(0 0 0 / 0.2));
@@ -1968,7 +1964,7 @@ html[data-theme='light'] .hero-copy h1 {
 
   /*
     Trilhas dos carrosséis (useCarouselTrack). --cards é quantos cabem na largura: fracionado no
-    celular e no tablet, para o próximo card aparecer cortado e indicar que dá para deslizar.
+    celular e no tablet, para o próximo card aparecer cortado e indicar que a trilha desliza.
   */
   .department-showcase-track,
   .product-carousel-track {
@@ -2117,8 +2113,8 @@ html[data-theme='light'] .hero-copy h1 {
   }
 
   /*
-    Repetido em cada card, o contorno claro do chamfer-accent pesava na vitrine; aqui a borda fica no
-    tom do degradê e o botão perde o brilho, sem deixar de ser a ação principal.
+    Repetido em cada card, o contorno claro do chamfer-accent chamava atenção demais na vitrine; aqui a
+    borda fica no tom do degradê e o botão perde o brilho, sem deixar de ser a ação principal.
   */
   .product-card-cta {
     --chamfer-border: #c8001f;
@@ -2221,10 +2217,10 @@ html[data-theme='light'] .hero-copy h1 {
   }
 
   /*
-    Painel da imagem (pombo-gamer-login). As margens negativas desfazem o padding do painel, menos
-    1px para a borda do modal continuar visível, e a imagem vai até ela: em cima e nas laterais na
-    faixa abaixo de 1001px; em cima, à esquerda e embaixo no desktop. O recorte repete o chanfro do
-    modal (--cut herdado do .modal-panel) nos cantos que tocam a borda. O fundo vermelho escuro aparece enquanto a imagem
+    Painel da imagem do login. As margens negativas desfazem o padding do painel, menos 1px para a
+    borda do modal continuar visível: a imagem encosta em cima e nas laterais na faixa abaixo de
+    1001px, e em cima, à esquerda e embaixo no desktop. O recorte repete o chanfro do modal (--cut
+    herdado do .modal-panel) nos cantos que tocam a borda. O fundo escuro aparece enquanto a imagem
     carrega e, na faixa, atrás do logo.
   */
   .auth-showcase {

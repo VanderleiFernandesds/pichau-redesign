@@ -1,9 +1,7 @@
 /*
-  Divisória do topo das seções da home, com o desenho de divisoria-pichau.svg. O arquivo estica tudo
-  junto (preserveAspectRatio="none"), o que deformaria o chanfro e a ponta fora dos 1200px; aqui
-  só os trechos retos esticam, e o chanfro e a ponta mantêm as medidas originais.
-  Os trechos fixos desenham um pouco além da própria caixa (overflow visível) para as quinas
-  emendarem com os trechos vizinhos sem fresta.
+  Divisória do topo das seções da home. Só os trechos retos esticam; o chanfro e a ponta têm
+  medidas fixas para não deformar em larguras diferentes. Os trechos fixos desenham um pouco além
+  da própria caixa (overflow visível) para as quinas emendarem sem fresta.
 */
 export default function SectionDivider() {
   return (

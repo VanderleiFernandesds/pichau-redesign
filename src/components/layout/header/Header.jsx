@@ -26,7 +26,7 @@ export default function Header({
 
   return (
     <div className="flex flex-wrap items-center gap-x-2 gap-y-2.5 px-(--box-padding) min-[414px]:gap-x-3 py-2.5 lg:h-18 lg:flex-nowrap lg:gap-5 lg:py-0">
-      {/* No celular o menu, os favoritos e o carrinho ficam na barra inferior (MobileNavBar). */}
+      {/* Só no tablet: no celular o menu fica na barra inferior, e no desktop a lista já está visível. */}
       <button
         type="button"
         aria-label="Menu"

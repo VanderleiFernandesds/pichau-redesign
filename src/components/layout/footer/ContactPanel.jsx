@@ -6,8 +6,7 @@ const CONTACT_TYPES = {
 };
 
 /*
-  Bloco de contato oficial da Pichau. Título, horários e contatos têm tamanhos e pesos diferentes, e
-  os contatos quebram em linhas conforme o espaço, em vez de disputar uma linha só.
+  Os contatos quebram em linhas conforme o espaço, em vez de disputar uma linha só.
 */
 export default function ContactPanel({ icon: Icon, title, city, hours, contacts, action }) {
   return (

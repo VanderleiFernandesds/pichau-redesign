@@ -44,6 +44,8 @@ export default function HomePage() {
   const [authView, setAuthView] = useState(null);
   // topicId leva a Central de ajuda direto a um tópico; sem ele, ela abre do começo.
   const [help, setHelp] = useState({ isOpen: false, topicId: null });
+  // Com um modal ou painel sobre a página, o carrossel do hero pausa (e retoma ao fechar).
+  const isOverlayOpen = isMenuOpen || isCartOpen || isConfigOpen || authView !== null || help.isOpen;
   const offersRef = useRef(null);
   const searchInputRef = useRef(null);
 
@@ -169,7 +171,7 @@ export default function HomePage() {
       </SiteHeader>
 
       <main id="main" className="bg-page">
-        <Hero onFilter={filterByCategory} theme={theme}>
+        <Hero onFilter={filterByCategory} theme={theme} isCovered={isOverlayOpen}>
           <PurposeCards onFilter={filterByCategory} />
         </Hero>
         <DepartmentShowcase onOpenDepartment={openDepartment} onShowAll={() => setIsMenuOpen(true)} />

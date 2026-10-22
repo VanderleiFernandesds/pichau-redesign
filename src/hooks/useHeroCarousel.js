@@ -41,7 +41,7 @@ function settleOn(current, targetId) {
   Só a leitura respeita a pausa; uma troca já iniciada termina e para no slide expandido, para
   nunca ficar presa no meio.
 */
-export function useHeroCarousel(slideIds, { readingTime, transitionTime, selectTransitionTime }) {
+export function useHeroCarousel(slideIds, { readingTime, transitionTime, selectTransitionTime, isCovered = false }) {
   const [isReducedMotion, setIsReducedMotion] = useState(getPrefersReducedMotion);
   // Com movimento reduzido não há avanço automático.
   const [cycle, setCycle] = useState(() => ({
@@ -55,8 +55,12 @@ export function useHeroCarousel(slideIds, { readingTime, transitionTime, selectT
   const [isFocused, setIsFocused] = useState(false);
   const [isPageHidden, setIsPageHidden] = useState(() => document.hidden);
 
-  // Passar o mouse não pausa; só o foco de teclado, a aba oculta e o botão de pausa.
-  const isRunning = isPlaying && !isFocused && !isPageHidden;
+  /*
+    Passar o mouse não pausa; só o foco de teclado, a aba oculta, um modal ou painel aberto sobre a
+    página (isCovered) e o botão de pausa. Os três primeiros são passageiros: ao sair, a leitura
+    continua de onde parou.
+  */
+  const isRunning = isPlaying && !isFocused && !isPageHidden && !isCovered;
 
   useEffect(() => {
     function handleVisibilityChange() {
@@ -119,7 +123,7 @@ export function useHeroCarousel(slideIds, { readingTime, transitionTime, selectT
   const isReading = cycle.phase === 'expanded';
 
   /*
-    Tempo de leitura já cumprido no slide atual. Pausas passageiras (foco, aba oculta)
+    Tempo de leitura já cumprido no slide atual. Pausas passageiras (foco, aba oculta, modal)
     retomam de onde pararam, como a barra de progresso do indicador, que só congela. Um novo
     slide ou a pausa pelo botão zeram: ao dar play, a leitura recomeça junto com a barra.
   */

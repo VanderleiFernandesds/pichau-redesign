@@ -21,8 +21,8 @@ function maxProductBand() {
 
 const PRODUCT_BAND_STYLE = { '--product-band': maxProductBand() };
 
-export default function Hero({ onFilter, theme, children }) {
-  const carousel = useHeroCarousel(SLIDE_IDS, CAROUSEL_TIMING);
+export default function Hero({ onFilter, theme, isCovered, children }) {
+  const carousel = useHeroCarousel(SLIDE_IDS, { ...CAROUSEL_TIMING, isCovered });
   const { shownId } = carousel;
 
   // Segue a ordem das campanhas (a dos indicadores) e dá a volta nas pontas.

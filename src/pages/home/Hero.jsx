@@ -67,8 +67,6 @@ export default function Hero({ onFilter, theme, isCovered, children }) {
             onSelect={carousel.select}
           />
 
-          <HeroCarouselArrows onPrevious={() => selectSibling(-1)} onNext={() => selectSibling(1)} />
-
           <div className="hero-controls">
             <HeroCarouselControls
               slides={HERO_SLIDES}
@@ -80,6 +78,7 @@ export default function Hero({ onFilter, theme, isCovered, children }) {
               onSelect={carousel.select}
               onTogglePlaying={carousel.togglePlaying}
             />
+            <HeroCarouselArrows onPrevious={() => selectSibling(-1)} onNext={() => selectSibling(1)} />
           </div>
         </div>
       </div>

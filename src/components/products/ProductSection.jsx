@@ -1,5 +1,6 @@
 import ProductCard from './ProductCard';
 import SectionDivider from '../ui/SectionDivider';
+import { useCarouselTrack } from '../../hooks/useCarouselTrack';
 
 export default function ProductSection({
   ref,
@@ -11,11 +12,14 @@ export default function ProductSection({
   favorites,
   onToggleFavorite,
   onAddToCart,
+  cartQuantities,
+  onChangeCartQuantity,
   onViewProduct,
   emptyState,
   children,
 }) {
   const hasProducts = products.length > 0;
+  const { trackRef, revealFocusedItem } = useCarouselTrack();
 
   return (
     <section ref={ref} id={id}>
@@ -30,19 +34,31 @@ export default function ProductSection({
 
       {children}
 
+      {/*
+        No celular, a trilha que desliza do ProductCarousel (um card e meio por vez); a partir de
+        601px, a grade de sempre (.offers-track e as classes sm:).
+      */}
       {hasProducts ? (
-        <div className="grid grid-cols-2 gap-2.5 sm:gap-4 lg:grid-cols-4 min-[1640px]:grid-cols-5">
+        <ul
+          ref={trackRef}
+          onFocus={revealFocusedItem}
+          aria-label={title}
+          className="product-carousel-track offers-track sm:grid-flow-row sm:grid-cols-2 sm:grid-rows-none sm:gap-4 sm:overflow-visible lg:grid-cols-4 min-[1640px]:grid-cols-5"
+        >
           {products.map((product) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-              isFavorite={favorites.includes(product.id)}
-              onToggleFavorite={onToggleFavorite}
-              onAddToCart={onAddToCart}
-              onView={onViewProduct}
-            />
+            <li key={product.id}>
+              <ProductCard
+                product={product}
+                quantity={cartQuantities[product.id] ?? 0}
+                isFavorite={favorites.includes(product.id)}
+                onToggleFavorite={onToggleFavorite}
+                onAddToCart={onAddToCart}
+                onChangeQuantity={onChangeCartQuantity}
+                onView={onViewProduct}
+              />
+            </li>
           ))}
-        </div>
+        </ul>
       ) : (
         emptyState
       )}

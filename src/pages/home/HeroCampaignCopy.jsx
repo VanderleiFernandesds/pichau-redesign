@@ -39,21 +39,21 @@ export default function HeroCampaignCopy({ campaigns, shownId, isAnnounced, onFi
           <div key={id} className={`hero-fade col-start-1 row-start-1 ${visibility(id)}`}>
             {logo ? (
               // Largura fixa e altura automática, para a proporção vir sempre da arte; no celular o logo
-              // fica com 73% da largura. O max-width deixa livre o canto das setas (abaixo de 1001px).
+              // fica com 73% da largura.
               <img
                 src={theme === 'light' && logo.srcOnLight ? logo.srcOnLight : logo.src}
                 alt={logo.alt}
                 width={logo.width}
                 height={logo.height}
                 style={{ '--logo-width': `${logo.displayWidth}px` }}
-                className="hero-logo block h-auto w-[calc(var(--logo-width)*0.73)] max-w-[calc(100%-6rem)] sm:w-(--logo-width)"
+                className="hero-logo block h-auto w-[calc(var(--logo-width)*0.73)] max-w-full sm:w-(--logo-width)"
               />
             ) : (
               <span className="eyebrow text-brand">{eyebrow}</span>
             )}
             {/* No desktop o tamanho e a linha única vêm de .hero-copy h1 (index.css); abaixo disso quebra. */}
             <h1
-              className={`my-4 font-display text-[clamp(32px,10.5vw,40px)] leading-none font-bold sm:my-5 sm:text-[50px] ${isTitleStacked ? 'is-stacked' : ''}`}
+              className={`my-4 font-display text-[clamp(28px,8.8vw,40px)] leading-none font-bold text-balance sm:my-5 sm:text-[50px] ${isTitleStacked ? 'is-stacked' : ''}`}
             >
               {title.map((part, index) => (
                 <span key={part} className="hero-title-part">
@@ -62,7 +62,7 @@ export default function HeroCampaignCopy({ campaigns, shownId, isAnnounced, onFi
                 </span>
               ))}
             </h1>
-            <p className="line-clamp-3 max-w-[36ch] text-[14px] leading-normal text-text sm:text-[16px]">{description}</p>
+            <p className="line-clamp-3 max-w-[36ch] text-[14px] text-balance leading-normal text-text sm:text-[16px]">{description}</p>
 
             {details.length > 0 && (
               <ul className="mt-3 grid gap-1.5 text-[13px] text-soft">

@@ -72,9 +72,13 @@ export default function CartDrawer({
   }
 
   function changeQuantity(id, delta) {
-    const { product, quantity } = cartItems.find((item) => item.product.id === id);
+    const { product, quantity, maxQuantity, limitMessage } = cartItems.find((item) => item.product.id === id);
+    const nextQuantity = quantity + delta;
     onChangeQuantity(id, delta);
-    setAnnouncement(`Quantidade de ${product.name}: ${quantity + delta}.`);
+    // Ao chegar no máximo o "+" é desativado; o anúncio explica o motivo.
+    setAnnouncement(
+      `Quantidade de ${product.name}: ${nextQuantity}.${nextQuantity >= maxQuantity ? ` ${limitMessage}` : ''}`,
+    );
   }
 
   // O botão clicado some da lista; o foco vai para o "Desfazer", a próxima ação provável.
@@ -181,11 +185,13 @@ export default function CartDrawer({
 
     return (
       <ul aria-label="Produtos no carrinho">
-        {cartItems.map(({ product, quantity }) => (
+        {cartItems.map(({ product, quantity, maxQuantity, limitMessage }) => (
           <CartItem
             key={product.id}
             product={product}
             quantity={quantity}
+            maxQuantity={maxQuantity}
+            limitMessage={limitMessage}
             onChangeQuantity={changeQuantity}
             onRemove={removeItem}
           />

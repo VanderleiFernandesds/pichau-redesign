@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Header from '../../components/layout/header/Header';
 import Navbar from '../../components/layout/header/Navbar';
 import SiteHeader from '../../components/layout/header/SiteHeader';
@@ -7,6 +7,7 @@ import MobileNavBar from '../../components/layout/MobileNavBar';
 import ProductSection from '../../components/products/ProductSection';
 import ProductCarousel from '../../components/products/ProductCarousel';
 import CartDrawer from '../../components/cart/CartDrawer';
+import AddedToCartNotice from '../../components/cart/AddedToCartNotice';
 import AccountDialog from '../../components/account/AccountDialog';
 import EmptyState from '../../components/ui/EmptyState';
 import Toast from '../../components/ui/Toast';
@@ -44,6 +45,8 @@ export default function HomePage() {
   const [authView, setAuthView] = useState(null);
   // topicId leva a Central de ajuda direto a um tópico; sem ele, ela abre do começo.
   const [help, setHelp] = useState({ isOpen: false, topicId: null });
+  const [cartStatus, setCartStatus] = useState('');
+  const [addedNotice, setAddedNotice] = useState({ isVisible: false, showKey: 0 });
   // Com um modal ou painel sobre a página, o carrossel do hero pausa (e retoma ao fechar).
   const isOverlayOpen = isMenuOpen || isCartOpen || isConfigOpen || authView !== null || help.isOpen;
   const offersRef = useRef(null);
@@ -53,6 +56,13 @@ export default function HomePage() {
   const { favorites, toggleFavorite } = useFavorites();
   const toast = useToast();
   const { theme, toggleTheme } = useTheme();
+
+  // Painéis e modais são <dialog> na camada superior: os avisos ficariam atrás deles, fora de alcance.
+  useEffect(() => {
+    if (!isOverlayOpen) return;
+    toast.dismissToast();
+    setAddedNotice((current) => ({ ...current, isVisible: false }));
+  }, [isOverlayOpen]);
   // No celular a busca do header só aparece no topo da página, sobre o hero, ou enquanto está em
   // uso; ao rolar depois de usá-la, o campo perde o foco e a busca recolhe de novo.
   const isSearchHidden = useIsScrolledPast(24);
@@ -119,9 +129,31 @@ export default function HomePage() {
     scrollToOffers();
   }
 
+  /*
+    Cada adição concluída mostra o aviso discreto abaixo do header (AddedToCartNotice), sem
+    overlay; adições seguidas só reiniciam o tempo dele (showKey). Os limites continuam no toast. Diminuir e
+    remover não têm aviso visual: o card mostra a quantidade, e a mudança é anunciada na região de
+    status (cartStatus). O card só anima a ida ao carrinho quando o produto entrou de fato.
+  */
   function addToCart(id) {
-    cart.addItem(id);
-    toast.showToast('Produto adicionado ao carrinho');
+    const { isAdded, message } = cart.addItem(id);
+    if (isAdded) setAddedNotice(({ showKey }) => ({ isVisible: true, showKey: showKey + 1 }));
+    else toast.showToast(message, { variant: 'warning' });
+    return isAdded;
+  }
+
+  function changeCartQuantity(id, delta) {
+    cart.changeQuantity(id, delta);
+    announceQuantity(id, (cart.quantities[id] ?? 0) + delta);
+  }
+
+  function announceQuantity(id, quantity) {
+    const { name } = products.find((product) => product.id === id);
+    setCartStatus(
+      quantity > 0
+        ? `${name}: ${quantity} ${quantity === 1 ? 'unidade' : 'unidades'} no carrinho.`
+        : `${name} removido do carrinho.`,
+    );
   }
 
   function viewProduct() {
@@ -186,6 +218,8 @@ export default function HomePage() {
             favorites={favorites}
             onToggleFavorite={toggleFavorite}
             onAddToCart={addToCart}
+            cartQuantities={cart.quantities}
+            onChangeCartQuantity={changeCartQuantity}
             onViewProduct={viewProduct}
             emptyState={
               <EmptyState
@@ -214,6 +248,8 @@ export default function HomePage() {
             favorites={favorites}
             onToggleFavorite={toggleFavorite}
             onAddToCart={addToCart}
+            cartQuantities={cart.quantities}
+            onChangeCartQuantity={changeCartQuantity}
             onViewProduct={viewProduct}
           />
         </div>
@@ -238,6 +274,11 @@ export default function HomePage() {
       />
 
       <AccountDialog view={authView} onViewChange={setAuthView} onClose={() => setAuthView(null)} />
+      <AddedToCartNotice
+        isVisible={addedNotice.isVisible}
+        showKey={addedNotice.showKey}
+        onClose={() => setAddedNotice((current) => ({ ...current, isVisible: false }))}
+      />
       <CartDrawer
         isOpen={isCartOpen}
         onClose={() => setIsCartOpen(false)}
@@ -256,7 +297,18 @@ export default function HomePage() {
         topicId={help.topicId}
         onClose={() => setHelp((current) => ({ ...current, isOpen: false }))}
       />
-      <Toast message={toast.message} isVisible={toast.isVisible} />
+      <Toast
+        message={toast.message}
+        variant={toast.variant}
+        action={toast.action}
+        isVisible={toast.isVisible}
+        onDismiss={toast.dismissToast}
+        onPause={toast.pauseToast}
+        onResume={toast.resumeToast}
+      />
+      <p role="status" className="sr-only">
+        {cartStatus}
+      </p>
     </>
   );
 }

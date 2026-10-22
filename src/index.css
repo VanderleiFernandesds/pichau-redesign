@@ -292,7 +292,7 @@ html[data-theme='light'] .theme-dark-only {
 
 /*
   Carrossel do hero. Abaixo de 1001px: o texto fica sobre a arte do card exibido, na mesma
-  célula do grid (stack), e os controles vêm logo abaixo. Desktop: texto e controles à esquerda,
+  célula do grid (stack), e os controles vêm logo abaixo, numa faixa dentro do card. Desktop: texto e controles à esquerda,
   painéis à direita ocupando as duas linhas.
 */
 .hero-carousel {
@@ -302,6 +302,8 @@ html[data-theme='light'] .theme-dark-only {
   --hero-objects-height: calc(var(--hero-art-height) * 0.7);
   /* Maior faixa de produtos por largura do card (--product-band, calculada no Hero). */
   --band: var(--product-band, 0);
+  /* Respiro entre o botão da campanha e o topo dos produtos, abaixo de 1001px. */
+  --products-gap: 28px;
   /* Curva comum das animações do carrossel: acelera e desacelera devagar, sem arranques. */
   --carousel-ease: cubic-bezier(0.65, 0, 0.35, 1);
   grid-template-areas: 'stack' 'controls';
@@ -347,7 +349,7 @@ html[data-theme='light'] .theme-dark-only {
 
   .hero-copy h1 {
     margin-block: clamp(8px, 1.5svh, 16px);
-    font-size: clamp(28px, min(10.5vw, 5.2svh), 40px);
+    font-size: clamp(28px, min(8.8vw, 5.2svh), 40px);
   }
 
   .hero-copy p {
@@ -371,7 +373,7 @@ html[data-theme='light'] .theme-dark-only {
   position: relative;
   z-index: 1;
   padding: calc(var(--box-padding) * 1.5) var(--box-padding)
-    max(var(--hero-objects-height), 100% * var(--band) + var(--box-padding));
+    max(var(--hero-objects-height), 100% * var(--band) + var(--products-gap));
 }
 
 .hero-copy h1.is-stacked .hero-title-part {
@@ -390,7 +392,28 @@ html[data-theme='light'] .hero-copy h1 {
 
 .hero-controls {
   grid-area: controls;
-  padding-block: 12px var(--hero-gap);
+}
+
+/*
+  Abaixo de 1001px os controles formam uma faixa própria dentro do card, sob a arte: o painel
+  ocupa as duas linhas do grid e a arte, o degradê e o link dela terminam no topo da faixa
+  (--controls-band). Pausa à esquerda, indicadores no centro e setas à direita.
+*/
+@media (width < 1001px) {
+  .hero-carousel {
+    --controls-band: 64px;
+    padding-bottom: var(--hero-gap);
+  }
+
+  .hero-controls {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    height: var(--controls-band);
+    padding-inline: 8px;
+  }
 }
 
 @media (width >= 1001px) {
@@ -445,23 +468,11 @@ html[data-theme='light'] .hero-copy h1 {
   }
 }
 
-/*
-  Setas abaixo de 1001px: juntas no canto superior direito do card (célula stack), centradas na
-  linha da chamada e acima do texto e do botão de seleção do card. O topo segue o padding do
-  texto (.hero-copy) para a linha central dos botões coincidir com a da chamada sem encostar no
-  título.
-*/
+/* Setas abaixo de 1001px, à direita da faixa de controles; 44px de área de toque. */
 .hero-arrows {
-  --arrow-size: 40px;
-  grid-area: stack;
-  align-self: start;
-  justify-self: end;
-  position: relative;
-  z-index: 2;
+  --arrow-size: 44px;
   display: flex;
-  gap: 8px;
-  margin-top: calc(var(--box-padding) * 1.5 + 6px - var(--arrow-size) / 2);
-  margin-right: var(--box-padding);
+  gap: 6px;
 }
 
 .hero-arrow {
@@ -477,47 +488,41 @@ html[data-theme='light'] .hero-copy h1 {
   --chamfer-border: var(--color-brand);
 }
 
-/*
-  No celular as setas ocupavam muito do topo do card: a moldura desenhada encolhe para 30px (camadas do
-  chanfro recuadas 7px) e o ícone para 16px, mas o botão continua com 44px de área de toque.
-  Sem gap, o espaço entre as molduras vem dos próprios recuos.
-*/
-@media (width < 601px) {
-  .hero-arrows {
-    --arrow-size: 44px;
-    --arrow-inset: 7px;
-    gap: 0;
-    margin-right: calc(var(--box-padding) - var(--arrow-inset));
-  }
-
-  .hero-arrows .hero-arrow {
-    --cut: 6px;
-    --chamfer-fill: color-mix(in srgb, var(--color-page) 60%, transparent);
-    color: var(--color-soft);
-  }
-
-  .hero-arrows .hero-arrow::before {
-    inset: var(--arrow-inset);
-  }
-
-  .hero-arrows .hero-arrow::after {
-    inset: calc(var(--arrow-inset) + 1px);
-  }
-
-  .hero-arrows .hero-arrow svg {
-    width: 16px;
-    height: 16px;
-  }
-
-  .hero-arrows .hero-arrow:focus-visible {
-    outline-offset: -2px;
-  }
-}
-
 /* Moldura que agrupa pausar/retomar e os indicadores do hero: segue o tema, como o restante do hero. */
 .hero-control {
   --chamfer-fill: var(--color-surface);
   --chamfer-border: var(--color-line);
+}
+
+/* No desktop a pausa fica dentro da moldura do grupo, sem moldura própria. */
+.hero-toggle {
+  --chamfer-border: transparent;
+  --chamfer-fill: transparent;
+}
+
+/*
+  Abaixo de 1001px o grupo perde a moldura e ocupa o meio da faixa; a pausa ganha a mesma moldura
+  das setas.
+*/
+@media (width < 1001px) {
+  .hero-control {
+    --chamfer-border: transparent;
+    --chamfer-fill: transparent;
+    flex: 1;
+  }
+
+  .hero-toggle {
+    --chamfer-border: var(--field-border);
+    --chamfer-fill: color-mix(in srgb, var(--color-page) 80%, transparent);
+  }
+
+  .hero-toggle:hover {
+    --chamfer-border: var(--color-brand);
+  }
+
+  .hero-controls :focus-visible {
+    outline-offset: -2px;
+  }
 }
 
 /* Setas do carrossel "Na Pichau Tem!": as mesmas do hero, desabilitadas nas pontas da trilha. */
@@ -667,9 +672,12 @@ html[data-theme='light'] .hero-copy h1 {
   que o card tinha antes, mantendo o mesmo tamanho e as mesmas posições.
 */
 @media (width < 1001px) {
-  /* Sem conteúdo no fluxo, só tem altura esticando até a da célula, definida pelo texto. */
+  /*
+    Sem conteúdo no fluxo, só tem altura esticando até a das células do texto e da faixa de
+    controles, que ficam dentro do card.
+  */
   .hero-panels {
-    grid-area: stack;
+    grid-area: stack-start / stack-start / controls-end / controls-end;
     align-self: stretch;
     position: relative;
     z-index: 0;
@@ -684,10 +692,14 @@ html[data-theme='light'] .hero-copy h1 {
     --frame-height: 100%;
   }
 
+  .hero-panel-link {
+    bottom: var(--controls-band);
+  }
+
   .hero-panel .hero-frame-content::after {
     content: '';
     position: absolute;
-    inset: 0;
+    inset: 0 0 var(--controls-band);
     background: linear-gradient(
       180deg,
       color-mix(in srgb, var(--color-page) 90%, transparent),
@@ -699,6 +711,7 @@ html[data-theme='light'] .hero-copy h1 {
 
   .hero-panel .campaign-object {
     top: auto;
+    bottom: var(--controls-band);
     height: var(--hero-art-height);
   }
 
@@ -717,6 +730,7 @@ html[data-theme='light'] .hero-copy h1 {
   */
   .hero-panel .hero-panel-image {
     top: auto;
+    bottom: var(--controls-band);
     height: var(--hero-art-height);
     mask-image: linear-gradient(to bottom, transparent, #000 35%);
   }
@@ -733,32 +747,39 @@ html[data-theme='light'] .hero-copy h1 {
     --fit-scale: var(--art-scale);
     --fit-drop: var(--art-drop);
     --fit-fade: var(--art-fade);
-    --objects-space: max(var(--hero-objects-height), 100cqw * var(--band) + var(--box-padding));
-    inset: auto auto 0 50%;
+    --objects-space: max(var(--hero-objects-height), 100cqw * var(--band) + var(--products-gap));
+    inset: auto auto var(--controls-band) 50%;
     width: auto;
     max-width: none;
-    height: max(100cqw * var(--fit-ratio), (var(--objects-space) - var(--box-padding)) * var(--fit-scale));
+    height: max(100cqw * var(--fit-ratio), (var(--objects-space) - var(--products-gap)) * var(--fit-scale));
     transform: translate(-50%, var(--fit-drop));
-    mask-image: linear-gradient(to bottom, transparent, #000 var(--fit-fade));
+    /* Curva suave: linear, a parede da arte surgia de uma vez acima dos produtos. */
+    mask-image: linear-gradient(to bottom, transparent, rgb(0 0 0 / 0.3) calc(var(--fit-fade) * 0.7), #000 var(--fit-fade));
+    /* O piso que desce abaixo dos produtos ficaria atrás da faixa de controles. */
+    clip-path: inset(0 0 var(--fit-drop));
   }
 
   /* background.isWholeArt: a arte nunca passa da largura do card, para as laterais não serem cortadas. */
   .hero-panel.keeps-whole-art .hero-panel-image {
-    height: min(100cqw * var(--fit-ratio), (var(--objects-space) - var(--box-padding)) * var(--fit-scale));
+    height: min(100cqw * var(--fit-ratio), (var(--objects-space) - var(--products-gap)) * var(--fit-scale));
   }
 
   /*
-    O degradê de leitura acaba onde começam os produtos, que aqui fazem parte da arte. A parada do
-    meio é proporcional a esse fim (a mesma do degradê padrão, 45% de 75%): fixa em 45%, ela ficava
-    depois do fim quando a faixa dos produtos passa da metade do card, e o degradê virava um corte.
+    O degradê de leitura acompanha a faixa livre sob o texto, onde começam os produtos, que aqui
+    fazem parte da arte. As paradas são proporcionais a esse fim: fixas, elas passavam dele quando
+    a faixa dos produtos ocupa mais da metade do card. A curva é suave e a última parada entra
+    32px nos produtos com pouca opacidade: terminar em zero no fim da faixa deixava a parede clara
+    da arte aparecer como uma faixa cinza entre o botão e os produtos.
   */
   .hero-panel.has-product-art .hero-frame-content::after {
-    --fade-end: calc(100% - max(var(--hero-objects-height), 100cqw * var(--band) + var(--box-padding)));
+    --fade-end: calc(100% - max(var(--hero-objects-height), 100cqw * var(--band) + var(--products-gap)));
     background: linear-gradient(
       180deg,
-      color-mix(in srgb, var(--color-page) 90%, transparent),
-      color-mix(in srgb, var(--color-page) 65%, transparent) calc(var(--fade-end) * 0.6),
-      transparent var(--fade-end)
+      color-mix(in srgb, var(--color-page) 92%, transparent),
+      color-mix(in srgb, var(--color-page) 84%, transparent) calc(var(--fade-end) * 0.5),
+      color-mix(in srgb, var(--color-page) 62%, transparent) calc(var(--fade-end) * 0.8),
+      color-mix(in srgb, var(--color-page) 30%, transparent) var(--fade-end),
+      transparent calc(var(--fade-end) + 32px)
     );
   }
 }
@@ -771,12 +792,12 @@ html[data-theme='light'] .hero-copy h1 {
 */
 @media (width < 1001px) {
   .hero-copy {
-    padding-bottom: min(max(var(--hero-objects-height), 100% * var(--band) + var(--box-padding)), var(--products-cap));
+    padding-bottom: min(max(var(--hero-objects-height), 100% * var(--band) + var(--products-gap)), var(--products-cap));
   }
 
   /* Resolvida dentro da moldura, onde cqw é a largura do card. */
   .hero-panel.has-product-art {
-    --mobile-objects-space: min(max(var(--hero-objects-height), 100cqw * var(--band) + var(--box-padding)), var(--products-cap));
+    --mobile-objects-space: min(max(var(--hero-objects-height), 100cqw * var(--band) + var(--products-gap)), var(--products-cap));
   }
 
   .hero-panel.has-product-art .hero-panel-image,
@@ -1783,6 +1804,118 @@ html[data-theme='light'] .hero-copy h1 {
     --chamfer-fill: color-mix(in srgb, var(--color-brand) 10%, var(--color-surface));
   }
 
+  /*
+    Aviso (Toast): no celular ocupa a largura acima da barra inferior (--mobile-nav-space já inclui
+    a safe area); a partir do tablet fica no canto inferior direito. O fundo e a borda são os do
+    painel do header, nos dois temas. Some com fade e um leve deslize, só fade com movimento reduzido.
+  */
+  .toast {
+    --cut: 10px;
+    --chamfer-border: var(--field-border);
+    --chamfer-fill: var(--panel-fill);
+    position: fixed;
+    right: 12px;
+    bottom: calc(var(--mobile-nav-space) + 12px);
+    left: 12px;
+    z-index: 50;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    column-gap: 10px;
+    padding: 4px 4px 4px 14px;
+    filter: drop-shadow(0 10px 24px var(--header-shadow));
+    opacity: 0;
+    translate: 0 12px;
+    visibility: hidden;
+    pointer-events: none;
+    transition:
+      opacity 180ms ease-in,
+      translate 180ms ease-in,
+      visibility 0s 180ms;
+  }
+
+  .toast.is-visible {
+    opacity: 1;
+    translate: 0 0;
+    visibility: visible;
+    pointer-events: auto;
+    transition:
+      opacity 220ms ease-out,
+      translate 220ms ease-out,
+      visibility 0s;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .toast,
+    .toast.is-visible {
+      translate: none;
+    }
+  }
+
+  @media (width >= 601px) {
+    .toast {
+      right: 24px;
+      bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+      left: auto;
+      width: min(400px, calc(100% - 48px));
+    }
+  }
+
+  /*
+    Aviso de produto adicionado (AddedToCartNotice), logo abaixo do header (o top vem do JS). Mesmo
+    fundo e borda do toast. No celular acompanha as margens do header; a partir do tablet fica à
+    direita, alinhado com o carrinho. Entra descendo um pouco, só com fade se o movimento é reduzido.
+  */
+  .cart-notice {
+    --cut: 10px;
+    --chamfer-border: var(--field-border);
+    --chamfer-fill: var(--panel-fill);
+    position: fixed;
+    right: calc(var(--container-start));
+    left: calc(var(--container-start));
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 2px 2px 2px 12px;
+    /* Brilho verde ao redor, como o vermelho dos cards no hover, e a sombra que o separa da página. */
+    filter: drop-shadow(0 0 10px color-mix(in srgb, var(--color-success) 45%, transparent))
+      drop-shadow(0 8px 20px var(--header-shadow));
+    opacity: 0;
+    translate: 0 -8px;
+    visibility: hidden;
+    pointer-events: none;
+    transition:
+      opacity 160ms ease-in,
+      translate 160ms ease-in,
+      visibility 0s 160ms;
+  }
+
+  .cart-notice.is-visible {
+    opacity: 1;
+    translate: 0 0;
+    visibility: visible;
+    pointer-events: auto;
+    transition:
+      opacity 200ms ease-out,
+      translate 200ms ease-out,
+      visibility 0s;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cart-notice,
+    .cart-notice.is-visible {
+      translate: none;
+    }
+  }
+
+  @media (width >= 601px) {
+    .cart-notice {
+      left: auto;
+      width: min(340px, calc(100% - 2 * (var(--container-start))));
+    }
+  }
+
   /* Contador ao lado do título: a moldura dos botões secundários, sem o hover, porque não é clicável. */
   .cart-count {
     --cut: 6px;
@@ -2034,16 +2167,19 @@ html[data-theme='light'] .hero-copy h1 {
   }
 
   /*
-    "Conheça outros produtos": duas fileiras, com os mesmos cards por linha da grade das ofertas no
-    desktop. As 6 linhas do ProductCard são um subgrid; o li repassa as linhas da trilha para elas
-    ficarem alinhadas entre os cards, como na grade. A linha do meio (--gap) separa as fileiras, e
-    os cards alternam entre elas, preenchendo coluna por coluna.
+    Vitrines de produtos (ProductSection e ProductCarousel). No celular, uma linha só que desliza:
+    um card inteiro e metade do próximo (--cards: 1.5), com 12px entre eles. As 6 linhas do
+    ProductCard são um subgrid; o li repassa as linhas da trilha, para preço e botões ficarem
+    alinhados entre os cards. O padding vertical, desfeito na margem, dá espaço aos contornos de
+    foco, que o overflow da trilha cortaria.
   */
   .product-carousel-track {
-    --cards: 2.2;
-    --gap: 10px;
-    grid-template-rows: repeat(6, auto) var(--gap) repeat(6, auto);
+    --cards: 1.5;
+    --gap: 12px;
+    grid-template-rows: repeat(6, auto);
     row-gap: 0;
+    padding-block: 6px;
+    margin-block: -6px;
   }
 
   .product-carousel-track > li {
@@ -2052,14 +2188,52 @@ html[data-theme='light'] .hero-copy h1 {
     grid-template-rows: subgrid;
   }
 
-  .product-carousel-track > li:nth-child(even) {
-    grid-row: 8 / span 6;
+  /*
+    "Conheça outros produtos" no celular: quatro fileiras que deslizam juntas, ainda com um card e
+    meio por fileira. Os cards preenchem coluna por coluna (de 4 em 4), e uma linha de --gap separa
+    as fileiras, como nas duas fileiras do desktop.
+  */
+  @media (width < 601px) {
+    .other-products-track {
+      grid-template-rows:
+        repeat(6, auto) var(--gap) repeat(6, auto) var(--gap)
+        repeat(6, auto) var(--gap) repeat(6, auto);
+    }
+
+    .other-products-track > li:nth-child(4n + 2) {
+      grid-row: 8 / span 6;
+    }
+
+    .other-products-track > li:nth-child(4n + 3) {
+      grid-row: 15 / span 6;
+    }
+
+    .other-products-track > li:nth-child(4n + 4) {
+      grid-row: 22 / span 6;
+    }
   }
 
+  /*
+    A partir de 601px, "Conheça outros produtos" ganha duas fileiras, com os mesmos cards por linha
+    da grade das ofertas: a linha do meio (--gap) as separa, e os cards alternam entre elas,
+    coluna por coluna. As ofertas viram grade (classes sm: no ProductSection): os li saem do layout
+    (display: contents) e os cards voltam a ser os itens dela.
+  */
   @media (width >= 601px) {
     .product-carousel-track {
       --cards: 3.3;
       --gap: 16px;
+      grid-template-rows: repeat(6, auto) var(--gap) repeat(6, auto);
+      padding-block: 0;
+      margin-block: 0;
+    }
+
+    .product-carousel-track > li:nth-child(even) {
+      grid-row: 8 / span 6;
+    }
+
+    .offers-track > li {
+      display: contents;
     }
   }
 
@@ -2124,11 +2298,60 @@ html[data-theme='light'] .hero-copy h1 {
   }
 
   /*
+    Cópia da foto que voa até o carrinho (utils/cartAnimation.js): fundo branco e chanfro como a
+    área da foto no card, acima do header (z-20) e da barra inferior (z-30).
+  */
+  .cart-flyer {
+    --cut: 10px;
+    position: fixed;
+    z-index: 40;
+    max-width: none;
+    padding: 6px;
+    object-fit: contain;
+    background: #ffffff;
+    pointer-events: none;
+    clip-path: polygon(
+      var(--cut) 0,
+      calc(100% - var(--cut)) 0,
+      100% var(--cut),
+      100% calc(100% - var(--cut)),
+      calc(100% - var(--cut)) 100%,
+      var(--cut) 100%,
+      0 calc(100% - var(--cut)),
+      0 var(--cut)
+    );
+  }
+
+  /*
     Repetido em cada card, o contorno claro do chamfer-accent chamava atenção demais na vitrine; aqui a
     borda fica no tom do degradê e o botão perde o brilho, sem deixar de ser a ação principal.
   */
   .product-card-cta {
     --chamfer-border: #c8001f;
+  }
+
+  /* Selo de desconto no canto da foto do card: o vermelho do botão principal, num chanfro pequeno. */
+  .discount-badge {
+    --cut: 5px;
+  }
+
+  /*
+    Etiquetas de cupom e frete na área da foto (ProductBenefits). A área é branca nos dois temas,
+    então as cores são fixas: cinza bem claro com contorno neutro e texto escuro, discretas sobre a
+    foto e sem o aspecto de botão do chip de favoritos.
+  */
+  .product-tag {
+    --cut: 4px;
+    --chamfer-border: #dcdfe5;
+    --chamfer-fill: #f4f5f7;
+    color: var(--color-ink);
+  }
+
+  /* Quantidade no card (CardQuantityControl): a moldura do botão de carrinho que ela substitui. */
+  .quantity-control {
+    --cut: 6px;
+    --chamfer-border: var(--chip-border);
+    --chamfer-fill: var(--chip-fill);
   }
 
   /* Botão secundário chanfrado (favoritar, carrinho), no estilo das setas dos cards. */

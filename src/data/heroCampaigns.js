@@ -155,10 +155,9 @@ export const HERO_CAMPAIGNS = {
       displayWidth: 189,
       alt: "Corsair",
     },
-    title: ["Cada peça.", "Uma nova conquista."],
+    title: ["Cada detalhe.", "Mais desempenho."],
     isTitleStacked: true,
-    description:
-      "Encontre componentes e periféricos Corsair para dar vida ao seu próximo setup.",
+    description: "Componentes e periféricos Corsair para o seu próximo setup.",
     details: [],
     cta: {
       label: "Explorar Corsair",

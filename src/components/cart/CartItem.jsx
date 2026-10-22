@@ -1,16 +1,21 @@
-import { Minus, Plus, Trash2 } from 'lucide-react';
+import { useId } from 'react';
+import { Info, Minus, Plus, Trash2 } from 'lucide-react';
 import { formatMoney } from '../../utils/format';
 
 /*
-  Os controles têm 44px de toque. Com quantidade 1, "diminuir" fica aria-disabled em vez de
-  disabled: o foco continua nele (um botão disabled perderia o foco) e remover é só pela lixeira.
+  Os controles têm 44px de toque. Nos limites, "diminuir" (quantidade 1) e "aumentar" (máximo do
+  produto) ficam aria-disabled em vez de disabled: o foco continua neles (um botão disabled perderia
+  o foco). Remover é sempre pela lixeira. No máximo, o motivo aparece sob a quantidade e fica
+  ligado ao "aumentar" por aria-describedby.
 */
 const controlClass =
   'chamfer chip-button grid size-11 shrink-0 place-items-center focus-visible:outline-offset-2 aria-disabled:pointer-events-none aria-disabled:opacity-40';
 
-export default function CartItem({ product, quantity, onChangeQuantity, onRemove }) {
+export default function CartItem({ product, quantity, maxQuantity, limitMessage, onChangeQuantity, onRemove }) {
   const { id, name, price, image } = product;
+  const limitId = useId();
   const isMinimum = quantity === 1;
+  const isMaximum = quantity >= maxQuantity;
 
   return (
     <li data-product-id={id} className="flex gap-3 border-t border-line py-4 first:border-t-0 sm:gap-4">
@@ -44,7 +49,9 @@ export default function CartItem({ product, quantity, onChangeQuantity, onRemove
             <span className="min-w-9 text-center text-[15px] font-semibold text-heading">{quantity}</span>
             <button
               type="button"
-              onClick={() => onChangeQuantity(id, 1)}
+              onClick={() => !isMaximum && onChangeQuantity(id, 1)}
+              aria-disabled={isMaximum}
+              aria-describedby={isMaximum ? limitId : undefined}
               aria-label={`Aumentar quantidade de ${name}`}
               className={controlClass}
             >
@@ -62,6 +69,13 @@ export default function CartItem({ product, quantity, onChangeQuantity, onRemove
             <Trash2 aria-hidden="true" className="size-4" />
           </button>
         </div>
+
+        {isMaximum && (
+          <p id={limitId} className="mt-2 flex items-start gap-1.5 text-[12px] leading-snug text-soft">
+            <Info aria-hidden="true" className="mt-px size-3.5 shrink-0 text-brand" />
+            {limitMessage}
+          </p>
+        )}
       </div>
     </li>
   );

@@ -11,6 +11,8 @@ export function useCarouselTrack() {
 
   useEffect(() => {
     const track = trackRef.current;
+    // Sem itens (busca sem resultado nas ofertas), a trilha nem é renderizada.
+    if (!track) return undefined;
 
     function updateArrows() {
       const maxScroll = track.scrollWidth - track.clientWidth;

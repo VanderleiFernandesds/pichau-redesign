@@ -4,7 +4,7 @@ import CarouselArrows from '../ui/CarouselArrows';
 import SectionDivider from '../ui/SectionDivider';
 import { useCarouselTrack } from '../../hooks/useCarouselTrack';
 
-export default function ProductCarousel({ eyebrow, title, products, favorites, onToggleFavorite, onAddToCart, onViewProduct }) {
+export default function ProductCarousel({ eyebrow, title, products, favorites, onToggleFavorite, onAddToCart, cartQuantities, onChangeCartQuantity, onViewProduct }) {
   const { trackRef, canScroll, scrollByItem, revealFocusedItem } = useCarouselTrack();
   const trackId = useId();
 
@@ -25,14 +25,16 @@ export default function ProductCarousel({ eyebrow, title, products, favorites, o
         />
       </div>
 
-      <ul id={trackId} ref={trackRef} onFocus={revealFocusedItem} className="product-carousel-track" aria-label={title}>
+      <ul id={trackId} ref={trackRef} onFocus={revealFocusedItem} className="product-carousel-track other-products-track" aria-label={title}>
         {products.map((product) => (
           <li key={product.id}>
             <ProductCard
               product={product}
+              quantity={cartQuantities[product.id] ?? 0}
               isFavorite={favorites.includes(product.id)}
               onToggleFavorite={onToggleFavorite}
               onAddToCart={onAddToCart}
+              onChangeQuantity={onChangeCartQuantity}
               onView={onViewProduct}
             />
           </li>

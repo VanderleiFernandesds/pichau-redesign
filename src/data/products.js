@@ -11,6 +11,12 @@ function productImage(fileName) {
   `category` precisa coincidir com o `productCategory` dos departamentos para o filtro funcionar.
   Os preços são de demonstração (valor no Pix); os ids são guardados no carrinho e nos favoritos,
   então um produto existente não deve mudar de id.
+
+  Benefícios opcionais, mostrados no card só quando existem (hoje vêm de illustrativeBenefits):
+    previousPrice  preço anterior no Pix, a mesma condição de `price`; o card calcula o desconto
+    coupon         código do cupom, ex.: 'SETUP100'
+    shipping       { label, regions }, ex.: { label: 'Frete grátis', regions: 'Sul e Sudeste' };
+                   a região é obrigatória, para a restrição nunca ficar implícita
 */
 const catalog = [
   { id: 0, name: 'Monitor Gamer Pichau Athen', spec: '23,8″ · Full HD · 144 Hz', category: 'Monitores', price: 799.9, image: 'monitor-athen' },
@@ -111,10 +117,35 @@ const ILLUSTRATIVE_RATINGS = {
   9: { score: 4.5, count: 143 },
 };
 
+/*
+  Descontos, cupons e fretes fictícios em todos os produtos, como as avaliações: o card os
+  identifica como condições ilustrativas. Os campos seguem a descrição no topo do arquivo. O
+  desconto varia pelo id, e o preço anterior é arredondado para o real mais próximo, terminando em
+  ,90; o card calcula o percentual a partir dele. ILLUSTRATIVE_BENEFIT_OVERRIDES fixa valores
+  específicos (o da RTX 5070 segue a referência).
+*/
+const ILLUSTRATIVE_DISCOUNTS = [0.05, 0.08, 0.1, 0.12, 0.15];
+const ILLUSTRATIVE_SHIPPING_REGIONS = ['Sul e Sudeste', 'Sudeste'];
+
+const ILLUSTRATIVE_BENEFIT_OVERRIDES = {
+  8: { previousPrice: 4999.89 },
+};
+
+function illustrativeBenefits({ id, price }) {
+  const discount = ILLUSTRATIVE_DISCOUNTS[id % ILLUSTRATIVE_DISCOUNTS.length];
+  return {
+    previousPrice: Number((Math.round(price / (1 - discount)) - 0.1).toFixed(2)),
+    coupon: 'SETUP100',
+    shipping: { label: 'Frete grátis', regions: ILLUSTRATIVE_SHIPPING_REGIONS[id % ILLUSTRATIVE_SHIPPING_REGIONS.length] },
+    ...ILLUSTRATIVE_BENEFIT_OVERRIDES[id],
+  };
+}
+
 export const products = catalog.map((product) => {
   const rating = ILLUSTRATIVE_RATINGS[product.id];
   return {
     ...product,
+    ...illustrativeBenefits(product),
     image: productImage(product.image),
     rating: rating ? { ...rating, isIllustrative: true } : null,
   };

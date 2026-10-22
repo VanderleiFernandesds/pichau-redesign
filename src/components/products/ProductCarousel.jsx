@@ -3,7 +3,6 @@ import ProductCard from './ProductCard';
 import CarouselArrows from '../ui/CarouselArrows';
 import { useCarouselTrack } from '../../hooks/useCarouselTrack';
 
-// Vitrine em carrossel, com o mesmo cabeçalho da ProductSection e as setas no lugar da ação.
 export default function ProductCarousel({ eyebrow, title, products, favorites, onToggleFavorite, onAddToCart, onViewProduct }) {
   const { trackRef, canScroll, scrollByItem, revealFocusedItem } = useCarouselTrack();
   const trackId = useId();

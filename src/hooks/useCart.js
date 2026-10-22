@@ -45,7 +45,6 @@ export function useCart() {
     setCart({});
   }
 
-  // Desfazer remoção ou esvaziamento: devolve cada produto com a quantidade que tinha.
   function restoreItems(items) {
     setCart((currentCart) => {
       const nextCart = { ...currentCart };

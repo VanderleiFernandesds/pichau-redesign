@@ -2,10 +2,9 @@ import { ArrowUpRight } from 'lucide-react';
 import DepartmentLink from '../../components/ui/DepartmentLink';
 
 /*
-  Mesmo card chanfrado dos cards de escolha do hero (purpose-card), com destaque mais contido: no
-  hover e no foco o fundo avermelha e a borda, o nome e a seta ficam vermelhos, mas sem o brilho. A seta é só indicação; o card inteiro
-  é o link (ou botão). Departamentos sem foto mostram o ícone do menu na mesma área, para os cards
-  ficarem alinhados.
+  Mesmo card chanfrado do purpose-card, sem o brilho no hover. O card inteiro é o link (ou botão);
+  a seta é só indicação. Departamentos sem foto mostram o ícone do menu na mesma área, para os
+  cards ficarem alinhados.
 */
 export default function DepartmentCard({ department, onOpen }) {
   const Icon = department.icon;

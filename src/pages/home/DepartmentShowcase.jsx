@@ -4,12 +4,10 @@ import DepartmentCard from './DepartmentCard';
 import { SHOWCASE_DEPARTMENTS } from '../../data/departments';
 import { useCarouselTrack } from '../../hooks/useCarouselTrack';
 
-// Carrossel de departamentos; as setas aparecem só no desktop e ficam desabilitadas nas pontas.
 export default function DepartmentShowcase({ onOpenDepartment, onShowAll }) {
   const { trackRef, canScroll, scrollByItem, revealFocusedItem } = useCarouselTrack();
 
   return (
-    // Mesmo cabeçalho das vitrines de produtos (título e ação à direita) e o mesmo espaçamento.
     <section aria-labelledby="department-showcase-title" className="department-showcase wrap pt-7 sm:pt-11">
       <div className="mb-4 flex flex-col items-start justify-between gap-[15px] sm:mb-[22px] lg:flex-row lg:items-end">
         <div>

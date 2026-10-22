@@ -13,7 +13,7 @@ export function useTheme() {
   function toggleTheme() {
     const nextTheme = theme === 'dark' ? 'light' : 'dark';
     const root = document.documentElement;
-    // Sem transições durante a troca: as do hero (com atraso, feitas para a expansão dos cards)
+    // Sem transições durante a troca: as do hero (com atraso, feitas para as etapas do carrossel)
     // deixavam o fundo no tema antigo enquanto logos e degradês já tinham trocado.
     root.classList.add('is-switching-theme');
     root.dataset.theme = nextTheme;

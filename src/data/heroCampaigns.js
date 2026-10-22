@@ -23,7 +23,7 @@ import rogLogoDark from '../assets/images/banners/rog/logo-escuro.svg';
   objects              cada PNG tem proporção própria (width/height naturais). Por estado:
     x, y   centro do objeto, em % da largura e da altura do card
     scale  escala sobre `size`, a largura base em cqmin (1% do menor lado do card), então o
-           objeto já encolhe no card estreito e cresce junto com a expansão
+           objeto acompanha a largura do card, fechado ou aberto
     layer  z-index entre os objetos
     base   (só no fechado, no lugar de y) altura onde a base do objeto encosta, para apoiá-lo
            num bloco do fundo: o card fechado tem a altura da arte, então o ponto não muda

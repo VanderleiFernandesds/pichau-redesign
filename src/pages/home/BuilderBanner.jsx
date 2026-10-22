@@ -6,8 +6,6 @@ import pcCaseImage from '../../assets/images/purposes/monte-seu-pc-gabinete.avif
 /*
   Chamada para o modal de objetivos (ConfigModal). Ele recomenda por onde começar e filtra as
   ofertas, sem montar o PC peça por peça, então o botão promete "encontrar", e não "configurar".
-  Texto à esquerda e PC com as peças à direita no desktop; abaixo de 1001px o texto e o botão
-  vêm antes da imagem.
 */
 export default function BuilderBanner({ onStart }) {
   return (

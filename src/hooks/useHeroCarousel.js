@@ -11,7 +11,6 @@ const JUMP_FRAME_DELAY = 40;
 // Na seleção manual o card aberto some rápido antes do pulo, para o clique responder logo.
 const QUICK_CONCEAL_TIME = 150;
 
-// Leva os `count` primeiros da fila para o final, mantendo a ordem relativa.
 function rotate(order, count) {
   return [...order.slice(count), ...order.slice(0, count)];
 }
@@ -25,7 +24,7 @@ function wrappedBefore(current, targetId) {
   return current.order.slice(0, current.order.indexOf(targetId));
 }
 
-// Termina a troca na hora, com o alvo na frente e expandido (usado sem animação).
+// Usado sem animação: a troca termina na hora, com o alvo na frente.
 function settleOn(current, targetId) {
   return { order: rotate(current.order, current.order.indexOf(targetId)), phase: 'expanded', targetId, shownId: targetId, isQuick: false };
 }

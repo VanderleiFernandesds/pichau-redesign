@@ -856,8 +856,8 @@ html[data-theme='light'] .hero-copy h1 {
 }
 
 /*
-  Desktop: a fila encosta à direita e só o primeiro expande, crescendo para a esquerda até ocupar o
-  que sobra da coluna, mais --panel-reach sobre o espaço até o texto. O texto fica acima dos
+  Desktop: a fila encosta à direita e o primeiro fica aberto, ocupando o que sobra da coluna, mais
+  --panel-reach sobre o espaço até o texto. O texto fica acima dos
   painéis (z-index), então o card nunca cobre o título nem o CTA.
 */
 @media (width >= 1001px) {
@@ -868,11 +868,11 @@ html[data-theme='light'] .hero-copy h1 {
     --panel-expanded: calc(
       max(var(--panel-narrow), 100cqw - (var(--slide-count) - 1) * (var(--panel-narrow) + var(--panel-gap))) + var(--panel-reach)
     );
-    /* Altura dos fundos das campanhas (475px), fixa também durante a expansão. */
+    /* Altura dos fundos das campanhas (475px), a mesma no card aberto e nos fechados. */
     --panel-height: 475px;
     /*
-      Moldura e fundo do card: somem no início da expansão (--frame-fade) e só voltam no fim do
-      fechamento (--frame-return), quando o card já está quase estreito.
+      Moldura e fundo do card: ao abrir somem na hora (regras de .is-expanded); ao fechar voltam
+      com atraso (--frame-return), depois que o card já saiu de cena.
     */
     --frame-fade: calc(var(--carousel-transition) * 0.2);
     --frame-return: calc(var(--carousel-transition) * 0.8);
@@ -1045,8 +1045,7 @@ html[data-theme='light'] .hero-copy h1 {
   }
 
   /*
-    O fundo ampliado entra em fade com o card já aberto, em vez de ser revelado da direita para a
-    esquerda junto com uma expansão. Ele sai no concealing, antes do pulo da fila.
+    O fundo ampliado entra em fade com o card já aberto e sai no concealing, antes do pulo da fila.
   */
   .hero-stage-image {
     position: absolute;
@@ -1083,8 +1082,7 @@ html[data-theme='light'] .hero-copy h1 {
   }
 
   /*
-    Fundo local do card (preenchimento e imagem): sai no início da expansão sobre o fundo ampliado
-    já opaco, então a troca não escurece o card; no fechamento volta por cima dele antes de ele sumir.
+    Fundo local do card (preenchimento e imagem): no fechamento volta com o mesmo atraso da moldura.
   */
   .hero-panel .hero-frame-content {
     transition: background-color var(--frame-fade) var(--carousel-ease) var(--frame-return);
@@ -1113,9 +1111,9 @@ html[data-theme='light'] .hero-copy h1 {
 
   /*
     Arte própria do card fechado (background.closed): na largura do card estreito, encostada na
-    base e à direita. Com a largura fixa, ela não cresce junto com o card enquanto some na expansão.
-    Ela vai da base até logo abaixo do logo (--closed-top), igual em todos os cards fechados; para
-    isso o cover corta um pouco das laterais, mais na ROG, que é a arte mais baixa.
+    base e à direita. Ela vai da base até logo abaixo do logo (--closed-top), igual em todos os
+    cards fechados; para isso o cover corta um pouco das laterais, mais na ROG, que é a arte mais
+    baixa.
   */
   .hero-panel.has-closed-art {
     --closed-width: var(--panel-narrow);
@@ -1142,7 +1140,7 @@ html[data-theme='light'] .hero-copy h1 {
 
   /*
     Os objetos não animam posição nem tamanho: somem (is-hiding-objects), trocam de lugar enquanto
-    estão invisíveis e reaparecem. Ao reaparecer no card aberto, esperam a expansão terminar; no
+    estão invisíveis e reaparecem. Ao reaparecer no card aberto, esperam a troca terminar; no
     card fechado, voltam junto com ele. A largura usa as medidas finais do card (--object-unit),
     então já está certa quando o objeto aparece e a proporção vem do height: auto.
   */
@@ -1181,7 +1179,7 @@ html[data-theme='light'] .hero-copy h1 {
 
   /*
     Degradê preto atrás do logo do card fechado. Fica dentro da moldura, para seguir o chanfro,
-    acima do fundo e abaixo dos objetos (z-index a partir de 1); sai no início da expansão e só
+    acima do fundo e abaixo dos objetos (z-index a partir de 1); some quando o card abre e só
     volta no fim do fechamento, junto com o logo.
   */
   .hero-panel .hero-frame-content::after {

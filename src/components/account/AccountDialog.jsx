@@ -1,163 +1,172 @@
 import { useId, useRef, useState } from 'react';
-import { ShieldCheck } from 'lucide-react';
+import { ArrowLeft, ShieldCheck, X } from 'lucide-react';
 import Modal from '../ui/Modal';
-import { validateEmail } from '../../utils/validation';
-
-const MIN_PASSWORD_LENGTH = 8;
-const EMPTY_VALUES = { name: '', email: '', password: '' };
+import BrandIcon from '../ui/BrandIcon';
+import AuthShowcase from './AuthShowcase';
+import AuthForm from './AuthForm';
 
 const VIEWS = {
-  login: { title: 'Entrar', switchPrompt: 'Ainda não tem conta?', switchLabel: 'Criar conta', switchTo: 'signup' },
-  signup: { title: 'Criar conta', switchPrompt: 'Já tem conta?', switchLabel: 'Entrar', switchTo: 'login' },
+  login: {
+    title: 'Bem-vindo de volta',
+    description: 'Entre para continuar.',
+    showcaseTitle: 'Seu próximo nível espera por você.',
+    showcaseDescription: 'Entre e continue explorando o seu setup.',
+    switchPrompt: 'Ainda não tem conta?',
+    switchLabel: 'Criar conta',
+    switchTo: 'signup',
+  },
+  signup: {
+    title: 'Crie sua conta',
+    description: 'Preencha os campos para começar.',
+    showcaseTitle: 'Seu próximo nível começa aqui.',
+    showcaseDescription: 'Crie sua conta e explore o seu próximo setup.',
+    switchPrompt: 'Já tem conta?',
+    switchLabel: 'Entrar',
+    switchTo: 'login',
+  },
 };
 
-function validate(view, values) {
-  const errors = {};
-  if (view === 'signup' && !values.name.trim()) errors.name = 'Informe seu nome.';
+// Mesma duração do fade de saída em .auth-view.is-leaving.
+const VIEW_LEAVE_TIME = 150;
 
-  const emailError = validateEmail(values.email.trim());
-  if (emailError) errors.email = emailError;
-
-  if (!values.password) errors.password = 'Informe sua senha.';
-  else if (view === 'signup' && values.password.length < MIN_PASSWORD_LENGTH) {
-    errors.password = `A senha precisa ter pelo menos ${MIN_PASSWORD_LENGTH} caracteres.`;
-  }
-  return errors;
-}
+const SOCIAL_PROVIDERS = [
+  { id: 'google', label: 'Google' },
+  { id: 'apple', label: 'Apple' },
+];
 
 /*
-  Entrar e criar conta são só simulações: os campos são validados e limpos, mas nada é enviado nem
-  salvo e nenhuma sessão é criada. O formulário é recriado (key) ao trocar de tela ou reabrir.
+  Entrar e criar conta são só demonstrações: os campos são validados e limpos, mas nada é enviado
+  nem salvo e nenhuma sessão é criada. Google, Apple e a recuperação de senha só avisam isso.
+  O formulário é recriado (key) ao trocar de tela ou reabrir. No desktop o painel tem a mesma altura
+  nas duas telas (.auth-panel), para o modal não mudar de tamanho na troca.
 */
 export default function AccountDialog({ view, onViewChange, onClose }) {
   const formRef = useRef(null);
-  const { title, switchPrompt, switchLabel, switchTo } = VIEWS[view ?? 'login'];
+  const titleId = useId();
+  const [notice, setNotice] = useState('');
+  const [isLeaving, setIsLeaving] = useState(false);
+  const switchTimerRef = useRef(null);
+  const content = VIEWS[view ?? 'login'];
 
-  // O botão de troca continua no lugar; o foco vai para o primeiro campo da nova tela.
-  function switchView() {
-    onViewChange(switchTo);
+  function close() {
+    // Fechar no meio da troca não pode deixar o timer reabrir o modal na outra tela.
+    clearTimeout(switchTimerRef.current);
+    setIsLeaving(false);
+    setNotice('');
+    onClose();
+  }
+
+  function showView(nextView) {
+    setIsLeaving(false);
+    onViewChange(nextView);
+    // O foco vai para o primeiro campo da nova tela.
     requestAnimationFrame(() => formRef.current?.elements[0]?.focus());
   }
 
-  return (
-    <Modal isOpen={view !== null} onClose={onClose} title={title} closeLabel={`Fechar ${title.toLowerCase()}`}>
-      <p className="chamfer simulation-notice mt-4 flex items-start gap-2 px-3 py-2.5 text-[13px] leading-snug font-semibold text-heading">
-        <ShieldCheck aria-hidden="true" className="mt-px size-4 shrink-0 text-brand" />
-        Simulação — nenhum dado será enviado ou salvo e nenhum login será feito. Não use dados reais.
-      </p>
-
-      {view && <AuthForm key={view} ref={formRef} view={view} submitLabel={title} />}
-
-      <p className="mt-3 text-center text-[13px] text-muted">
-        {switchPrompt}{' '}
-        <button type="button" onClick={switchView} className="min-h-11 px-1 font-semibold text-brand hover:underline">
-          {switchLabel}
-        </button>
-      </p>
-    </Modal>
-  );
-}
-
-// noValidate troca o balão nativo por mensagens ligadas a cada campo, como no NewsletterForm.
-function AuthForm({ ref, view, submitLabel }) {
-  const [values, setValues] = useState(EMPTY_VALUES);
-  const [errors, setErrors] = useState({});
-  const [message, setMessage] = useState('');
-  const isSignup = view === 'signup';
-
-  function handleChange(event) {
-    const { name, value } = event.target;
-    setValues((current) => ({ ...current, [name]: value }));
-    // O erro do campo some assim que a pessoa começa a corrigir.
-    setErrors((current) => ({ ...current, [name]: '' }));
-    setMessage('');
-  }
-
-  function handleSubmit(event) {
-    event.preventDefault();
-    const nextErrors = validate(view, values);
-    const firstInvalid = Object.keys(nextErrors)[0];
-
-    setErrors(nextErrors);
-    if (firstInvalid) {
-      event.currentTarget.elements[firstInvalid].focus();
+  // Troca em sequência, como o texto do hero: a tela atual some e só então a nova entra (.auth-view).
+  function switchView() {
+    if (isLeaving) return;
+    setNotice('');
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      showView(content.switchTo);
       return;
     }
-
-    setValues(EMPTY_VALUES);
-    setMessage(
-      isSignup
-        ? 'Cadastro simulado. Nenhum dado foi enviado ou salvo e nenhuma conta foi criada.'
-        : 'Login simulado. Nenhum dado foi enviado ou salvo e você continua sem login.',
-    );
+    setIsLeaving(true);
+    switchTimerRef.current = setTimeout(() => showView(content.switchTo), VIEW_LEAVE_TIME);
   }
 
   return (
-    <form ref={ref} noValidate onSubmit={handleSubmit} className="mt-5 grid gap-4">
-      {isSignup && <Field label="Nome" name="name" value={values.name} error={errors.name} onChange={handleChange} />}
-      <Field label="E-mail" name="email" type="email" value={values.email} error={errors.email} onChange={handleChange} />
-      <Field
-        label="Senha"
-        name="password"
-        type="password"
-        value={values.password}
-        error={errors.password}
-        hint={isSignup ? `Mínimo de ${MIN_PASSWORD_LENGTH} caracteres.` : ''}
-        onChange={handleChange}
-      />
+    <Modal
+      isOpen={view !== null}
+      onClose={close}
+      labelledBy={titleId}
+      className="max-h-[calc(100dvh-16px)] w-[min(560px,calc(100%-16px))] lg:max-h-[calc(100dvh-40px)] lg:w-[min(1120px,calc(100%-48px))]"
+      panelClassName="auth-panel grid grid-cols-1 lg:grid-cols-2"
+    >
+      <span aria-hidden="true" className="corner-accents corner-accents-mirrored" />
+      <AuthShowcase title={content.showcaseTitle} description={content.showcaseDescription} isLeaving={isLeaving} />
 
-      <button
-        type="submit"
-        className="chamfer chamfer-accent mt-1 flex h-11 w-full items-center justify-center text-[13px] font-bold tracking-[0.5px] text-white uppercase"
-      >
-        {submitLabel}
-      </button>
+      <div className="flex flex-col px-3 pt-4 pb-3 sm:px-8 sm:pt-5 sm:pb-5 lg:overflow-y-auto lg:overscroll-contain lg:px-[clamp(32px,5vw,64px)] lg:pt-6 lg:pb-5">
+        <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
+          <button
+            type="button"
+            onClick={close}
+            className="-ml-1 inline-flex min-h-11 items-center gap-2 px-1 text-[14px] font-semibold text-heading transition-colors hover:text-brand"
+          >
+            <ArrowLeft aria-hidden="true" className="size-5" />
+            Voltar à loja
+          </button>
+          <div className="ml-auto flex items-center gap-2">
+            {/* Abaixo de 360px o selo não cabe na linha; o aviso do rodapé continua dizendo o mesmo. */}
+            <span className="chamfer demo-badge px-3 py-1.5 text-[12px] font-semibold text-soft max-[359px]:hidden">Demonstração</span>
+            <button
+              type="button"
+              onClick={close}
+              aria-label="Fechar"
+              className="-mr-2 grid size-11 shrink-0 place-items-center text-muted transition-colors hover:text-brand lg:absolute lg:top-4 lg:right-4 lg:mr-0"
+            >
+              <X aria-hidden="true" className="size-6" strokeWidth={1.75} />
+            </button>
+          </div>
+        </div>
 
-      <p aria-live="polite" className="text-[13px] text-success empty:hidden">
-        {message}
-      </p>
-    </form>
-  );
-}
+        <div key={view ?? 'login'} className={`auth-view my-auto pt-5 lg:pt-6 ${isLeaving ? 'is-leaving' : ''}`}>
+          <h2 id={titleId} className="font-display text-[clamp(28px,3vw,38px)] leading-tight font-bold text-heading">
+            {content.title}
+          </h2>
+          <p className="mt-1 text-[15px] text-soft sm:text-[16px]">{content.description}</p>
 
-/*
-  autoComplete off: o formulário é de mentira, então o navegador não deve sugerir nem oferecer
-  salvar dados reais. 16px abaixo de 601px evita o zoom automático do iOS ao focar o campo.
-*/
-function Field({ label, name, type = 'text', value, error, hint = '', onChange }) {
-  const inputId = useId();
-  const hintId = useId();
-  const errorId = useId();
-  const describedBy = [hint && hintId, error && errorId].filter(Boolean).join(' ') || undefined;
+          <div className="mt-6">
+            {view && <AuthForm key={view} ref={formRef} view={view} onNotice={setNotice} />}
+          </div>
 
-  return (
-    <div>
-      <label htmlFor={inputId} className="mb-1.5 block text-[13px] font-semibold text-heading">
-        {label}
-      </label>
-      <div className={`chamfer chamfer-field flex h-12 items-center px-3.5 ${error ? 'field-error' : ''}`}>
-        <input
-          id={inputId}
-          name={name}
-          type={type}
-          autoComplete="off"
-          value={value}
-          onChange={onChange}
-          aria-invalid={Boolean(error)}
-          aria-describedby={describedBy}
-          className="h-full min-w-0 flex-1 bg-transparent text-base text-heading outline-none sm:text-[14px]"
-        />
+          <div aria-live="polite" className="mt-4 empty:hidden">
+            {notice && (
+              <p className="chamfer simulation-notice flex items-start gap-2 px-3 py-2.5 text-[13px] leading-snug font-semibold text-heading">
+                <ShieldCheck aria-hidden="true" className="mt-px size-4 shrink-0 text-brand" />
+                {notice}
+              </p>
+            )}
+          </div>
+
+          <div className="my-5 flex items-center gap-3 text-[13px] text-muted lg:my-4">
+            <span aria-hidden="true" className="h-px flex-1 bg-line" />
+            ou continue com
+            <span aria-hidden="true" className="h-px flex-1 bg-line" />
+          </div>
+
+          <div className="grid grid-cols-2 gap-2.5 sm:gap-3">
+            {SOCIAL_PROVIDERS.map(({ id, label }) => (
+              <button
+                key={id}
+                type="button"
+                onClick={() => setNotice(`Entrar com ${label} é demonstrativo: nenhuma conta ${label} será usada.`)}
+                className="chamfer chip-button flex h-12 items-center justify-center gap-2.5 text-[14px] font-semibold text-heading"
+              >
+                <BrandIcon name={id} className="size-5 shrink-0" />
+                <span className="sr-only">Continuar com </span>
+                {label}
+              </button>
+            ))}
+          </div>
+
+          <p className="mt-5 text-center text-[14px] text-soft lg:mt-3">
+            {content.switchPrompt}{' '}
+            <button
+              type="button"
+              onClick={switchView}
+              className="min-h-11 px-1 font-semibold text-link underline underline-offset-4 hover:no-underline"
+            >
+              {content.switchLabel}
+            </button>
+          </p>
+        </div>
+
+        <p className="mt-4 flex items-center justify-center gap-1.5 text-center text-[12px] text-muted sm:text-[13px] lg:mt-3">
+          <ShieldCheck aria-hidden="true" className="size-4 shrink-0 text-brand" />
+          Demonstração. Não use dados reais.
+        </p>
       </div>
-      {hint && (
-        <p id={hintId} className="mt-1.5 text-[12px] text-muted">
-          {hint}
-        </p>
-      )}
-      {error && (
-        <p id={errorId} className="mt-1.5 text-[13px] text-danger">
-          Erro: {error}
-        </p>
-      )}
-    </div>
+    </Modal>
   );
 }

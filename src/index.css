@@ -57,6 +57,8 @@
   --color-success: #2fcf6f;
   /* Mensagens de erro: o vermelho da marca não tem contraste suficiente para texto pequeno. */
   --color-danger: #ff5c6c;
+  /* Links em texto pequeno: o vermelho da marca fica abaixo de 4,5:1 no fundo escuro. */
+  --color-link: #ff4d63;
   --color-muted: #9ca1aa;
   --color-line: #2c2e35;
   /* Linha das divisórias de seção: mais visível que --color-line, que é a das bordas. */
@@ -96,6 +98,7 @@ html[data-theme='light'] {
   --color-soft: #5b606a;
   --color-success: #008c35;
   --color-danger: #c8001f;
+  --color-link: #d1001f;
   --color-muted: #656a73;
   --color-line: #e8e9ed;
   --color-divider: #cdd0d6;
@@ -553,6 +556,13 @@ html[data-theme='light'] .hero-copy h1 {
 @keyframes hero-progress {
   from {
     transform: scaleX(0);
+  }
+}
+
+@keyframes auth-view-in {
+  from {
+    opacity: 0;
+    translate: 0 8px;
   }
 }
 
@@ -2154,6 +2164,173 @@ html[data-theme='light'] .hero-copy h1 {
     --cut: 16px;
     --chamfer-border: var(--card-border);
     --chamfer-fill: var(--color-surface);
+  }
+
+  /*
+    Entrar e criar conta (AccountDialog). No desktop a altura é fixa e cabe o cadastro, a tela mais
+    alta, para o modal não mudar de tamanho na troca; o que passar dela (erros, telas baixas) rola
+    dentro da coluna do formulário, e a imagem fica parada.
+  */
+  .auth-panel {
+    --panel-pad: 8px;
+    padding: var(--panel-pad);
+  }
+
+  /* A imagem encosta nas bordas do painel; os traços dos cantos continuam por cima dela. */
+  .auth-panel > .corner-accents {
+    z-index: 2;
+  }
+
+  @media (width >= 601px) {
+    .auth-panel {
+      --panel-pad: 10px;
+    }
+  }
+
+  @media (width >= 1001px) {
+    .auth-panel {
+      --panel-pad: 14px;
+      height: min(860px, calc(100dvh - 40px));
+      grid-template-rows: minmax(0, 1fr);
+    }
+  }
+
+  /*
+    Troca entre entrar e criar conta: a tela atual some (is-leaving, 150ms, o VIEW_LEAVE_TIME do
+    AccountDialog) e a nova entra com fade e um leve deslize ao ser montada.
+  */
+  .auth-view {
+    animation: auth-view-in 240ms ease-out;
+  }
+
+  .auth-view.is-leaving {
+    opacity: 0;
+    transition: opacity 150ms ease-in;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .auth-view {
+      animation: none;
+    }
+  }
+
+  .demo-badge {
+    --cut: 6px;
+    --chamfer-border: var(--chip-border);
+    --chamfer-fill: var(--chip-fill);
+  }
+
+  /*
+    Painel da imagem (pombo-gamer-login). As margens negativas desfazem o padding do painel, menos
+    1px para a borda do modal continuar visível, e a imagem vai até ela: em cima e nas laterais na
+    faixa abaixo de 1001px; em cima, à esquerda e embaixo no desktop. O recorte repete o chanfro do
+    modal (--cut herdado do .modal-panel) nos cantos que tocam a borda. O fundo vermelho escuro aparece enquanto a imagem
+    carrega e, na faixa, atrás do logo.
+  */
+  .auth-showcase {
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 112px;
+    margin: calc(1px - var(--panel-pad)) calc(1px - var(--panel-pad)) 0;
+    padding-inline: 18px;
+    overflow: hidden;
+    background: linear-gradient(160deg, #3a0710, #0a0a0c 70%);
+    clip-path: polygon(
+      var(--cut) 0,
+      calc(100% - var(--cut)) 0,
+      100% var(--cut),
+      100% 100%,
+      0 100%,
+      0 var(--cut)
+    );
+  }
+
+  /*
+    Na faixa, a imagem inteira cobriria a largura e a cabeça do pombo cairia sob o logo. Por isso
+    ela fica ampliada (a cabeça ocupa quase toda a altura) e encostada à direita, com a borda
+    esquerda dissolvida no fundo. Os valores seguem a arte: a cabeça começa a 16% da altura e
+    termina na metade da largura.
+  */
+  .auth-showcase-image {
+    position: absolute;
+    top: -56%;
+    right: 0;
+    width: auto;
+    max-width: none;
+    height: 380%;
+    translate: 46% 0;
+    mask-image: linear-gradient(to right, transparent, #000 22%);
+  }
+
+  .auth-showcase-logo {
+    position: relative;
+    z-index: 1;
+    width: 112px;
+  }
+
+  .auth-showcase-copy {
+    display: none;
+  }
+
+  @media (width >= 601px) {
+    .auth-showcase {
+      height: 140px;
+      padding-inline: 28px;
+    }
+
+    .auth-showcase-logo {
+      width: 136px;
+    }
+  }
+
+  @media (width >= 1001px) {
+    .auth-showcase {
+      flex-direction: column;
+      align-items: stretch;
+      justify-content: space-between;
+      height: auto;
+      margin: calc(1px - var(--panel-pad)) 0 calc(1px - var(--panel-pad)) calc(1px - var(--panel-pad));
+      padding: clamp(28px, 3.5vw, 44px);
+      clip-path: polygon(
+        var(--cut) 0,
+        100% 0,
+        100% 100%,
+        var(--cut) 100%,
+        0 calc(100% - var(--cut)),
+        0 var(--cut)
+      );
+    }
+
+    /* Leve sombra no topo para o logo e escurecimento na base para o texto. */
+    .auth-showcase::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(rgb(0 0 0 / 0.3), transparent 22%, transparent 55%, rgb(0 0 0 / 0.82));
+    }
+
+    /* O painel é mais estreito que a arte: o corte sai das laterais, e 38% mantém rosto e headset. */
+    .auth-showcase-image {
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: 38% 30%;
+      translate: none;
+      mask-image: none;
+    }
+
+    .auth-showcase-logo {
+      width: clamp(150px, 14vw, 184px);
+    }
+
+    .auth-showcase-copy {
+      display: block;
+      position: relative;
+      z-index: 1;
+      text-align: center;
+    }
   }
 
   /* Botão secundário com contorno vermelho (ex.: "Ver loja"); o fundo avermelha no hover. */

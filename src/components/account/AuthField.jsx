@@ -1,5 +1,5 @@
 import { useId, useState } from 'react';
-import { Eye, EyeOff } from 'lucide-react';
+import { CircleAlert, Eye, EyeOff } from 'lucide-react';
 
 /*
   Campo com label visível e erro ligado por aria-describedby. Os de senha têm o botão de mostrar e
@@ -20,7 +20,9 @@ export default function AuthField({ label, name, type = 'text', autoComplete, va
       <label htmlFor={inputId} className="mb-1.5 block text-[13px] font-semibold text-heading sm:text-[14px]">
         {label}
       </label>
-      <div className={`chamfer chamfer-field flex h-12 items-center pl-3.5 ${isPassword ? 'pr-1' : 'pr-3.5'} ${error ? 'field-error' : ''}`}>
+      <div
+        className={`chamfer chamfer-field auth-field flex h-12 items-center pl-3.5 ${isPassword ? 'pr-1' : 'pr-3.5'} ${value ? 'is-filled' : ''} ${error ? 'field-error' : ''}`}
+      >
         <input
           id={inputId}
           name={name}
@@ -54,8 +56,9 @@ export default function AuthField({ label, name, type = 'text', autoComplete, va
         </p>
       )}
       {error && (
-        <p id={errorId} className="mt-1.5 text-[13px] text-danger">
-          Erro: {error}
+        <p id={errorId} className="mt-1.5 flex items-start gap-1.5 text-[13px] leading-snug text-danger">
+          <CircleAlert aria-hidden="true" className="mt-px size-4 shrink-0" />
+          <span>Erro: {error}</span>
         </p>
       )}
     </div>

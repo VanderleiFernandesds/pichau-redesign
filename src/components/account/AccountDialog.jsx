@@ -1,5 +1,5 @@
 import { useId, useRef, useState } from 'react';
-import { ArrowLeft, ShieldCheck, X } from 'lucide-react';
+import { ShieldCheck, X } from 'lucide-react';
 import Modal from '../ui/Modal';
 import BrandIcon from '../ui/BrandIcon';
 import AuthShowcase from './AuthShowcase';
@@ -10,7 +10,6 @@ const VIEWS = {
     title: 'Bem-vindo de volta',
     description: 'Entre para continuar.',
     showcaseTitle: 'Seu próximo nível espera por você.',
-    showcaseDescription: 'Entre e continue explorando o seu setup.',
     switchPrompt: 'Ainda não tem conta?',
     switchLabel: 'Criar conta',
     switchTo: 'signup',
@@ -19,7 +18,6 @@ const VIEWS = {
     title: 'Crie sua conta',
     description: 'Preencha os campos para começar.',
     showcaseTitle: 'Seu próximo nível começa aqui.',
-    showcaseDescription: 'Crie sua conta e explore o seu próximo setup.',
     switchPrompt: 'Já tem conta?',
     switchLabel: 'Entrar',
     switchTo: 'login',
@@ -84,37 +82,28 @@ export default function AccountDialog({ view, onViewChange, onClose }) {
       panelClassName="auth-panel grid grid-cols-1 lg:grid-cols-2"
     >
       <span aria-hidden="true" className="corner-accents corner-accents-mirrored" />
-      <AuthShowcase title={content.showcaseTitle} description={content.showcaseDescription} isLeaving={isLeaving} />
+      <AuthShowcase title={content.showcaseTitle} isLeaving={isLeaving} />
 
-      <div className="flex flex-col px-3 pt-4 pb-3 sm:px-8 sm:pt-5 sm:pb-5 lg:overflow-y-auto lg:overscroll-contain lg:px-[clamp(32px,5vw,64px)] lg:pt-6 lg:pb-5">
-        <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
-          <button
-            type="button"
-            onClick={close}
-            className="-ml-1 inline-flex min-h-11 items-center gap-2 px-1 text-[14px] font-semibold text-heading transition-colors hover:text-brand"
-          >
-            <ArrowLeft aria-hidden="true" className="size-5" />
-            Voltar à loja
-          </button>
-          <div className="ml-auto flex items-center gap-2">
-            {/* Abaixo de 360px o selo não cabe na linha; o aviso do rodapé continua dizendo o mesmo. */}
-            <span className="chamfer demo-badge px-3 py-1.5 text-[12px] font-semibold text-soft max-[359px]:hidden">Demonstração</span>
-            <button
-              type="button"
-              onClick={close}
-              aria-label="Fechar"
-              className="-mr-2 grid size-11 shrink-0 place-items-center text-muted transition-colors hover:text-brand lg:absolute lg:top-4 lg:right-4 lg:mr-0"
-            >
-              <X aria-hidden="true" className="size-6" strokeWidth={1.75} />
-            </button>
-          </div>
-        </div>
+      <div className="relative flex flex-col px-3 pt-4 pb-5 sm:px-8 sm:pt-6 sm:pb-7 lg:overflow-y-auto lg:overscroll-contain lg:px-[clamp(32px,5vw,64px)] lg:py-8">
+        {/* "Voltar à loja" fazia o mesmo que o X; fica só o X, com o destino no nome acessível. */}
+        <button
+          type="button"
+          onClick={close}
+          aria-label="Fechar e voltar à loja"
+          className="absolute top-2 right-0.5 grid size-11 place-items-center text-muted transition-colors hover:text-brand sm:top-3 sm:right-3"
+        >
+          <X aria-hidden="true" className="size-6" strokeWidth={1.75} />
+        </button>
 
-        <div key={view ?? 'login'} className={`auth-view my-auto pt-5 lg:pt-6 ${isLeaving ? 'is-leaving' : ''}`}>
-          <h2 id={titleId} className="font-display text-[clamp(28px,3vw,38px)] leading-tight font-bold text-heading">
+        <div key={view ?? 'login'} className={`auth-view my-auto ${isLeaving ? 'is-leaving' : ''}`}>
+          <h2 id={titleId} className="pr-12 font-display text-[clamp(28px,3vw,38px)] leading-tight font-bold text-heading">
             {content.title}
           </h2>
           <p className="mt-1 text-[15px] text-soft sm:text-[16px]">{content.description}</p>
+          <p className="mt-3 flex items-start gap-1.5 text-[13px] leading-snug font-medium text-soft">
+            <ShieldCheck aria-hidden="true" className="mt-px size-4 shrink-0 text-brand" />
+            Acesso demonstrativo. Não use dados reais.
+          </p>
 
           <div className="mt-6">
             {view && <AuthForm key={view} ref={formRef} view={view} onNotice={setNotice} />}
@@ -129,7 +118,7 @@ export default function AccountDialog({ view, onViewChange, onClose }) {
             )}
           </div>
 
-          <div className="my-5 flex items-center gap-3 text-[13px] text-muted lg:my-4">
+          <div className="my-5 flex items-center gap-3 text-[13px] text-muted">
             <span aria-hidden="true" className="h-px flex-1 bg-line" />
             ou continue com
             <span aria-hidden="true" className="h-px flex-1 bg-line" />
@@ -150,7 +139,7 @@ export default function AccountDialog({ view, onViewChange, onClose }) {
             ))}
           </div>
 
-          <p className="mt-5 text-center text-[14px] text-soft lg:mt-3">
+          <p className="mt-4 text-center text-[14px] text-soft">
             {content.switchPrompt}{' '}
             <button
               type="button"
@@ -161,11 +150,6 @@ export default function AccountDialog({ view, onViewChange, onClose }) {
             </button>
           </p>
         </div>
-
-        <p className="mt-4 flex items-center justify-center gap-1.5 text-center text-[12px] text-muted sm:text-[13px] lg:mt-3">
-          <ShieldCheck aria-hidden="true" className="size-4 shrink-0 text-brand" />
-          Demonstração. Não use dados reais.
-        </p>
       </div>
     </Modal>
   );

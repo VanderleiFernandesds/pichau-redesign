@@ -2210,10 +2210,37 @@ html[data-theme='light'] .hero-copy h1 {
     }
   }
 
-  .demo-badge {
-    --cut: 6px;
+  /*
+    Campos do login e do cadastro: borda mais clara que a dos outros campos, para o formulário
+    ficar fácil de ler. Preenchido clareia a borda; o erro vence o preenchido, e o foco (borda de
+    2px) vence os dois. As regras repetem hover e foco do .chamfer-field porque .is-filled tem a
+    mesma especificidade e vem depois.
+  */
+  .auth-field {
     --chamfer-border: var(--chip-border);
-    --chamfer-fill: var(--chip-fill);
+  }
+
+  .auth-field.is-filled {
+    --chamfer-border: var(--color-muted);
+  }
+
+  @media (hover: hover) {
+    .auth-field:hover {
+      --chamfer-border: var(--color-brand);
+    }
+  }
+
+  .auth-field.field-error {
+    --chamfer-border: var(--color-danger);
+  }
+
+  .auth-field:is(:focus-visible, :has(:focus-visible)) {
+    --chamfer-border: var(--color-brand);
+    --chamfer-fill: var(--field-fill-focus);
+  }
+
+  .auth-field:is(:focus-visible, :has(:focus-visible))::after {
+    inset: 2px;
   }
 
   /*

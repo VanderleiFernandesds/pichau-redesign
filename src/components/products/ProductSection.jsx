@@ -1,4 +1,5 @@
 import ProductCard from './ProductCard';
+import SectionDivider from '../ui/SectionDivider';
 
 export default function ProductSection({
   ref,
@@ -18,6 +19,7 @@ export default function ProductSection({
 
   return (
     <section ref={ref} id={id}>
+      <SectionDivider />
       <div className="mb-4 flex flex-col items-start justify-between gap-[15px] sm:mb-[22px] lg:flex-row lg:items-end">
         <div>
           <span className="eyebrow">{eyebrow}</span>

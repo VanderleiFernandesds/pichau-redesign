@@ -173,7 +173,7 @@ export default function HomePage() {
           <PurposeCards onFilter={filterByCategory} />
         </Hero>
         <DepartmentShowcase onOpenDepartment={openDepartment} onShowAll={() => setIsMenuOpen(true)} />
-        <div className="wrap pt-7 sm:pt-11">
+        <div className="wrap">
 
           <ProductSection
             ref={offersRef}

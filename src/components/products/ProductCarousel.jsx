@@ -1,6 +1,7 @@
 import { useId } from 'react';
 import ProductCard from './ProductCard';
 import CarouselArrows from '../ui/CarouselArrows';
+import SectionDivider from '../ui/SectionDivider';
 import { useCarouselTrack } from '../../hooks/useCarouselTrack';
 
 export default function ProductCarousel({ eyebrow, title, products, favorites, onToggleFavorite, onAddToCart, onViewProduct }) {
@@ -9,6 +10,7 @@ export default function ProductCarousel({ eyebrow, title, products, favorites, o
 
   return (
     <section>
+      <SectionDivider />
       <div className="mb-4 flex items-end justify-between gap-[15px] sm:mb-[22px]">
         <div>
           <span className="eyebrow">{eyebrow}</span>

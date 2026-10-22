@@ -3,12 +3,14 @@ import CarouselArrows from '../../components/ui/CarouselArrows';
 import DepartmentCard from './DepartmentCard';
 import { SHOWCASE_DEPARTMENTS } from '../../data/departments';
 import { useCarouselTrack } from '../../hooks/useCarouselTrack';
+import SectionDivider from '../../components/ui/SectionDivider';
 
 export default function DepartmentShowcase({ onOpenDepartment, onShowAll }) {
   const { trackRef, canScroll, scrollByItem, revealFocusedItem } = useCarouselTrack();
 
   return (
-    <section aria-labelledby="department-showcase-title" className="department-showcase wrap pt-7 sm:pt-11">
+    <section aria-labelledby="department-showcase-title" className="department-showcase wrap">
+      <SectionDivider />
       <div className="mb-4 flex flex-col items-start justify-between gap-[15px] sm:mb-[22px] lg:flex-row lg:items-end">
         <div>
           <h2 id="department-showcase-title" className="font-display text-[26px] leading-tight font-bold text-heading sm:text-[32px]">

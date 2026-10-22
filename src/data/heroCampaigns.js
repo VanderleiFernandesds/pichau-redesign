@@ -218,9 +218,10 @@ export const HERO_CAMPAIGNS = {
       displayWidth: 220,
       alt: "ASUS Republic of Gamers",
     },
-    title: ["Seu próximo nível", "começa aqui."],
+    title: ["Seu setup merece", "uma nova potência."],
     isTitleStacked: true,
-    description: "Explore hardware e periféricos ASUS ROG para o seu setup.",
+    description:
+      "Explore componentes e periféricos ASUS ROG para transformar sua experiência de jogo.",
     details: [],
     cta: {
       label: "Explorar ASUS ROG",

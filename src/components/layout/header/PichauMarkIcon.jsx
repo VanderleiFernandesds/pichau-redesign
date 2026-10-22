@@ -1,4 +1,4 @@
-import markSource from '../../../assets/images/pichau-marca.svg?raw';
+import markSource from '../../../assets/images/logos/pichau-marca.svg?raw';
 
 /*
   Símbolo da Pichau (as penas) no item "Empresas" do navbar. Como no NavSeparator, o desenho vem do

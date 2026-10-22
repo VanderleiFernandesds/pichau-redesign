@@ -4,9 +4,55 @@ import CarouselArrows from '../ui/CarouselArrows';
 import SectionDivider from '../ui/SectionDivider';
 import { useCarouselTrack } from '../../hooks/useCarouselTrack';
 
-export default function ProductCarousel({ eyebrow, title, products, favorites, onToggleFavorite, onAddToCart, cartQuantities, onChangeCartQuantity, onViewProduct }) {
+// Fileiras do celular, cada uma com a própria trilha.
+const MOBILE_ROWS = 4;
+
+function splitIntoRows(products, rowCount) {
+  const rowSize = Math.ceil(products.length / rowCount);
+  return Array.from({ length: rowCount }, (_, index) => products.slice(index * rowSize, (index + 1) * rowSize)).filter(
+    (row) => row.length > 0,
+  );
+}
+
+function ProductTrackItems({ products, cardProps }) {
+  const { favorites, cartQuantities, onToggleFavorite, onAddToCart, onChangeCartQuantity, onViewProduct } = cardProps;
+
+  return products.map((product) => (
+    <li key={product.id}>
+      <ProductCard
+        product={product}
+        quantity={cartQuantities[product.id] ?? 0}
+        isFavorite={favorites.includes(product.id)}
+        onToggleFavorite={onToggleFavorite}
+        onAddToCart={onAddToCart}
+        onChangeQuantity={onChangeCartQuantity}
+        onView={onViewProduct}
+      />
+    </li>
+  ));
+}
+
+// Uma fileira do celular: trilha própria, que desliza sem mover as outras.
+function MobileProductRow({ label, products, cardProps }) {
+  const { trackRef, revealFocusedItem } = useCarouselTrack();
+
+  return (
+    <ul ref={trackRef} onFocus={revealFocusedItem} aria-label={label} className="product-carousel-track">
+      <ProductTrackItems products={products} cardProps={cardProps} />
+    </ul>
+  );
+}
+
+/*
+  No celular os produtos se dividem em fileiras independentes, cada uma com o seu carrossel (um
+  card e meio por vez). A partir de 601px fica uma trilha só, de duas fileiras, com as setas. As
+  duas versões ficam no DOM e o CSS mostra uma delas: a escondida (display: none) sai do Tab e da
+  árvore de acessibilidade, e trocar de largura não perde as trilhas.
+*/
+export default function ProductCarousel({ eyebrow, title, products, ...cardProps }) {
   const { trackRef, canScroll, scrollByItem, revealFocusedItem } = useCarouselTrack();
   const trackId = useId();
+  const mobileRows = splitIntoRows(products, MOBILE_ROWS);
 
   return (
     <section>
@@ -25,20 +71,25 @@ export default function ProductCarousel({ eyebrow, title, products, favorites, o
         />
       </div>
 
-      <ul id={trackId} ref={trackRef} onFocus={revealFocusedItem} className="product-carousel-track other-products-track" aria-label={title}>
-        {products.map((product) => (
-          <li key={product.id}>
-            <ProductCard
-              product={product}
-              quantity={cartQuantities[product.id] ?? 0}
-              isFavorite={favorites.includes(product.id)}
-              onToggleFavorite={onToggleFavorite}
-              onAddToCart={onAddToCart}
-              onChangeQuantity={onChangeCartQuantity}
-              onView={onViewProduct}
-            />
-          </li>
+      <div className="grid gap-3 sm:hidden">
+        {mobileRows.map((row, index) => (
+          <MobileProductRow
+            key={row[0].id}
+            label={`${title}, fileira ${index + 1} de ${mobileRows.length}`}
+            products={row}
+            cardProps={cardProps}
+          />
         ))}
+      </div>
+
+      <ul
+        id={trackId}
+        ref={trackRef}
+        onFocus={revealFocusedItem}
+        className="product-carousel-track max-sm:hidden"
+        aria-label={title}
+      >
+        <ProductTrackItems products={products} cardProps={cardProps} />
       </ul>
     </section>
   );

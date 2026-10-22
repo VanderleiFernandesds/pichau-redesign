@@ -2189,31 +2189,6 @@ html[data-theme='light'] .hero-copy h1 {
   }
 
   /*
-    "Conheça outros produtos" no celular: quatro fileiras que deslizam juntas, ainda com um card e
-    meio por fileira. Os cards preenchem coluna por coluna (de 4 em 4), e uma linha de --gap separa
-    as fileiras, como nas duas fileiras do desktop.
-  */
-  @media (width < 601px) {
-    .other-products-track {
-      grid-template-rows:
-        repeat(6, auto) var(--gap) repeat(6, auto) var(--gap)
-        repeat(6, auto) var(--gap) repeat(6, auto);
-    }
-
-    .other-products-track > li:nth-child(4n + 2) {
-      grid-row: 8 / span 6;
-    }
-
-    .other-products-track > li:nth-child(4n + 3) {
-      grid-row: 15 / span 6;
-    }
-
-    .other-products-track > li:nth-child(4n + 4) {
-      grid-row: 22 / span 6;
-    }
-  }
-
-  /*
     A partir de 601px, "Conheça outros produtos" ganha duas fileiras, com os mesmos cards por linha
     da grade das ofertas: a linha do meio (--gap) as separa, e os cards alternam entre elas,
     coluna por coluna. As ofertas viram grade (classes sm: no ProductSection): os li saem do layout

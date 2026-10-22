@@ -1378,6 +1378,7 @@ html[data-theme='light'] .hero-copy h1 {
     --chamfer-border: var(--field-border);
     --chamfer-fill: var(--panel-fill);
     --header-control: 44px;
+    --cart-gap: 10px;
   }
 
   /* O painel tem traços nos quatro cantos: a segunda camada espelha a dos cards na horizontal. */
@@ -1391,13 +1392,23 @@ html[data-theme='light'] .hero-copy h1 {
     g para dentro diminui o chanfro em g * (√2 - 1).
   */
   .header-cart {
-    --cart-gap: 10px;
     --cut: calc(var(--bar-cut) - var(--cart-gap) * 0.4142);
     margin-right: calc(var(--cart-gap) - var(--box-padding));
   }
 
+  /*
+    Abaixo de 1001px a busca ocupa a linha de baixo: à esquerda alinha com o logo e o menu, à
+    direita avança até a folga do carrinho, para as duas bordas direitas ficarem na mesma linha.
+  */
+  @media (width < 1001px) {
+    .header-search {
+      flex-basis: calc(100% + var(--box-padding) - var(--cart-gap));
+      margin-right: calc(var(--cart-gap) - var(--box-padding));
+    }
+  }
+
   @media (width >= 1001px) {
-    .header-cart {
+    .header-bar {
       --cart-gap: 12px;
     }
   }

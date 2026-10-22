@@ -42,13 +42,13 @@ export default function Header({
         <PichauLogo className="h-[26px] w-auto drop-shadow-[0_0_18px_#ed002466] min-[360px]:h-[30px] [html[data-theme=light]_&]:drop-shadow-none lg:h-[38px]" />
       </a>
 
-      {/* Abaixo de 1001px a busca ocupa sozinha a segunda linha. */}
+      {/* Abaixo de 1001px a busca ocupa sozinha a segunda linha (largura no .header-search). */}
       <SearchForm
         query={query}
         onQueryChange={onQueryChange}
         onSearch={onSearch}
         inputRef={searchInputRef}
-        className="header-search order-last min-w-0 basis-full lg:order-0 lg:basis-auto lg:flex-1"
+        className="header-search order-last min-w-0 lg:order-0 lg:flex-1"
       />
 
       {/*

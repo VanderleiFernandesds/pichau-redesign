@@ -57,16 +57,17 @@ export const HERO_CAMPAIGNS = {
     direita do texto; o clamp impede que a arte deixe uma faixa vazia nas bordas.
   */
   energyDrink: {
-    id: 'energy-drink',
-    name: 'Pichau Energy Drink',
+    id: "energy-drink",
+    name: "Pichau Energy Drink",
     background: {
       src: energyDrinkBackground,
       width: 1985,
       height: 792,
       position: {
-        collapsed: '50% 50%',
-        expanded: '50% 50%',
-        stage: 'clamp(100%, 50% + (var(--copy-width) + var(--copy-gap)) / 2 - 134px, 0%) 50%',
+        collapsed: "50% 50%",
+        expanded: "50% 50%",
+        stage:
+          "clamp(100%, 50% + (var(--copy-width) + var(--copy-gap)) / 2 - 134px, 0%) 50%",
       },
       productArea: { top: 165, bottom: 700 },
       mobile: {
@@ -79,21 +80,30 @@ export const HERO_CAMPAIGNS = {
     },
     objects: [
       {
-        id: 'logo',
+        id: "logo",
         src: energyDrinkLogo,
         width: 1647,
         height: 690,
         size: 100,
-        collapsed: { x: '50%', y: '10%', scale: 0.72, layer: 4 },
+        collapsed: { x: "50%", y: "10%", scale: 0.72, layer: 4 },
         expanded: null,
       },
     ],
-    logo: { src: energyDrinkLogo, width: 1647, height: 690, displayWidth: 150, alt: 'Pichau Energy Drink' },
-    title: ['Escolha seu sabor.', 'Entre no jogo.'],
+    logo: {
+      src: energyDrinkLogo,
+      width: 1647,
+      height: 690,
+      displayWidth: 150,
+      alt: "Pichau Energy Drink",
+    },
+    title: ["Escolha seu sabor.", "Entre no jogo."],
     isTitleStacked: true,
-    description: 'Conheça a linha e encontre o seu favorito.',
+    description: "Conheça a linha e encontre o seu favorito.",
     details: [],
-    cta: { label: 'Explorar sabores', href: 'https://www.pichau.com.br/search?q=energetico%20pichau' },
+    cta: {
+      label: "Explorar sabores",
+      href: "https://www.pichau.com.br/search?q=energetico%20pichau",
+    },
   },
   /*
     Como no ROG, as três artes já trazem os produtos (gabinete, cadeira, fonte, teclado, mouse e
@@ -104,16 +114,17 @@ export const HERO_CAMPAIGNS = {
     borda esquerda, sob a parte opaca do degradê. Em notebooks as pontas ficam cortadas.
   */
   corsair: {
-    id: 'corsair',
-    name: 'Seleção Corsair',
+    id: "corsair",
+    name: "Seleção Corsair",
     background: {
       src: corsairBackground,
       width: 1986,
       height: 792,
       position: {
-        collapsed: '50% 50%',
-        expanded: '50% 50%',
-        stage: 'max(100%, 50% + (var(--copy-width) + var(--copy-gap)) / 2 - 188px) 50%',
+        collapsed: "50% 50%",
+        expanded: "50% 50%",
+        stage:
+          "max(100%, 50% + (var(--copy-width) + var(--copy-gap)) / 2 - 188px) 50%",
       },
       productArea: { top: 21, bottom: 775 },
       mobile: {
@@ -126,22 +137,33 @@ export const HERO_CAMPAIGNS = {
     },
     objects: [
       {
-        id: 'logo',
+        id: "logo",
         src: corsairLogo,
         srcOnLight: corsairLogoDark,
         width: 800,
         height: 186,
         size: 100,
-        collapsed: { x: '50%', y: '8%', scale: 0.82, layer: 6 },
+        collapsed: { x: "50%", y: "8%", scale: 0.82, layer: 6 },
         expanded: null,
       },
     ],
-    logo: { src: corsairLogo, srcOnLight: corsairLogoDark, width: 800, height: 186, displayWidth: 189, alt: 'Corsair' },
-    title: ['Seu setup.', 'Sem limites.'],
+    logo: {
+      src: corsairLogo,
+      srcOnLight: corsairLogoDark,
+      width: 800,
+      height: 186,
+      displayWidth: 189,
+      alt: "Corsair",
+    },
+    title: ["Cada peça.", "Uma nova conquista."],
     isTitleStacked: true,
-    description: 'Explore componentes e periféricos Corsair para completar seu espaço gamer.',
+    description:
+      "Encontre componentes e periféricos Corsair para dar vida ao seu próximo setup.",
     details: [],
-    cta: { label: 'Explorar Corsair', href: 'https://www.pichau.com.br/marca/corsair' },
+    cta: {
+      label: "Explorar Corsair",
+      href: "https://www.pichau.com.br/marca/corsair",
+    },
   },
   /*
     As três artes já trazem os produtos (monitor, placa, ROG Ally, teclado e headset), então só o
@@ -153,16 +175,17 @@ export const HERO_CAMPAIGNS = {
     pontas (Ally e headset) ficam cortadas ou sob o texto.
   */
   asusRog: {
-    id: 'asus-rog',
-    name: 'ASUS ROG',
+    id: "asus-rog",
+    name: "ASUS ROG",
     background: {
       src: rogBackground,
       width: 1986,
       height: 792,
       position: {
-        collapsed: '50% 50%',
-        expanded: '50% 50%',
-        stage: 'max(100%, 50% + (var(--copy-width) + var(--copy-gap)) / 2 - 247px) 50%',
+        collapsed: "50% 50%",
+        expanded: "50% 50%",
+        stage:
+          "max(100%, 50% + (var(--copy-width) + var(--copy-gap)) / 2 - 247px) 50%",
       },
       productArea: { top: 35, bottom: 700 },
       mobile: {
@@ -177,22 +200,32 @@ export const HERO_CAMPAIGNS = {
     },
     objects: [
       {
-        id: 'logo',
+        id: "logo",
         src: rogLogo,
         srcOnLight: rogLogoDark,
         width: 200,
         height: 37,
         size: 100,
-        collapsed: { x: '50%', y: '7.5%', scale: 0.8, layer: 6 },
+        collapsed: { x: "50%", y: "7.5%", scale: 0.8, layer: 6 },
         expanded: null,
       },
     ],
-    logo: { src: rogLogo, srcOnLight: rogLogoDark, width: 200, height: 37, displayWidth: 220, alt: 'ASUS Republic of Gamers' },
-    title: ['Seu próximo nível', 'começa aqui.'],
+    logo: {
+      src: rogLogo,
+      srcOnLight: rogLogoDark,
+      width: 200,
+      height: 37,
+      displayWidth: 220,
+      alt: "ASUS Republic of Gamers",
+    },
+    title: ["Seu próximo nível", "começa aqui."],
     isTitleStacked: true,
-    description: 'Explore hardware e periféricos ASUS ROG para o seu setup.',
+    description: "Explore hardware e periféricos ASUS ROG para o seu setup.",
     details: [],
-    cta: { label: 'Explorar ASUS ROG', href: 'https://www.pichau.com.br/marca/asus' },
+    cta: {
+      label: "Explorar ASUS ROG",
+      href: "https://www.pichau.com.br/marca/asus",
+    },
   },
 };
 

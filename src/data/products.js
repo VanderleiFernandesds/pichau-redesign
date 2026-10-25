@@ -141,12 +141,33 @@ function illustrativeBenefits({ id, price }) {
   };
 }
 
+// Endereço da página do produto (/produto/<slug>): o nome sem acentos, em minúsculas e com hífens.
+function slugify(name) {
+  return name
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+}
+
 export const products = catalog.map((product) => {
   const rating = ILLUSTRATIVE_RATINGS[product.id];
+  const image = productImage(product.image);
   return {
     ...product,
     ...illustrativeBenefits(product),
-    image: productImage(product.image),
+    slug: slugify(product.name),
+    image,
+    // A galeria da página do produto aceita várias fotos; hoje cada produto tem uma só.
+    images: [image],
     rating: rating ? { ...rating, isIllustrative: true } : null,
   };
 });
+
+const productsBySlug = new Map(products.map((product) => [product.slug, product]));
+if (productsBySlug.size !== products.length) throw new Error('Dois produtos geram o mesmo endereço (slug).');
+
+export function findProductBySlug(slug) {
+  return productsBySlug.get(slug) ?? null;
+}

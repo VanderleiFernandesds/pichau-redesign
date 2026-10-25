@@ -2833,3 +2833,30 @@ html[data-theme='light'] .hero-copy h1 {
     }
   }
 }
+
+/*
+  Página do produto. Fora das camadas, como os estilos do hero, para valer sobre os utilitários dos
+  componentes reaproveitados (nota do StarRating, altura do controle de quantidade).
+*/
+.product-rating > p:first-child {
+  gap: 8px;
+  font-size: 15px;
+}
+
+/* Aba ativa: traço vermelho sobre a linha da lista, além do peso do texto. */
+.product-tab[aria-selected='true']::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 -1px;
+  height: 3px;
+  background: var(--color-brand);
+}
+
+.product-thumb[aria-current='true'] {
+  --chamfer-border: var(--color-brand);
+}
+
+/* Na página o controle de quantidade tem a altura do botão de adicionar que ele substitui. */
+.product-page-quantity .quantity-control {
+  height: 56px;
+}

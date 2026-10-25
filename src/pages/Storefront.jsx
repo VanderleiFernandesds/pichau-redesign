@@ -1,39 +1,48 @@
-import { useEffect, useRef, useState } from 'react';
-import Header from '../../components/layout/header/Header';
-import Navbar from '../../components/layout/header/Navbar';
-import SiteHeader from '../../components/layout/header/SiteHeader';
-import Footer from '../../components/layout/footer/Footer';
-import MobileNavBar from '../../components/layout/MobileNavBar';
-import ProductSection from '../../components/products/ProductSection';
-import ProductCarousel from '../../components/products/ProductCarousel';
-import CartDrawer from '../../components/cart/CartDrawer';
-import AddedToCartNotice from '../../components/cart/AddedToCartNotice';
-import AccountDialog from '../../components/account/AccountDialog';
-import EmptyState from '../../components/ui/EmptyState';
-import Toast from '../../components/ui/Toast';
-import Hero from './Hero';
-import PurposeCards from './PurposeCards';
-import DepartmentShowcase from './DepartmentShowcase';
-import BuilderBanner from './BuilderBanner';
-import ConfigModal from './ConfigModal';
-import HelpCenterModal from '../../components/help/HelpCenterModal';
-import { products } from '../../data/products';
-import { ALL_CATEGORIES } from '../../data/categories';
-import { useCart } from '../../hooks/useCart';
-import { useFavorites } from '../../hooks/useFavorites';
-import { useToast } from '../../hooks/useToast';
-import { useTheme } from '../../hooks/useTheme';
-import { useIsScrolledPast } from '../../hooks/useIsScrolledPast';
-import { useBlurOnScroll } from '../../hooks/useBlurOnScroll';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import Header from '../components/layout/header/Header';
+import Navbar from '../components/layout/header/Navbar';
+import SiteHeader from '../components/layout/header/SiteHeader';
+import Footer from '../components/layout/footer/Footer';
+import MobileNavBar from '../components/layout/MobileNavBar';
+import ProductSection from '../components/products/ProductSection';
+import ProductCarousel from '../components/products/ProductCarousel';
+import CartDrawer from '../components/cart/CartDrawer';
+import AddedToCartNotice from '../components/cart/AddedToCartNotice';
+import AccountDialog from '../components/account/AccountDialog';
+import EmptyState from '../components/ui/EmptyState';
+import Toast from '../components/ui/Toast';
+import Hero from './home/Hero';
+import PurposeCards from './home/PurposeCards';
+import DepartmentShowcase from './home/DepartmentShowcase';
+import BuilderBanner from './home/BuilderBanner';
+import ConfigModal from './home/ConfigModal';
+import HelpCenterModal from '../components/help/HelpCenterModal';
+import ProductPage from './product/ProductPage';
+import { findProductBySlug, products } from '../data/products';
+import { ALL_CATEGORIES } from '../data/categories';
+import { useCart } from '../hooks/useCart';
+import { useFavorites } from '../hooks/useFavorites';
+import { useToast } from '../hooks/useToast';
+import { useTheme } from '../hooks/useTheme';
+import { useIsScrolledPast } from '../hooks/useIsScrolledPast';
+import { useBlurOnScroll } from '../hooks/useBlurOnScroll';
+import { homePath, isHomeLocation, navigate, productPath, useRoute } from '../hooks/useRoute';
 
 // Sem filtro, as ofertas mostram só os primeiros produtos; os demais ficam no carrossel da outra vitrine.
 const FEATURED_COUNT = 10;
 const FEATURED_PRODUCTS = products.slice(0, FEATURED_COUNT);
 const OTHER_PRODUCTS = products.slice(FEATURED_COUNT);
 
-// Carrinho e favoritos são instanciados só aqui e repassados por props,
-// garantindo uma única fonte de estado para header, vitrines e modal.
-export default function HomePage() {
+/*
+  Casca da loja: header, footer, painéis e avisos ficam aqui, e o <main> mostra a Home ou a página
+  do produto conforme a rota. Carrinho e favoritos são instanciados só aqui e repassados por props,
+  garantindo uma única fonte de estado para as duas páginas, o header e os modais.
+*/
+export default function Storefront() {
+  const route = useRoute();
+  const product = route.name === 'product' ? findProductBySlug(route.slug) : null;
+  // Seção da Home para rolar depois de voltar a ela (link #offers, filtro, busca feitos no produto).
+  const [pendingScrollId, setPendingScrollId] = useState(null);
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState(ALL_CATEGORIES);
   const [isFavoriteOnly, setIsFavoriteOnly] = useState(false);
@@ -49,7 +58,6 @@ export default function HomePage() {
   const [addedNotice, setAddedNotice] = useState({ isVisible: false, showKey: 0 });
   // Com um modal ou painel sobre a página, o carrossel do hero pausa (e retoma ao fechar).
   const isOverlayOpen = isMenuOpen || isCartOpen || isConfigOpen || authView !== null || help.isOpen;
-  const offersRef = useRef(null);
   const searchInputRef = useRef(null);
 
   const cart = useCart();
@@ -100,9 +108,77 @@ export default function HomePage() {
     if (top < 0 || bottom > window.innerHeight) input.scrollIntoView({ block: 'center' });
   }
 
-  function scrollToOffers() {
-    offersRef.current?.scrollIntoView({ behavior: 'smooth' });
+  // Fora da Home, volta para ela e rola até a seção depois que ela renderizar.
+  function scrollToSection(id) {
+    if (!isHomeLocation()) {
+      navigate(homePath());
+      setPendingScrollId(id);
+      return;
+    }
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
   }
+
+  function scrollToOffers() {
+    scrollToSection('offers');
+  }
+
+  /*
+    Links internos sem recarregar a página: o clique comum em <a> para outra rota da loja vira
+    navegação pelo histórico (Ctrl/Cmd+clique e nova aba seguem normais). Na página do produto, as
+    âncoras da Home (#offers, #builder...) levam de volta a ela e rolam até a seção. Em captura, para
+    rodar antes dos onClick dos links, que já encontram a Home como rota atual.
+  */
+  useEffect(() => {
+    function handleLinkClick(event) {
+      if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
+        return;
+      }
+      const link = event.target.closest?.('a[href]');
+      if (!link || (link.target && link.target !== '_self') || link.hasAttribute('download')) return;
+
+      const href = link.getAttribute('href');
+      if (href.startsWith('#')) {
+        if (isHomeLocation() || href === '#main') return;
+        event.preventDefault();
+        navigate(homePath());
+        setPendingScrollId(href.slice(1));
+        return;
+      }
+
+      const url = new URL(link.href);
+      if (url.origin !== window.location.origin || !url.pathname.startsWith(homePath().slice(0, -1))) return;
+      event.preventDefault();
+      if (url.pathname === window.location.pathname) window.scrollTo({ top: 0, behavior: 'smooth' });
+      else navigate(url.pathname);
+    }
+
+    document.addEventListener('click', handleLinkClick, true);
+    return () => document.removeEventListener('click', handleLinkClick, true);
+  }, []);
+
+  /*
+    A cada troca de rota: rola até a seção pendente ou restaura a posição guardada no histórico
+    (topo para páginas novas, onde estava ao voltar). Na primeira renderização só a âncora do
+    endereço (ex.: /#offers): o navegador tenta rolar até ela antes de o React montar a seção.
+  */
+  const routeKey = `${route.name}:${route.slug ?? ''}`;
+  const lastRouteKeyRef = useRef(null);
+  useLayoutEffect(() => {
+    if (lastRouteKeyRef.current === null) {
+      lastRouteKeyRef.current = routeKey;
+      if (window.location.hash.length > 1) document.getElementById(window.location.hash.slice(1))?.scrollIntoView();
+      return;
+    }
+    if (lastRouteKeyRef.current === routeKey) return;
+    lastRouteKeyRef.current = routeKey;
+    setIsNavOpen(false);
+    if (pendingScrollId && route.name === 'home') {
+      document.getElementById(pendingScrollId)?.scrollIntoView();
+      setPendingScrollId(null);
+      return;
+    }
+    window.scrollTo(0, window.history.state?.scrollY ?? 0);
+  }, [routeKey]);
 
   function filterByCategory(nextCategory) {
     setCategory(nextCategory);
@@ -156,8 +232,9 @@ export default function HomePage() {
     );
   }
 
-  function viewProduct() {
-    toast.showToast('Conceito demonstrativo: página do produto indisponível.');
+  function viewProduct(id) {
+    const target = products.find((item) => item.id === id);
+    if (target) navigate(productPath(target.slug));
   }
 
   function selectGoal(goalCategory) {
@@ -203,56 +280,86 @@ export default function HomePage() {
       </SiteHeader>
 
       <main id="main" className="bg-page">
-        <Hero onFilter={filterByCategory} theme={theme} isCovered={isOverlayOpen}>
-          <PurposeCards onFilter={filterByCategory} />
-        </Hero>
-        <DepartmentShowcase onOpenDepartment={openDepartment} onShowAll={() => setIsMenuOpen(true)} />
-        <div className="wrap">
-
-          <ProductSection
-            ref={offersRef}
-            id="offers"
-            eyebrow="ESCOLHAS PARA O SEU SETUP"
-            title={isFavoriteOnly ? 'Seus favoritos' : 'Ofertas em destaque'}
-            products={hasActiveFilter ? filteredProducts : FEATURED_PRODUCTS}
-            favorites={favorites}
+        {route.name === 'product' && product && (
+          <ProductPage
+            key={product.id}
+            product={product}
+            quantity={cart.quantities[product.id] ?? 0}
+            isFavorite={favorites.includes(product.id)}
             onToggleFavorite={toggleFavorite}
             onAddToCart={addToCart}
-            cartQuantities={cart.quantities}
-            onChangeCartQuantity={changeCartQuantity}
-            onViewProduct={viewProduct}
-            emptyState={
-              <EmptyState
-                title="Nenhum produto encontrado"
-                description="Tente outro nome ou categoria."
-                action={
-                  <button type="button" className="button" onClick={resetFilters}>
-                    Limpar filtros
-                  </button>
-                }
-              />
-            }
-          >
-            {/* Mantido sempre no DOM para que leitores de tela anunciem a contagem. */}
-            <p className="mb-3 text-[12px] text-muted empty:hidden" aria-live="polite">
-              {hasActiveFilter ? `${filteredProducts.length} produto(s) encontrado(s)` : ''}
-            </p>
-          </ProductSection>
-
-          <BuilderBanner onStart={() => setIsConfigOpen(true)} />
-
-          <ProductCarousel
-            eyebrow="NOVAS POSSIBILIDADES"
-            title="Conheça outros produtos"
-            products={OTHER_PRODUCTS}
-            favorites={favorites}
-            onToggleFavorite={toggleFavorite}
-            onAddToCart={addToCart}
-            cartQuantities={cart.quantities}
-            onChangeCartQuantity={changeCartQuantity}
-            onViewProduct={viewProduct}
+            onChangeQuantity={changeCartQuantity}
+            onOpenCategory={filterByCategory}
           />
-        </div>
+        )}
+
+        {route.name === 'product' && !product && (
+          <div className="wrap pt-[calc(var(--header-offset)+8px)] pb-12">
+            <EmptyState
+              title="Produto não encontrado"
+              description="O endereço pode estar incompleto ou o produto não faz mais parte do catálogo."
+              action={
+                <a href={homePath()} className="button">
+                  Voltar para o início
+                </a>
+              }
+            />
+          </div>
+        )}
+
+        {route.name === 'home' && (
+          <>
+            <Hero onFilter={filterByCategory} theme={theme} isCovered={isOverlayOpen}>
+              <PurposeCards onFilter={filterByCategory} />
+            </Hero>
+            <DepartmentShowcase onOpenDepartment={openDepartment} onShowAll={() => setIsMenuOpen(true)} />
+            <div className="wrap">
+
+              <ProductSection
+                id="offers"
+                eyebrow="ESCOLHAS PARA O SEU SETUP"
+                title={isFavoriteOnly ? 'Seus favoritos' : 'Ofertas em destaque'}
+                products={hasActiveFilter ? filteredProducts : FEATURED_PRODUCTS}
+                favorites={favorites}
+                onToggleFavorite={toggleFavorite}
+                onAddToCart={addToCart}
+                cartQuantities={cart.quantities}
+                onChangeCartQuantity={changeCartQuantity}
+                onViewProduct={viewProduct}
+                emptyState={
+                  <EmptyState
+                    title="Nenhum produto encontrado"
+                    description="Tente outro nome ou categoria."
+                    action={
+                      <button type="button" className="button" onClick={resetFilters}>
+                        Limpar filtros
+                      </button>
+                    }
+                  />
+                }
+              >
+                {/* Mantido sempre no DOM para que leitores de tela anunciem a contagem. */}
+                <p className="mb-3 text-[12px] text-muted empty:hidden" aria-live="polite">
+                  {hasActiveFilter ? `${filteredProducts.length} produto(s) encontrado(s)` : ''}
+                </p>
+              </ProductSection>
+
+              <BuilderBanner onStart={() => setIsConfigOpen(true)} />
+
+              <ProductCarousel
+                eyebrow="NOVAS POSSIBILIDADES"
+                title="Conheça outros produtos"
+                products={OTHER_PRODUCTS}
+                favorites={favorites}
+                onToggleFavorite={toggleFavorite}
+                onAddToCart={addToCart}
+                cartQuantities={cart.quantities}
+                onChangeCartQuantity={changeCartQuantity}
+                onViewProduct={viewProduct}
+              />
+            </div>
+          </>
+        )}
       </main>
 
       <Footer

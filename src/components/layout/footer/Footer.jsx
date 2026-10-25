@@ -1,5 +1,6 @@
 import { ArrowRight, ArrowUpRight, ChevronUp, Headset, MapPin } from 'lucide-react';
 import PichauLogo from '../../ui/PichauLogo';
+import { homePath } from '../../../hooks/useRoute';
 import BrandIcon from '../../ui/BrandIcon';
 import DepartmentLink from '../../ui/DepartmentLink';
 import FooterLinkGroup, { footerHeadingClass } from './FooterLinkGroup';
@@ -81,7 +82,7 @@ export default function Footer({ onOpenHelp, onOpenDepartment, onShowAllDepartme
         <div className="chamfer footer-panel px-(--box-padding) pt-6 pb-6 sm:pt-8">
           <div className="grid gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)_minmax(0,1fr)_minmax(0,1.4fr)] lg:gap-0">
             <div className="lg:pr-8">
-              <a href="./" aria-label="Pichau início" className="inline-block">
+              <a href={homePath()} aria-label="Pichau início" className="inline-block">
                 <PichauLogo className="h-[34px] w-auto sm:h-[40px]" />
               </a>
               <p className="mt-3 text-[15px]">Tecnologia para o seu próximo nível.</p>

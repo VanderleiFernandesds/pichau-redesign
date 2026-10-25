@@ -5,10 +5,8 @@ import CardQuantityControl from './CardQuantityControl';
 import ProductBenefits from './ProductBenefits';
 import { formatMoney } from '../../utils/format';
 import { animateAddToCart } from '../../utils/cartAnimation';
-
-// O valor no Pix já tem 15% de desconto; o preço no cartão é calculado a partir dele.
-const PIX_DISCOUNT_FACTOR = 0.85;
-const INSTALLMENTS = 12;
+import { INSTALLMENTS, getCardPrice, getDiscountPercent, hasIllustrativeConditions } from '../../utils/pricing';
+import { productPath } from '../../hooks/useRoute';
 
 /*
   As 6 linhas do card (imagem, nome, especificações, avaliação, preço e botões) são um subgrid da
@@ -22,10 +20,8 @@ const INSTALLMENTS = 12;
   contador do header mostram sempre o mesmo valor.
 */
 export default function ProductCard({ product, quantity, isFavorite, onToggleFavorite, onAddToCart, onChangeQuantity, onView }) {
-  const cardPrice = product.price / PIX_DISCOUNT_FACTOR;
-  // previousPrice e price são os dois no Pix, então o desconto compara a mesma condição de pagamento.
-  const discountPercent =
-    product.previousPrice > product.price ? Math.round((1 - product.price / product.previousPrice) * 100) : 0;
+  const cardPrice = getCardPrice(product);
+  const discountPercent = getDiscountPercent(product);
   const isInCart = quantity > 0;
   const lastSpace = product.name.lastIndexOf(' ') + 1;
   const nameStart = product.name.slice(0, lastSpace);
@@ -43,11 +39,11 @@ export default function ProductCard({ product, quantity, isFavorite, onToggleFav
 
   /*
     O card inteiro abre o produto, como o nome. É só um atalho para o mouse e o toque: no teclado o
-    caminho é o botão do nome, e os controles de dentro (favoritar, carrinho e quantidade) mantêm
+    caminho é o link do nome, e os controles de dentro (favoritar, carrinho e quantidade) mantêm
     a ação deles.
   */
   function handleCardClick(event) {
-    if (event.target.closest('button, [role="group"]')) return;
+    if (event.target.closest('a, button, [role="group"]')) return;
     onView(product.id);
   }
 
@@ -115,9 +111,9 @@ export default function ProductCard({ product, quantity, isFavorite, onToggleFav
         texto (leitor de tela) e no title; o corte em linhas é só visual.
       */}
       <h3 className="mt-3 font-display text-[15px] leading-tight font-bold sm:text-[17px]">
-        <button
-          type="button"
-          onClick={() => onView(product.id)}
+        {/* Link de verdade (abre em nova aba, copia o endereço); o clique comum vira navegação interna. */}
+        <a
+          href={productPath(product.slug)}
           title={product.name}
           className="line-clamp-3 text-left transition-colors hover:text-brand sm:line-clamp-2"
         >
@@ -127,7 +123,7 @@ export default function ProductCard({ product, quantity, isFavorite, onToggleFav
             {nameEnd}
             <ArrowUpRight aria-hidden="true" className="ml-1 inline size-4 align-[-2px] text-muted" />
           </span>
-        </button>
+        </a>
       </h3>
       <p className="mt-1 text-[12px] leading-snug text-soft sm:text-[13px]">{product.spec}</p>
       <StarRating rating={product.rating} className="mt-1 sm:mt-2" />
@@ -156,7 +152,7 @@ export default function ProductCard({ product, quantity, isFavorite, onToggleFav
           <br />
           Total no cartão: <span className="whitespace-nowrap">{formatMoney(cardPrice)}</span>
         </p>
-        {(discountPercent > 0 || product.coupon || product.shipping) && (
+        {hasIllustrativeConditions(product) && (
           <p className="mt-1 text-[12px] leading-snug text-muted">Condições ilustrativas</p>
         )}
       </div>

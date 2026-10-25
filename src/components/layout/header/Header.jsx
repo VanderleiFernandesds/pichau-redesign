@@ -2,6 +2,7 @@ import { Menu, Moon, Sun, X } from 'lucide-react';
 import SearchForm from './SearchForm';
 import HeaderActions from './HeaderActions';
 import PichauLogo from '../../ui/PichauLogo';
+import { homePath } from '../../../hooks/useRoute';
 
 const iconButtonClass =
   'chamfer chamfer-field grid size-(--header-control) shrink-0 place-items-center text-heading transition-colors hover:text-brand';
@@ -38,7 +39,7 @@ export default function Header({
         {isNavOpen ? <X aria-hidden="true" className="size-5" /> : <Menu aria-hidden="true" className="size-5" />}
       </button>
 
-      <a href="./" aria-label="Pichau início" className="flex min-h-(--header-control) shrink-0 items-center">
+      <a href={homePath()} aria-label="Pichau início" className="flex min-h-(--header-control) shrink-0 items-center">
         <PichauLogo className="h-[26px] w-auto drop-shadow-[0_0_18px_#ed002466] min-[360px]:h-[30px] [html[data-theme=light]_&]:drop-shadow-none lg:h-[38px]" />
       </a>
 

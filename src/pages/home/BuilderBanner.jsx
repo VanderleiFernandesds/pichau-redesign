@@ -13,7 +13,7 @@ export default function BuilderBanner({ onStart }) {
     // A divisória fica fora do painel, que é recortado pelo chanfro.
     <section id="builder" aria-labelledby="builder-title">
       <SectionDivider />
-      <div className="chamfer builder-banner relative grid items-center gap-6 px-6 py-7 text-heading lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-6 lg:py-6">
+      <div className="chamfer builder-banner relative grid items-center gap-6 px-(--box-padding) py-7 text-heading lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-6 lg:py-6">
         <span aria-hidden="true" className="corner-accents" />
 
         <div className="relative z-[1]">

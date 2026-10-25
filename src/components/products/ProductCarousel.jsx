@@ -57,7 +57,7 @@ export default function ProductCarousel({ eyebrow, title, products, ...cardProps
   return (
     <section>
       <SectionDivider />
-      <div className="mb-4 flex items-end justify-between gap-[15px] sm:mb-[22px]">
+      <div className="mb-4 flex items-end justify-between gap-[15px] sm:mb-[22px] px-(--box-padding)">
         <div>
           <span className="eyebrow">{eyebrow}</span>
           <h2 className="mt-2 font-display text-[26px] leading-tight font-bold sm:text-[32px]">{title}</h2>

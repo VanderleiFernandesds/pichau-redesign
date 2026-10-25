@@ -139,8 +139,11 @@ html[data-theme='light'] .theme-dark-only {
   --container-max: 1920px;
   --container-gutter: 16px;
   --container-start: max(0px, (100vw - var(--container-max)) / 2) + var(--container-gutter);
-  /* Recuo lateral do conteúdo dentro dos blocos com fundo (header, cards, banner, hero no desktop). */
-  --box-padding: 16px;
+  /*
+    Recuo lateral do conteúdo dentro dos blocos com fundo (header, hero, cards, banners, footer) e
+    dos títulos das seções: 12px no celular, 24px a partir do tablet.
+  */
+  --box-padding: 12px;
   /*
     Espaço ocupado pelo painel flutuante (16px do topo + altura do painel + folga):
     logo e ações, depois a busca, até 1000px; duas linhas acima disso.
@@ -372,7 +375,7 @@ html[data-theme='light'] .theme-dark-only {
   grid-area: stack;
   position: relative;
   z-index: 1;
-  padding: calc(var(--box-padding) * 1.5) var(--box-padding)
+  padding: max(24px, var(--box-padding) * 1.5) var(--box-padding)
     max(var(--hero-objects-height), 100% * var(--band) + var(--products-gap));
 }
 
@@ -2229,22 +2232,25 @@ html[data-theme='light'] .hero-copy h1 {
     display: flex;
     width: 100%;
     flex-direction: column;
-    padding: 16px 12px 14px;
+    padding: 16px var(--box-padding) 14px;
     container-type: inline-size;
   }
 
   /*
     O nome acompanha a largura do card (entre 15px e 18px) para a palavra mais longa,
     "Computadores" (~6,1em), caber inteira: uma palavra só não quebra, e o line-clamp a cortaria.
-    A partir de 601px a seta divide a linha com o nome e desconta os 32px dela.
+    A partir de 601px a seta divide a linha com o nome e desconta os 32px dela; nos cards em que
+    o nome a 15px e a seta não cabem juntos (menos de 126px úteis), a seta some (DepartmentCard).
   */
   .department-card-label {
     font-size: clamp(15px, (100cqi - 2px) / 6.1, 18px);
   }
 
   @media (width >= 601px) {
-    .department-card-label {
-      font-size: clamp(15px, (100cqi - 34px) / 6.1, 18px);
+    @container (width >= 126px) {
+      .department-card-label {
+        font-size: clamp(15px, (100cqi - 34px) / 6.1, 18px);
+      }
     }
   }
 
@@ -2265,9 +2271,12 @@ html[data-theme='light'] .hero-copy h1 {
     color: var(--color-brand);
   }
 
-  /* Branco nos dois temas, porque as fotos têm fundo branco. */
+  /*
+    Branco nos dois temas, porque as fotos têm fundo branco. Fica a 4px da borda do card (chanfro
+    de 16px): com 14px de chanfro, a folga é de 4px também na diagonal.
+  */
   .product-media {
-    --cut: 10px;
+    --cut: 14px;
     --chamfer-border: #ffffff;
     --chamfer-fill: #ffffff;
   }
@@ -2277,7 +2286,7 @@ html[data-theme='light'] .hero-copy h1 {
     área da foto no card, acima do header (z-20) e da barra inferior (z-30).
   */
   .cart-flyer {
-    --cut: 10px;
+    --cut: 14px;
     position: fixed;
     z-index: 40;
     max-width: none;

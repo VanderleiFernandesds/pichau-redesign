@@ -30,7 +30,7 @@ export default function Footer({ onOpenHelp, onOpenDepartment, onShowAllDepartme
           aqui, a Central de ajuda do projeto. Evita repetir "Precisa de ajuda?" em dois lugares.
         */}
         <section aria-labelledby="footer-help" className="flex flex-col gap-3 sm:gap-4">
-          <div className="flex flex-col gap-4 pb-1 lg:flex-row lg:items-end lg:justify-between lg:gap-8">
+          <div className="flex flex-col gap-4 pb-1 px-(--box-padding) lg:flex-row lg:items-end lg:justify-between lg:gap-8">
             <div>
               <h2 id="footer-help" className={`${footerHeadingClass} text-[24px] sm:text-[28px]`}>
                 <span aria-hidden="true" className="slash-accent" />
@@ -78,7 +78,7 @@ export default function Footer({ onOpenHelp, onOpenDepartment, onShowAllDepartme
           </p>
         </section>
 
-        <div className="chamfer footer-panel px-6 pt-6 pb-6 sm:pt-8">
+        <div className="chamfer footer-panel px-(--box-padding) pt-6 pb-6 sm:pt-8">
           <div className="grid gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)_minmax(0,1fr)_minmax(0,1.4fr)] lg:gap-0">
             <div className="lg:pr-8">
               <a href="./" aria-label="Pichau início" className="inline-block">
@@ -153,7 +153,7 @@ export default function Footer({ onOpenHelp, onOpenDepartment, onShowAllDepartme
 
         <section
           aria-label="Sobre este projeto"
-          className="chamfer footer-panel flex flex-col gap-4 px-6 py-5 sm:flex-row sm:items-center sm:gap-6"
+          className="chamfer footer-panel flex flex-col gap-4 px-(--box-padding) py-5 sm:flex-row sm:items-center sm:gap-6"
         >
           <div className="flex gap-3">
             <span aria-hidden="true" className="slash-accent mt-1" />

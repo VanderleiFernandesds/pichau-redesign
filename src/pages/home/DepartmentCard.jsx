@@ -31,8 +31,8 @@ export default function DepartmentCard({ department, onOpen }) {
         <span className="flex min-h-[2lh] min-w-0 flex-1 items-center">
           <span className="department-card-name line-clamp-2 text-left transition-colors">{department.name}</span>
         </span>
-        {/* No celular o card estreito precisa da largura toda para o nome; o toque no card já é o atalho. */}
-        <span aria-hidden="true" className="chamfer purpose-card-arrow grid size-6 shrink-0 place-items-center max-sm:hidden">
+        {/* No celular e nos cards estreitos o nome precisa da largura toda; o toque no card já é o atalho. */}
+        <span aria-hidden="true" className="chamfer purpose-card-arrow grid size-6 shrink-0 place-items-center max-sm:hidden @max-[126px]:hidden">
           <ArrowUpRight className="size-3.5" />
         </span>
       </span>

@@ -11,7 +11,7 @@ export default function DepartmentShowcase({ onOpenDepartment, onShowAll }) {
   return (
     <section aria-labelledby="department-showcase-title" className="department-showcase wrap">
       <SectionDivider />
-      <div className="mb-4 flex flex-col items-start justify-between gap-[15px] sm:mb-[22px] lg:flex-row lg:items-end">
+      <div className="mb-4 flex flex-col items-start justify-between gap-[15px] sm:mb-[22px] px-(--box-padding) lg:flex-row lg:items-end">
         <div>
           <h2 id="department-showcase-title" className="font-display text-[26px] leading-tight font-bold text-heading sm:text-[32px]">
             Na Pichau Tem!

@@ -13,7 +13,7 @@ export default function BusinessBanner() {
     <section
       id="business"
       aria-labelledby="business-banner-title"
-      className="chamfer footer-panel business-banner relative flex flex-col gap-6 px-6 py-5 sm:py-8 lg:flex-row lg:items-center lg:gap-8"
+      className="chamfer footer-panel business-banner relative flex flex-col gap-6 px-(--box-padding) py-5 sm:py-8 lg:flex-row lg:items-center lg:gap-8"
     >
       <span aria-hidden="true" className="corner-accents" />
 

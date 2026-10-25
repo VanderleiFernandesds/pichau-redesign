@@ -77,7 +77,8 @@ export default function ProductCard({ product, quantity, isFavorite, onToggleFav
         A altura é fixa em cada largura, com ou sem etiquetas, para os cards seguirem alinhados: a
         foto ocupa o que sobra acima delas, sempre inteira (object-contain).
       */}
-      <div className="chamfer product-media relative flex h-52 flex-col p-1 sm:h-56 sm:p-3">
+      {/* A área branca avança sobre o padding do card nas laterais e em cima, até 4px da borda. */}
+      <div className="chamfer product-media relative -mx-2 -mt-2 flex h-54 flex-col p-1 sm:-mx-3 sm:-mt-3 sm:h-59 sm:p-3">
         <img
           src={product.image}
           alt={product.name}

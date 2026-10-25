@@ -436,13 +436,16 @@ html[data-theme='light'] .hero-copy h1 {
     padding-top: calc(var(--header-bottom) + var(--panels-gap));
   }
 
-  /* Largura fixa, para o card não mudar de tamanho com a campanha. Fica acima do fundo ampliado. */
+  /*
+    Largura fixa, para o card não mudar de tamanho com a campanha. Fica acima do fundo ampliado.
+    Alinhado pelo topo: o logo da campanha fica na altura dos logos dos cards fechados (~26px).
+  */
   .hero-copy {
     grid-area: copy;
-    align-self: end;
+    align-self: start;
     width: var(--copy-width);
     max-width: none;
-    padding: var(--hero-gap) 0 0 var(--copy-inset);
+    padding: 26px 0 0 var(--copy-inset);
   }
 
   /*
@@ -462,11 +465,15 @@ html[data-theme='light'] .hero-copy h1 {
     line-height: 0.95;
   }
 
+  /*
+    Na base do card, espelhando o texto: a mesma folga de 26px que o logo tem do topo. A linha
+    dos controles termina na margem de baixo dos painéis (--panels-gap), daí a soma.
+  */
   .hero-controls {
     position: relative;
     z-index: 1;
-    align-self: start;
-    padding-block: 20px 0;
+    align-self: end;
+    padding-block: 20px calc(var(--panels-gap) + 26px);
     padding-left: var(--copy-inset);
   }
 }
@@ -525,6 +532,41 @@ html[data-theme='light'] .hero-copy h1 {
 
   .hero-controls :focus-visible {
     outline-offset: -2px;
+  }
+}
+
+/*
+  No celular não há faixa de controles, setas nem botão de pausa (o avanço automático continua): os
+  indicadores sobem para o canto do card, na altura do logo da campanha, sem moldura: o fundo é o
+  degradê do topo do card. Cada indicador fica só com a largura do traço mais a folga (24px ou mais), para o grupo
+  não encostar nos logos mais largos; a altura de toque continua 44px.
+*/
+@media (width < 601px) {
+  .hero-carousel {
+    --controls-band: 0px;
+  }
+
+  .hero-controls {
+    grid-area: stack;
+    align-self: start;
+    justify-self: end;
+    height: auto;
+    /* O mesmo recuo do topo do texto (.hero-copy), para os indicadores começarem na linha do logo. */
+    padding: 24px var(--box-padding) 0 0;
+  }
+
+  .hero-arrows,
+  .hero-toggle {
+    display: none;
+  }
+
+  .hero-control {
+    flex: none;
+    padding-inline: 4px;
+  }
+
+  .hero-control button {
+    min-width: 0;
   }
 }
 

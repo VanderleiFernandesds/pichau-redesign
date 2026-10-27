@@ -429,6 +429,8 @@ html[data-theme='light'] .hero-copy h1 {
     --copy-width: clamp(340px, 26vw, 460px);
     --copy-gap: 24px;
     grid-template-columns: auto minmax(0, 1fr);
+    /* A linha do texto fica com toda a altura do card acima dos controles, para ele centrar nela. */
+    grid-template-rows: 1fr auto;
     grid-template-areas: 'copy panels' 'controls panels';
     column-gap: var(--copy-gap);
     /* Mesmo espaço entre o header e os painéis e entre os painéis e os cards. */
@@ -438,14 +440,15 @@ html[data-theme='light'] .hero-copy h1 {
 
   /*
     Largura fixa, para o card não mudar de tamanho com a campanha. Fica acima do fundo ampliado.
-    Alinhado pelo topo: o logo da campanha fica na altura dos logos dos cards fechados (~26px).
+    Centrado na vertical no espaço entre o topo do card e os controles; os 26px são a folga mínima
+    de cada lado, a mesma que os logos dos cards fechados têm do topo.
   */
   .hero-copy {
     grid-area: copy;
-    align-self: start;
+    align-self: center;
     width: var(--copy-width);
     max-width: none;
-    padding: 26px 0 0 var(--copy-inset);
+    padding: 26px 0 26px var(--copy-inset);
   }
 
   /*

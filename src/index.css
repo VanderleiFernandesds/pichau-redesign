@@ -2769,6 +2769,20 @@ html[data-theme='light'] .hero-copy h1 {
   @media (width < 601px) {
     .purpose-card-art {
       --art-align-x: 0.5;
+  /*
+    No tema escuro os cards de "Escolha seu computador" ganham um brilho branco que esmaece do topo
+    para a base, por cima do degradê do card (também no hover). Fica sutil para o título branco
+    manter o contraste.
+  */
+  html:not([data-theme='light']) #choose .purpose-card {
+    --white-sheen: linear-gradient(180deg, rgb(255 255 255 / 0.14), rgb(255 255 255 / 0) 65%);
+    --chamfer-fill: var(--white-sheen), var(--card-fill);
+  }
+
+  html:not([data-theme='light']) #choose .purpose-card:is(:hover, :focus-visible) {
+    --chamfer-fill: var(--white-sheen), var(--card-fill-hover);
+  }
+
       height: auto;
       aspect-ratio: 9 / 8;
     }

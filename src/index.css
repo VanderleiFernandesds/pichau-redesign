@@ -2039,6 +2039,77 @@ html[data-theme='light'] .hero-copy h1 {
 
     .department-menu-panel[data-has-detail] {
       width: min(1000px, 100% - 48px);
+      align-items: flex-start;
+    }
+
+    /*
+      Com um departamento aberto, a lista continua com a altura da tela e as subcategorias só com a
+      do conteúdo (rolam se passarem dela). O fundo do painel fica sempre só atrás da lista (reto do
+      lado das subcategorias quando elas aparecem), e elas têm fundo próprio com os chanfros da
+      direita. Assim, quando o painel volta a estreitar, não sobra um fundo vazio da altura da tela
+      encolhendo. O drop-shadow do painel contorna o degrau.
+    */
+    .department-menu-panel::before {
+      right: auto;
+      width: var(--department-list-width);
+    }
+
+    .department-menu-panel::after {
+      right: auto;
+      width: calc(var(--department-list-width) - 1px);
+    }
+
+    .department-menu-panel[data-has-detail]::after {
+      width: var(--department-list-width);
+    }
+
+    .department-menu-panel[data-has-detail]::before,
+    .department-menu-panel[data-has-detail]::after {
+      clip-path: none;
+    }
+
+    .department-menu-panel[data-has-detail] .department-menu-list {
+      align-self: stretch;
+    }
+
+    /* --detail-top (DepartmentMenu) alinha o topo das subcategorias ao departamento escolhido. */
+    .department-menu-panel[data-has-detail] .department-menu-detail {
+      position: relative;
+      isolation: isolate;
+      max-height: 100%;
+      translate: 0 var(--detail-top, 0px);
+      transition: translate 0.25s var(--carousel-ease, ease);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .department-menu-panel[data-has-detail] .department-menu-detail {
+        transition: none;
+      }
+    }
+
+    .department-menu-panel[data-has-detail] .department-menu-detail::before,
+    .department-menu-panel[data-has-detail] .department-menu-detail::after {
+      content: '';
+      position: absolute;
+      z-index: -1;
+      clip-path: polygon(
+        0 0,
+        calc(100% - var(--cut)) 0,
+        100% var(--cut),
+        100% calc(100% - var(--cut)),
+        calc(100% - var(--cut)) 100%,
+        0 100%
+      );
+    }
+
+    .department-menu-panel[data-has-detail] .department-menu-detail::before {
+      inset: 0;
+      background: var(--chamfer-border);
+    }
+
+    .department-menu-panel[data-has-detail] .department-menu-detail::after {
+      inset: 1px 1px 1px 0;
+      background: var(--chamfer-fill);
     }
 
     .department-menu-panel:not([data-has-detail]) .department-menu-detail {
@@ -2698,6 +2769,20 @@ html[data-theme='light'] .hero-copy h1 {
     filter: drop-shadow(0 0 10px #ed002459);
   }
 
+  /*
+    No tema escuro os cards de "Escolha seu computador" ganham um brilho branco que esmaece do topo
+    para a base, por cima do degradê do card (também no hover). Fica sutil para o título branco
+    manter o contraste.
+  */
+  html:not([data-theme='light']) #choose .purpose-card {
+    --white-sheen: linear-gradient(180deg, rgb(255 255 255 / 0.14), rgb(255 255 255 / 0) 65%);
+    --chamfer-fill: var(--white-sheen), var(--card-fill);
+  }
+
+  html:not([data-theme='light']) #choose .purpose-card:is(:hover, :focus-visible) {
+    --chamfer-fill: var(--white-sheen), var(--card-fill-hover);
+  }
+
   /* Traços vermelhos sobre as diagonais dos cantos superior direito e inferior esquerdo. */
   .corner-accents {
     --accent-length: calc(var(--cut) * 1.1);
@@ -2769,20 +2854,6 @@ html[data-theme='light'] .hero-copy h1 {
   @media (width < 601px) {
     .purpose-card-art {
       --art-align-x: 0.5;
-  /*
-    No tema escuro os cards de "Escolha seu computador" ganham um brilho branco que esmaece do topo
-    para a base, por cima do degradê do card (também no hover). Fica sutil para o título branco
-    manter o contraste.
-  */
-  html:not([data-theme='light']) #choose .purpose-card {
-    --white-sheen: linear-gradient(180deg, rgb(255 255 255 / 0.14), rgb(255 255 255 / 0) 65%);
-    --chamfer-fill: var(--white-sheen), var(--card-fill);
-  }
-
-  html:not([data-theme='light']) #choose .purpose-card:is(:hover, :focus-visible) {
-    --chamfer-fill: var(--white-sheen), var(--card-fill-hover);
-  }
-
       height: auto;
       aspect-ratio: 9 / 8;
     }

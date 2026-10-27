@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 import { X } from 'lucide-react';
 import DepartmentList from './DepartmentList';
 import DepartmentDetail from './DepartmentDetail';
@@ -60,6 +60,52 @@ export default function DepartmentMenu({ isOpen, onClose, triggerRef, onOpenDepa
 
   // O painel recebe o foco, e não a busca, para o teclado virtual não abrir sozinho no celular.
   useSlidingDialog(isOpen, dialogRef, panelRef, () => panelRef.current.focus());
+
+  /*
+    Desktop: as subcategorias descem até a altura do departamento escolhido na lista, sem passar da
+    base da tela (--detail-top, usado em index.css). Refaz a conta quando o painel ou as
+    subcategorias mudam de tamanho: enquanto o painel alarga, o texto quebra mais e elas ficam mais
+    altas.
+  */
+  const activeId = activeDepartment?.id;
+  const isDetailPlacedRef = useRef(false);
+  useLayoutEffect(() => {
+    if (!activeId) {
+      isDetailPlacedRef.current = false;
+      return;
+    }
+    const panel = panelRef.current;
+    const detail = panel.querySelector('.department-menu-detail');
+
+    // Só a troca de departamento desliza; ao aparecer e nos ajustes de tamanho o painel vai direto.
+    function placeDetail(isAnimated) {
+      const button = panel.querySelector('[aria-controls="department-detail"][aria-current]');
+      if (!button || window.matchMedia(MOBILE_QUERY).matches) return;
+
+      const panelRect = panel.getBoundingClientRect();
+      const lowest = panelRect.height - detail.offsetHeight;
+      const top = button.getBoundingClientRect().top - panelRect.top;
+      if (!isAnimated) detail.style.transition = 'none';
+      panel.style.setProperty('--detail-top', `${Math.max(0, Math.min(top, lowest))}px`);
+      if (!isAnimated) {
+        detail.getBoundingClientRect();
+        detail.style.transition = '';
+      }
+    }
+
+    placeDetail(isDetailPlacedRef.current);
+    isDetailPlacedRef.current = true;
+
+    // A primeira notificação do observer só repete a medida inicial e cortaria o deslize.
+    let isFirstNotice = true;
+    const observer = new ResizeObserver(() => {
+      if (!isFirstNotice) placeDetail(false);
+      isFirstNotice = false;
+    });
+    observer.observe(panel);
+    observer.observe(detail);
+    return () => observer.disconnect();
+  }, [activeId]);
 
   // Esc passa pelo mesmo fechamento animado em vez de fechar o <dialog> direto.
   function handleCancel(event) {

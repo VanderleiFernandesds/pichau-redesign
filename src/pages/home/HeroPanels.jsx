@@ -1,6 +1,8 @@
 import HeroCampaignPanel from './HeroCampaignPanel';
 import CampaignBackground from './CampaignBackground';
 import CampaignArtLink from './CampaignArtLink';
+import { useAfterPageLoad } from '../../hooks/useAfterPageLoad';
+import { useMediaQuery } from '../../hooks/useMediaQuery';
 
 /*
   O fundo do primeiro slide é o LCP (o index.html faz preload dele): fica com prioridade alta, e as
@@ -10,6 +12,14 @@ import CampaignArtLink from './CampaignArtLink';
 function fetchPriority(slides, id) {
   return id === slides[0].id ? 'high' : 'low';
 }
+
+/*
+  As artes que não aparecem na primeira tela só são pedidas depois do load: os fundos ampliados
+  dos outros slides (invisíveis até o carrossel girar) e, abaixo de 1001px, os cards dos outros
+  slides. No desktop os cards fechados ficam à mostra, então baixam desde o início. Se o visitante
+  trocar de slide antes do load, a troca libera as artes na hora.
+*/
+const MOBILE_MEDIA = '(width < 1001px)';
 
 /*
   Os painéis seguem a ordem da fila no DOM, para o Tab percorrer os cards na ordem visual. Com
@@ -27,6 +37,10 @@ export default function HeroPanels({
   onSelect,
 }) {
   const shownSlide = slides.find(({ id }) => id === shownId);
+  const isPageLoaded = useAfterPageLoad();
+  const isMobile = useMediaQuery(MOBILE_MEDIA);
+  const canLoadAll = isPageLoaded || shownId !== slides[0].id;
+  const isOffscreenArt = (id) => !canLoadAll && id !== slides[0].id;
   const panelsClassName = ['hero-panels', isConcealing && 'is-concealing', isJumping && 'is-jumping']
     .filter(Boolean)
     .join(' ');
@@ -45,6 +59,7 @@ export default function HeroPanels({
             className={`hero-stage-image ${id === shownId ? 'is-visible' : ''}`}
             style={{ objectPosition: background.position.stage }}
             fetchPriority={fetchPriority(slides, id)}
+            isDeferred={isOffscreenArt(id)}
           />
         ))}
         <CampaignArtLink cta={shownSlide.cta} className="hero-stage-link" />
@@ -67,6 +82,7 @@ export default function HeroPanels({
             ]}
             isShown={isShown}
             fetchPriority={fetchPriority(slides, slide.id)}
+            isArtDeferred={isMobile && isOffscreenArt(slide.id)}
             onSelect={() => onSelect(slide.id)}
           />
         );

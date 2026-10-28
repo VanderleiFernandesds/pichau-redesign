@@ -22,11 +22,12 @@ export default function AccountMenu({ onOpenAuth }) {
       <div className="hidden h-12 items-center gap-2 px-2 text-[13px] leading-tight whitespace-nowrap text-heading lg:flex">
         <User aria-hidden="true" className="size-5 shrink-0" />
         <p>
-          <button type="button" onClick={() => onOpenAuth('login')} className={linkClass}>
+          {/* Cada link com 24px de altura, o alvo mínimo do WCAG 2.2; os dois juntos ocupam os 48px da caixa. */}
+          <button type="button" onClick={() => onOpenAuth('login')} className={`inline-flex h-6 items-center ${linkClass}`}>
             Entre
           </button>{' '}
           ou
-          <button type="button" onClick={() => onOpenAuth('signup')} className={`block ${linkClass}`}>
+          <button type="button" onClick={() => onOpenAuth('signup')} className={`flex h-6 items-center ${linkClass}`}>
             Cadastre-se
           </button>
         </p>

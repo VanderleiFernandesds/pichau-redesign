@@ -40,7 +40,15 @@ function objectStyle({ size, collapsed, expanded }) {
   O card mostra só fundo e objetos; os textos da campanha ficam na coluna à esquerda do hero.
   No card fechado o logo da campanha faz o papel de título. O botão de seleção cobre o card inteiro.
 */
-export default function HeroCampaignPanel({ campaign, position, stateClasses, isShown, fetchPriority, onSelect }) {
+export default function HeroCampaignPanel({
+  campaign,
+  position,
+  stateClasses,
+  isShown,
+  fetchPriority,
+  isArtDeferred,
+  onSelect,
+}) {
   const { name, background, objects } = campaign;
   const hasProductArt = Boolean(background.productArea);
   const hasClosedArt = Boolean(background.closed);
@@ -70,6 +78,7 @@ export default function HeroCampaignPanel({ campaign, position, stateClasses, is
             ...productAreaVars('mobile-art', background.mobile),
           }}
           fetchPriority={fetchPriority}
+          isDeferred={isArtDeferred}
         />
         {objects.map((object) => (
           <span

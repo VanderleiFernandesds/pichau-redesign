@@ -10,7 +10,16 @@ const DESKTOP_MEDIA = '(width >= 1001px)';
   assim é a mesma do card. closedArt (só no card) é a arte estreita do card fechado: no desktop o
   card só mostra o próprio fundo fechado, porque aberto ele fica transparente sobre o fundo ampliado.
 */
-export default function CampaignBackground({ background, closedArt, ...imageProps }) {
+export default function CampaignBackground({ background, closedArt, isDeferred = false, ...imageProps }) {
+  // Adiado: fica sem src (nada é baixado) até a página terminar de carregar; ver HeroPanels.
+  if (isDeferred) {
+    return (
+      <picture>
+        <img alt="" decoding="async" {...imageProps} />
+      </picture>
+    );
+  }
+
   return (
     <picture>
       {background.mobile && <source media={MOBILE_MEDIA} srcSet={background.mobile.src} />}

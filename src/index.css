@@ -481,6 +481,21 @@ html[data-theme='light'] .hero-copy h1 {
   }
 }
 
+/*
+  Notebooks (1001px a 1599px): o fundo ampliado já está encostado à direita e os produtos da arte
+  começam cerca de 280px depois do início do texto. O título em duas linhas e a descrição ficam
+  estreitos o bastante para caber nesse trecho, sem passar por cima dos produtos.
+*/
+@media (1001px <= width < 1600px) {
+  .hero-copy h1.is-stacked {
+    font-size: clamp(34px, 2.85vw, 46px);
+  }
+
+  .hero-copy h1.is-stacked + p {
+    max-width: 24ch;
+  }
+}
+
 /* Setas abaixo de 1001px, à direita da faixa de controles; 44px de área de toque. */
 .hero-arrows {
   --arrow-size: 44px;
@@ -2869,6 +2884,11 @@ html[data-theme='light'] .hero-copy h1 {
 
   .eyebrow {
     @apply text-[8px] font-bold tracking-[2px] text-[#777e87] sm:text-[10px];
+  }
+
+  /* Sobre o fundo claro o cinza do tema escuro fica em 3,9:1; este passa de 4,5:1 (WCAG AA). */
+  html[data-theme='light'] .eyebrow {
+    color: #5f6670;
   }
 }
 

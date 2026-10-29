@@ -3,10 +3,13 @@ import CarouselArrows from '../../components/ui/CarouselArrows';
 import DepartmentCard from './DepartmentCard';
 import { SHOWCASE_DEPARTMENTS } from '../../data/departments';
 import { useCarouselTrack } from '../../hooks/useCarouselTrack';
+import { useAfterPageLoad } from '../../hooks/useAfterPageLoad';
 import SectionDivider from '../../components/ui/SectionDivider';
 
 export default function DepartmentShowcase({ onOpenDepartment, onShowAll }) {
   const { trackRef, canScroll, scrollByItem, revealFocusedItem } = useCarouselTrack();
+  // A vitrine fica abaixo da primeira tela: as fotos só são pedidas depois do load.
+  const isPageLoaded = useAfterPageLoad();
 
   return (
     <section aria-labelledby="department-showcase-title" className="department-showcase wrap">
@@ -48,7 +51,7 @@ export default function DepartmentShowcase({ onOpenDepartment, onShowAll }) {
       >
         {SHOWCASE_DEPARTMENTS.map((department) => (
           <li key={department.id} className="flex">
-            <DepartmentCard department={department} onOpen={onOpenDepartment} />
+            <DepartmentCard department={department} isImageDeferred={!isPageLoaded} onOpen={onOpenDepartment} />
           </li>
         ))}
       </ul>

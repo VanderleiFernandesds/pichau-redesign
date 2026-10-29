@@ -1,14 +1,17 @@
 import energyDrinkBackground from '../assets/images/banners/energy-drink/fundo-1985x792.avif';
 import energyDrinkBackgroundMobile from '../assets/images/banners/energy-drink/fundo-celular-1122x1402.avif';
+import energyDrinkBackgroundMobileSmall from '../assets/images/banners/energy-drink/fundo-celular-750x937.avif';
 import energyDrinkLogo from '../assets/images/banners/energy-drink/logo-pichau-energy-drink.svg';
 import energyDrinkBackgroundClosed from '../assets/images/banners/energy-drink/fundo-fechado-322x996.avif';
 import corsairBackground from '../assets/images/banners/corsair/fundo-1986x792.avif';
 import corsairBackgroundMobile from '../assets/images/banners/corsair/fundo-celular-1122x1402.avif';
+import corsairBackgroundMobileSmall from '../assets/images/banners/corsair/fundo-celular-750x937.avif';
 import corsairBackgroundClosed from '../assets/images/banners/corsair/fundo-fechado-322x892.avif';
 import corsairLogo from '../assets/images/banners/corsair/logo.avif';
 import corsairLogoDark from '../assets/images/banners/corsair/logo-escuro.avif';
 import rogBackground from '../assets/images/banners/rog/fundo-1986x792.avif';
 import rogBackgroundMobile from '../assets/images/banners/rog/fundo-celular-1122x1402.avif';
+import rogBackgroundMobileSmall from '../assets/images/banners/rog/fundo-celular-750x937.avif';
 import rogBackgroundClosed from '../assets/images/banners/rog/fundo-fechado-322x742.avif';
 import rogLogo from '../assets/images/banners/rog/logo.svg';
 import rogLogoDark from '../assets/images/banners/rog/logo-escuro.svg';
@@ -36,6 +39,8 @@ import rogLogoDark from '../assets/images/banners/rog/logo-escuro.svg';
                        cobre a largura do card; com isWholeArt, ela fica no máximo com essa
                        largura, sem cortar as laterais.
   background.mobile    (opcional) arte própria abaixo de 1001px (celular e tablet): src, width, height e productArea.
+                       smallSrc é a mesma arte com 750px de largura, para telas que não precisam
+                       da original (ver CampaignBackground e o preload do index.html).
   background.closed    (opcional) arte própria do card fechado do desktop: src, width e height.
                        Ocupa a largura do card, encostada na base, sem cortar os produtos.
   Textos da coluna à esquerda do hero, trocados junto com o card expandido. Só usam informações
@@ -72,6 +77,7 @@ export const HERO_CAMPAIGNS = {
       productArea: { top: 165, bottom: 700 },
       mobile: {
         src: energyDrinkBackgroundMobile,
+        smallSrc: energyDrinkBackgroundMobileSmall,
         width: 1122,
         height: 1402,
         productArea: { top: 610, bottom: 1260 },
@@ -129,6 +135,7 @@ export const HERO_CAMPAIGNS = {
       productArea: { top: 21, bottom: 775 },
       mobile: {
         src: corsairBackgroundMobile,
+        smallSrc: corsairBackgroundMobileSmall,
         width: 1122,
         height: 1402,
         productArea: { top: 560, bottom: 1280 },
@@ -189,6 +196,7 @@ export const HERO_CAMPAIGNS = {
       productArea: { top: 35, bottom: 700 },
       mobile: {
         src: rogBackgroundMobile,
+        smallSrc: rogBackgroundMobileSmall,
         width: 1122,
         height: 1402,
         productArea: { top: 585, bottom: 1190 },

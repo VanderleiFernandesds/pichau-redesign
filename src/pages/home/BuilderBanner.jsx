@@ -1,14 +1,23 @@
 import { ArrowRight } from 'lucide-react';
+import partsImageSmall from '../../assets/images/purposes/monte-seu-pc-300.avif';
 import partsImage from '../../assets/images/purposes/monte-seu-pc-600.avif';
 import partsImageLarge from '../../assets/images/purposes/monte-seu-pc-1200.avif';
+import pcCaseImageSmall from '../../assets/images/purposes/monte-seu-pc-gabinete-337.avif';
 import pcCaseImage from '../../assets/images/purposes/monte-seu-pc-gabinete.avif';
 import SectionDivider from '../../components/ui/SectionDivider';
+import { useAfterPageLoad } from '../../hooks/useAfterPageLoad';
 
 /*
   Chamada para o modal de objetivos (ConfigModal). Ele recomenda por onde começar e filtra as
   ofertas, sem montar o PC peça por peça, então o botão promete "encontrar", e não "configurar".
 */
 export default function BuilderBanner({ onStart }) {
+  /*
+    O lazy sozinho não basta: o banner cai dentro da margem em que o navegador já baixa as imagens
+    lazy, e as fotos (~160 KB) disputavam a banda com o LCP. Até o load elas ficam sem src.
+  */
+  const isPageLoaded = useAfterPageLoad();
+
   return (
     // A divisória fica fora do painel, que é recortado pelo chanfro.
     <section id="builder" aria-labelledby="builder-title">
@@ -38,14 +47,27 @@ export default function BuilderBanner({ onStart }) {
           Decorativa: o título já diz do que se trata. O gabinete fica à direita, atrás das peças; o
           brilho é um pseudo-elemento atrás das duas fotos.
         */}
+        {/*
+          Larguras medidas: o gabinete ocupa ~32% da tela no celular, ~210px até 1440px e ~310px
+          acima; as peças, ~62% no celular, ~405px até 1440px e 600px acima.
+        */}
         <div className="builder-art">
-          <img className="builder-art-case" src={pcCaseImage} alt="" width="673" height="800" loading="lazy" decoding="async" />
-          {/* As peças ocupam no máximo 600 x 400 (desktop largo) e 390px de largura abaixo de 1001px. */}
+          <img
+            className="builder-art-case"
+            src={isPageLoaded ? pcCaseImage : undefined}
+            srcSet={isPageLoaded ? `${pcCaseImageSmall} 337w, ${pcCaseImage} 673w` : undefined}
+            sizes="(width >= 1440px) 310px, (width >= 601px) 210px, 33vw"
+            alt=""
+            width="673"
+            height="800"
+            loading="lazy"
+            decoding="async"
+          />
           <img
             className="builder-art-parts"
-            src={partsImage}
-            srcSet={`${partsImage} 600w, ${partsImageLarge} 1200w`}
-            sizes="(min-width: 1001px) 600px, 390px"
+            src={isPageLoaded ? partsImage : undefined}
+            srcSet={isPageLoaded ? `${partsImageSmall} 300w, ${partsImage} 600w, ${partsImageLarge} 1200w` : undefined}
+            sizes="(width >= 1440px) 600px, (width >= 601px) 405px, 63vw"
             alt=""
             width="1536"
             height="1024"

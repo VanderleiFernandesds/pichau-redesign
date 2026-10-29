@@ -49,9 +49,12 @@
       media="(width >= 1001px)"
       fetchpriority="high"
     />
+    <!-- srcset e sizes iguais aos do <source> do celular no CampaignBackground. -->
     <link
       rel="preload"
       href="/src/assets/images/banners/energy-drink/fundo-celular-1122x1402.avif"
+      imagesrcset="/src/assets/images/banners/energy-drink/fundo-celular-750x937.avif 750w, /src/assets/images/banners/energy-drink/fundo-celular-1122x1402.avif 1122w"
+      imagesizes="100vw"
       as="image"
       type="image/avif"
       media="(width < 1001px)"

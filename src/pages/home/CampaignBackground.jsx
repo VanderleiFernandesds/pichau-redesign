@@ -3,6 +3,16 @@ import { hideBrokenImage } from '../../utils/image';
 // Mesmas media queries do CSS (index.css) e do preload do index.html.
 const MOBILE_MEDIA = '(width < 1001px)';
 const DESKTOP_MEDIA = '(width >= 1001px)';
+/*
+  Abaixo de 1001px o card ocupa quase a largura da tela. Com a versão de 750px, celulares com
+  densidade de até ~2x não baixam a arte original, quase o dobro maior. O preload do index.html
+  repete o srcset e o sizes, para baixar o mesmo arquivo.
+*/
+const MOBILE_SIZES = '100vw';
+
+function mobileSrcSet({ src, smallSrc, width }) {
+  return smallSrc ? `${smallSrc} 750w, ${src} ${width}w` : src;
+}
 
 /*
   Fundo da campanha, no card e no fundo ampliado. Com arte própria para o celular, os dois usam o
@@ -22,7 +32,9 @@ export default function CampaignBackground({ background, closedArt, isDeferred =
 
   return (
     <picture>
-      {background.mobile && <source media={MOBILE_MEDIA} srcSet={background.mobile.src} />}
+      {background.mobile && (
+        <source media={MOBILE_MEDIA} srcSet={mobileSrcSet(background.mobile)} sizes={MOBILE_SIZES} />
+      )}
       {closedArt && <source media={DESKTOP_MEDIA} srcSet={closedArt.src} />}
       <img src={background.src} alt="" decoding="async" onError={hideBrokenImage} {...imageProps} />
     </picture>

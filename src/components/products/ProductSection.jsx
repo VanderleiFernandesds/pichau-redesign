@@ -1,6 +1,7 @@
 import ProductCard from './ProductCard';
 import SectionDivider from '../ui/SectionDivider';
 import { useCarouselTrack } from '../../hooks/useCarouselTrack';
+import { useAfterPageLoad } from '../../hooks/useAfterPageLoad';
 
 export default function ProductSection({
   ref,
@@ -20,6 +21,11 @@ export default function ProductSection({
 }) {
   const hasProducts = products.length > 0;
   const { trackRef, revealFocusedItem } = useCarouselTrack();
+  /*
+    As ofertas ficam abaixo da primeira tela, mas dentro da margem em que o navegador já baixa as
+    fotos lazy, que disputavam a banda com o LCP. Até o load elas ficam sem src.
+  */
+  const isPageLoaded = useAfterPageLoad();
 
   return (
     <section ref={ref} id={id}>
@@ -51,6 +57,7 @@ export default function ProductSection({
                 product={product}
                 quantity={cartQuantities[product.id] ?? 0}
                 isFavorite={favorites.includes(product.id)}
+                isImageDeferred={!isPageLoaded}
                 onToggleFavorite={onToggleFavorite}
                 onAddToCart={onAddToCart}
                 onChangeQuantity={onChangeCartQuantity}

@@ -17,9 +17,19 @@ import { productPath } from '../../hooks/useRoute';
 */
 /*
   quantity vem do carrinho compartilhado (useCart), então cards repetidos, o painel do carrinho e o
-  contador do header mostram sempre o mesmo valor.
+  contador do header mostram sempre o mesmo valor. isImageDeferred deixa a foto sem src até o load
+  da página (ver ProductSection e ProductCarousel).
 */
-export default function ProductCard({ product, quantity, isFavorite, onToggleFavorite, onAddToCart, onChangeQuantity, onView }) {
+export default function ProductCard({
+  product,
+  quantity,
+  isFavorite,
+  isImageDeferred = false,
+  onToggleFavorite,
+  onAddToCart,
+  onChangeQuantity,
+  onView,
+}) {
   const cardPrice = getCardPrice(product);
   const discountPercent = getDiscountPercent(product);
   const isInCart = quantity > 0;
@@ -76,7 +86,7 @@ export default function ProductCard({ product, quantity, isFavorite, onToggleFav
       {/* A área branca avança sobre o padding do card nas laterais e em cima, até 4px da borda. */}
       <div className="chamfer product-media relative -mx-2 -mt-2 flex h-54 flex-col p-1 sm:-mx-3 sm:-mt-3 sm:h-59 sm:p-3">
         <img
-          src={product.image}
+          src={isImageDeferred ? undefined : product.image}
           alt={product.name}
           loading="lazy"
           decoding="async"

@@ -27,4 +27,13 @@ export default defineConfig({
   // O GitHub Pages serve o projeto em /pichau-redesign/, e não na raiz do domínio.
   base: '/pichau-redesign/',
   plugins: [react(), tailwindcss(), spaFallback()],
+  build: {
+    /*
+      Fotos AVIF nunca viram data URI: as dos produtos (mais de 130, quase todas abaixo de 4 KB)
+      somavam ~56 KB do JavaScript gzipado, baixado antes da primeira pintura, e o base64 nem
+      aproveita o loading="lazy". Como arquivos, só são pedidas quando aparecem. O resto segue o
+      limite padrão do Vite.
+    */
+    assetsInlineLimit: (filePath) => (filePath.endsWith('.avif') ? false : undefined),
+  },
 });

@@ -1,12 +1,16 @@
 import { ArrowUpRight } from 'lucide-react';
 
+// Largura da imagem no card: ~41% da tela no celular (duas colunas) e até ~220px nas maiores.
+const IMAGE_SIZES = '(width < 601px) 41vw, 220px';
+
 /*
   O card inteiro é um único link; seta, cantos e imagem são decorativos (o título já nomeia o link).
   No celular a descrição vem logo abaixo do título, e imagem e seta ficam presas na base do card:
   como os cards da mesma linha têm a mesma altura, elas ficam alinhadas com as do card ao lado.
 */
-export default function PurposeCard({ purpose, onFilter }) {
-  const { title, description, href, category, image, imageFrame } = purpose;
+// isImageDeferred deixa a imagem sem src (nada é baixado) até o load da página; ver PurposeCards.
+export default function PurposeCard({ purpose, isImageDeferred = false, onFilter }) {
+  const { title, description, href, category, image, imageSrcSet, imageFrame } = purpose;
 
   return (
     <a
@@ -47,7 +51,15 @@ export default function PurposeCard({ purpose, onFilter }) {
             '--frame-height': imageFrame.height,
           }}
         >
-          <img src={image} alt="" width={imageFrame.sourceWidth} height={imageFrame.sourceHeight} decoding="async" />
+          <img
+            src={isImageDeferred ? undefined : image}
+            srcSet={isImageDeferred ? undefined : imageSrcSet}
+            sizes={IMAGE_SIZES}
+            alt=""
+            width={imageFrame.sourceWidth}
+            height={imageFrame.sourceHeight}
+            decoding="async"
+          />
         </div>
       </div>
     </a>

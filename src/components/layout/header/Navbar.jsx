@@ -28,6 +28,7 @@ const SECTION_IDS = SECTION_LINKS.map(({ href }) => href.slice(1));
 export default function Navbar({
   isMenuOpen,
   onMenuOpenChange,
+  onMenuOverlayChange,
   isNavOpen,
   onNavOpenChange,
   onCoupon,
@@ -145,6 +146,7 @@ export default function Navbar({
         triggerRef={departmentsButtonRef}
         onOpenDepartment={openDepartment}
         onNavigate={leaveDepartmentMenu}
+        onOverlayChange={onMenuOverlayChange}
       />
     </nav>
   );

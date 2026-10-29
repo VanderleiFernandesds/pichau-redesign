@@ -56,8 +56,11 @@ export default function Storefront() {
   const [help, setHelp] = useState({ isOpen: false, topicId: null });
   const [cartStatus, setCartStatus] = useState('');
   const [addedNotice, setAddedNotice] = useState({ isVisible: false, showKey: 0 });
-  // Com um modal ou painel sobre a página, o carrossel do hero pausa (e retoma ao fechar).
+  // Se o menu de departamentos está escurecendo a página (ele mesmo avisa; nem sempre há fundo).
+  const [isMenuOverlaid, setIsMenuOverlaid] = useState(false);
   const isOverlayOpen = isMenuOpen || isCartOpen || isConfigOpen || authView !== null || help.isOpen;
+  // O carrossel do hero pausa só com o fundo escurecido de um modal ou painel (e retoma ao fechar).
+  const isHeroCovered = isMenuOverlaid || isCartOpen || isConfigOpen || authView !== null || help.isOpen;
   const searchInputRef = useRef(null);
 
   const cart = useCart();
@@ -272,6 +275,7 @@ export default function Storefront() {
         <Navbar
           isMenuOpen={isMenuOpen}
           onMenuOpenChange={setIsMenuOpen}
+          onMenuOverlayChange={setIsMenuOverlaid}
           isNavOpen={isNavOpen}
           onNavOpenChange={setIsNavOpen}
           onCoupon={() => toast.showToast('Conceito demonstrativo: nenhum cupom real disponível.')}
@@ -309,7 +313,7 @@ export default function Storefront() {
 
         {route.name === 'home' && (
           <>
-            <Hero onFilter={filterByCategory} theme={theme} isCovered={isOverlayOpen}>
+            <Hero onFilter={filterByCategory} theme={theme} isCovered={isHeroCovered}>
               <PurposeCards onFilter={filterByCategory} />
             </Hero>
             <DepartmentShowcase onOpenDepartment={openDepartment} onShowAll={() => setIsMenuOpen(true)} />

@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { X } from 'lucide-react';
 import DepartmentList from './DepartmentList';
 import DepartmentDetail from './DepartmentDetail';
@@ -6,6 +6,8 @@ import { DEPARTMENT_GROUPS } from '../../../../data/departments';
 import { useSlidingDialog } from '../../../../hooks/useSlidingDialog';
 
 const MOBILE_QUERY = '(width < 1001px)';
+// Mesmo corte do index.css: a partir dele a lista sozinha não escurece a página.
+const WIDE_QUERY = '(width >= 1500px)';
 const HOVER_DELAY = 120;
 
 function normalize(text) {
@@ -43,7 +45,7 @@ function filterGroups(query) {
   camada superior, acima do header fixo. Desktop: lista e subcategorias lado a lado; abaixo de
   1001px, um painel por vez (data-level), com "Voltar".
 */
-export default function DepartmentMenu({ isOpen, onClose, triggerRef, onOpenDepartment, onNavigate }) {
+export default function DepartmentMenu({ isOpen, onClose, triggerRef, onOpenDepartment, onNavigate, onOverlayChange }) {
   const dialogRef = useRef(null);
   const panelRef = useRef(null);
   const titleRef = useRef(null);
@@ -60,6 +62,22 @@ export default function DepartmentMenu({ isOpen, onClose, triggerRef, onOpenDepa
 
   // O painel recebe o foco, e não a busca, para o teclado virtual não abrir sozinho no celular.
   useSlidingDialog(isOpen, dialogRef, panelRef, () => panelRef.current.focus());
+
+  /*
+    Avisa quando o menu escurece a página (o fundo do <dialog> em index.css): abaixo de 1500px
+    sempre que está aberto; acima disso só com um departamento aberto. O hero pausa só nesses casos.
+  */
+  const hasDetail = Boolean(activeDepartment);
+  useEffect(() => {
+    const wideQuery = window.matchMedia(WIDE_QUERY);
+    function report() {
+      onOverlayChange(isOpen && (hasDetail || !wideQuery.matches));
+    }
+
+    report();
+    wideQuery.addEventListener('change', report);
+    return () => wideQuery.removeEventListener('change', report);
+  }, [isOpen, hasDetail, onOverlayChange]);
 
   /*
     Desktop: as subcategorias descem até a altura do departamento escolhido na lista, sem passar da

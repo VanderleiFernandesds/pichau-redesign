@@ -2358,6 +2358,26 @@ html[data-theme='light'] .hero-copy h1 {
     }
   }
 
+  /*
+    Trilhas de "Conheça outros produtos" (ProductCarousel): longe da primeira tela e com quase dois
+    terços dos elementos da home. Montá-las após o load custava ~250 ms de estilo e layout no celular
+    (o grosso do TBT). Fora da tela, o navegador pula esse trabalho até a trilha se aproximar. Na
+    trilha, e não na seção: o overflow dela já corta o que passa da borda, então a contenção não
+    esconde nada a mais (na seção, cortaria a folga dos contornos de foco). Também não nos li, porque
+    a contenção desligaria o subgrid do card. A altura é só a estimativa até o primeiro render; o
+    auto guarda a medida real depois dele.
+  */
+  .offscreen-track {
+    content-visibility: auto;
+    contain-intrinsic-height: auto 510px;
+  }
+
+  @media (width >= 601px) {
+    .offscreen-track {
+      contain-intrinsic-height: auto 1120px;
+    }
+  }
+
   /* Card no padrão do purpose-card (chanfro e cantos); aqui o miolo e um destaque mais contido. */
   .department-card {
     display: flex;

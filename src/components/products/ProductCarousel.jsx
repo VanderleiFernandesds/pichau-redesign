@@ -50,7 +50,7 @@ function MobileProductRow({ label, products, cardProps }) {
   const { trackRef, revealFocusedItem } = useCarouselTrack();
 
   return (
-    <ul ref={trackRef} onFocus={revealFocusedItem} aria-label={label} className="product-carousel-track">
+    <ul ref={trackRef} onFocus={revealFocusedItem} aria-label={label} className="product-carousel-track offscreen-track">
       <ProductTrackItems products={products} cardProps={cardProps} />
     </ul>
   );
@@ -107,7 +107,7 @@ export default function ProductCarousel({ eyebrow, title, products, ...props }) 
         id={trackId}
         ref={trackRef}
         onFocus={revealFocusedItem}
-        className="product-carousel-track max-sm:hidden"
+        className="product-carousel-track offscreen-track max-sm:hidden"
         aria-label={title}
       >
         {!isMobile && <ProductTrackItems products={shownItems(products, INITIAL_TRACK_ITEMS)} cardProps={cardProps} />}

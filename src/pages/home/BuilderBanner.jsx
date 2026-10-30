@@ -1,9 +1,10 @@
 import { ArrowRight } from 'lucide-react';
-import partsImageSmall from '../../assets/images/purposes/monte-seu-pc-300.avif';
-import partsImage from '../../assets/images/purposes/monte-seu-pc-600.avif';
-import partsImageLarge from '../../assets/images/purposes/monte-seu-pc-1200.avif';
-import pcCaseImageSmall from '../../assets/images/purposes/monte-seu-pc-gabinete-337.avif';
-import pcCaseImage from '../../assets/images/purposes/monte-seu-pc-gabinete.avif';
+import bannerImageSmall from '../../assets/images/purposes/monte-seu-pc-banner-1086.avif';
+import bannerImage from '../../assets/images/purposes/monte-seu-pc-banner-1629.avif';
+import bannerImageLarge from '../../assets/images/purposes/monte-seu-pc-banner-2172.avif';
+import mobileImageSmall from '../../assets/images/purposes/monte-seu-pc-banner-celular-543.avif';
+import mobileImage from '../../assets/images/purposes/monte-seu-pc-banner-celular-815.avif';
+import mobileImageLarge from '../../assets/images/purposes/monte-seu-pc-banner-celular-1086.avif';
 import SectionDivider from '../../components/ui/SectionDivider';
 import { useAfterPageLoad } from '../../hooks/useAfterPageLoad';
 
@@ -14,29 +15,30 @@ import { useAfterPageLoad } from '../../hooks/useAfterPageLoad';
 export default function BuilderBanner({ onStart }) {
   /*
     O lazy sozinho não basta: o banner cai dentro da margem em que o navegador já baixa as imagens
-    lazy, e as fotos (~160 KB) disputavam a banda com o LCP. Até o load elas ficam sem src.
+    lazy, e as fotos disputavam a banda com o LCP. Até o load elas ficam sem src.
   */
   const isPageLoaded = useAfterPageLoad();
 
   return (
     // A divisória fica fora do painel, que é recortado pelo chanfro.
-    <section id="builder" aria-labelledby="builder-title">
+    <section id="builder" aria-labelledby="builder-title" className="builder-section">
       <SectionDivider />
-      <div className="chamfer builder-banner relative grid items-center gap-6 px-(--box-padding) py-7 text-heading lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-6 lg:py-6">
+      {/* Fundo preto e texto claro nos dois temas: a arte é escura e iluminada de vermelho. */}
+      <div className="chamfer builder-banner relative grid grid-cols-[minmax(0,1fr)] content-center px-(--box-padding) pt-7 text-white min-[768px]:py-8">
         <span aria-hidden="true" className="corner-accents" />
 
-        <div className="relative z-[1]">
-          <p className="text-[11px] font-semibold tracking-[3px] text-muted uppercase sm:text-[12px]">Cada peça faz a diferença</p>
+        <div className="builder-copy relative z-[1]">
+          <p className="text-[11px] font-semibold tracking-[3px] text-white/70 uppercase sm:text-[12px]">Cada peça faz a diferença</p>
           <h2 id="builder-title" className="mt-3 font-display text-[clamp(34px,4.2vw,58px)] leading-[0.95] font-bold">
             Monte um PC <span className="block">do seu jeito</span>
           </h2>
-          <p className="mt-4 max-w-[44ch] text-[15px] leading-relaxed text-soft sm:text-[17px]">
+          <p className="mt-4 max-w-[44ch] text-[15px] leading-relaxed text-white/80 sm:text-[17px]">
             Escolha um objetivo e encontre os componentes para começar seu próximo setup.
           </p>
           <button
             type="button"
             onClick={onStart}
-            className="chamfer chamfer-accent mt-6 flex h-12 w-full items-center justify-center gap-3 px-7 font-display text-[17px] font-bold tracking-[0.5px] text-white uppercase sm:inline-flex sm:w-auto"
+            className="chamfer chamfer-accent mt-6 flex h-12 w-full items-center justify-center gap-2 px-4 font-display text-[15px] font-bold whitespace-nowrap min-[375px]:gap-3 min-[375px]:px-7 min-[375px]:text-[17px] tracking-[0.5px] text-white uppercase min-[768px]:inline-flex min-[768px]:w-auto"
           >
             Encontrar meu setup
             <ArrowRight aria-hidden="true" className="size-5" />
@@ -44,37 +46,28 @@ export default function BuilderBanner({ onStart }) {
         </div>
 
         {/*
-          Decorativa: o título já diz do que se trata. O gabinete fica à direita, atrás das peças; o
-          brilho é um pseudo-elemento atrás das duas fotos.
+          Decorativa: o título já diz do que se trata. Cada largura tem a sua arte: a do celular é
+          vertical, com as peças embaixo do texto, e não um recorte da horizontal.
         */}
-        {/*
-          Larguras medidas: o gabinete ocupa ~32% da tela no celular, ~210px até 1440px e ~310px
-          acima; as peças, ~62% no celular, ~405px até 1440px e 600px acima.
-        */}
-        <div className="builder-art">
+        <picture className="builder-art">
+          <source
+            media="(min-width: 768px)"
+            srcSet={isPageLoaded ? `${bannerImageSmall} 1086w, ${bannerImage} 1629w, ${bannerImageLarge} 2172w` : undefined}
+            sizes="(min-width: 1001px) 75vw, 90vw"
+            width="2172"
+            height="724"
+          />
           <img
-            className="builder-art-case"
-            src={isPageLoaded ? pcCaseImage : undefined}
-            srcSet={isPageLoaded ? `${pcCaseImageSmall} 337w, ${pcCaseImage} 673w` : undefined}
-            sizes="(width >= 1440px) 310px, (width >= 601px) 210px, 33vw"
+            src={isPageLoaded ? mobileImage : undefined}
+            srcSet={isPageLoaded ? `${mobileImageSmall} 543w, ${mobileImage} 815w, ${mobileImageLarge} 1086w` : undefined}
+            sizes="min(100vw, 520px)"
             alt=""
-            width="673"
-            height="800"
+            width="1086"
+            height="1448"
             loading="lazy"
             decoding="async"
           />
-          <img
-            className="builder-art-parts"
-            src={isPageLoaded ? partsImage : undefined}
-            srcSet={isPageLoaded ? `${partsImageSmall} 300w, ${partsImage} 600w, ${partsImageLarge} 1200w` : undefined}
-            sizes="(width >= 1440px) 600px, (width >= 601px) 405px, 63vw"
-            alt=""
-            width="1536"
-            height="1024"
-            loading="lazy"
-            decoding="async"
-          />
-        </div>
+        </picture>
       </div>
     </section>
   );

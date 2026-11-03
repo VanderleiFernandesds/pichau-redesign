@@ -516,36 +516,18 @@ html[data-theme='light'] .hero-copy h1 {
   --chamfer-border: var(--color-brand);
 }
 
-/* Moldura que agrupa pausar/retomar e os indicadores do hero: segue o tema, como o restante do hero. */
+/* Moldura que agrupa os indicadores do hero: segue o tema, como o restante do hero. */
 .hero-control {
   --chamfer-fill: var(--color-surface);
   --chamfer-border: var(--color-line);
 }
 
-/* No desktop a pausa fica dentro da moldura do grupo, sem moldura própria. */
-.hero-toggle {
-  --chamfer-border: transparent;
-  --chamfer-fill: transparent;
-}
-
-/*
-  Abaixo de 1001px o grupo perde a moldura e ocupa o meio da faixa; a pausa ganha a mesma moldura
-  das setas.
-*/
+/* Abaixo de 1001px o grupo perde a moldura e ocupa o meio da faixa. */
 @media (width < 1001px) {
   .hero-control {
     --chamfer-border: transparent;
     --chamfer-fill: transparent;
     flex: 1;
-  }
-
-  .hero-toggle {
-    --chamfer-border: var(--field-border);
-    --chamfer-fill: color-mix(in srgb, var(--color-page) 80%, transparent);
-  }
-
-  .hero-toggle:hover {
-    --chamfer-border: var(--color-brand);
   }
 
   .hero-controls :focus-visible {
@@ -554,7 +536,7 @@ html[data-theme='light'] .hero-copy h1 {
 }
 
 /*
-  No celular não há faixa de controles, setas nem botão de pausa (o avanço automático continua): os
+  No celular não há faixa de controles nem setas (o avanço automático continua): os
   indicadores sobem para o canto do card, na altura do logo da campanha, sem moldura: o fundo é o
   degradê do topo do card. Cada indicador fica só com a largura do traço mais a folga (24px ou mais), para o grupo
   não encostar nos logos mais largos; a altura de toque continua 44px.
@@ -573,8 +555,7 @@ html[data-theme='light'] .hero-copy h1 {
     padding: 24px var(--box-padding) 0 0;
   }
 
-  .hero-arrows,
-  .hero-toggle {
+  .hero-arrows {
     display: none;
   }
 

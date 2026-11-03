@@ -44,6 +44,7 @@ function settleOn(current, targetId) {
 export function useHeroCarousel(slideIds, { readingTime, transitionTime, selectTransitionTime, isCovered = false }) {
   const [isReducedMotion, setIsReducedMotion] = useState(getPrefersReducedMotion);
   // Com movimento reduzido não há avanço automático.
+  const isPlaying = !isReducedMotion;
   const [cycle, setCycle] = useState(() => ({
     order: slideIds,
     phase: 'expanded',
@@ -51,14 +52,12 @@ export function useHeroCarousel(slideIds, { readingTime, transitionTime, selectT
     shownId: slideIds[0],
     isQuick: false,
   }));
-  const [isPlaying, setIsPlaying] = useState(!isReducedMotion);
   const [isFocused, setIsFocused] = useState(false);
   const [isPageHidden, setIsPageHidden] = useState(() => document.hidden);
 
   /*
-    Passar o mouse não pausa; só o foco de teclado, a aba oculta, um modal ou painel aberto sobre a
-    página (isCovered) e o botão de pausa. Os três primeiros são passageiros: ao sair, a leitura
-    continua de onde parou.
+    Passar o mouse não pausa; só o foco de teclado, a aba oculta e um modal ou painel aberto sobre a
+    página (isCovered). São pausas passageiras: ao sair, a leitura continua de onde parou.
   */
   const isRunning = isPlaying && !isFocused && !isPageHidden && !isCovered;
 
@@ -72,14 +71,13 @@ export function useHeroCarousel(slideIds, { readingTime, transitionTime, selectT
   }, []);
 
   // Ativar o movimento reduzido com a página aberta tem o mesmo efeito do carregamento: a troca em
-  // andamento termina na hora e o avanço automático para. Desativar não retoma sozinho.
+  // andamento termina na hora e o avanço automático para. Desativar retoma o avanço.
   useEffect(() => {
     const query = window.matchMedia(REDUCED_MOTION_QUERY);
 
     function handleChange() {
       setIsReducedMotion(query.matches);
       if (!query.matches) return;
-      setIsPlaying(false);
       setCycle((current) => (current.phase === 'expanded' ? current : settleOn(current, current.targetId)));
     }
 
@@ -125,7 +123,7 @@ export function useHeroCarousel(slideIds, { readingTime, transitionTime, selectT
   /*
     Tempo de leitura já cumprido no slide atual. Pausas passageiras (foco, aba oculta, modal)
     retomam de onde pararam, como a barra de progresso do indicador, que só congela. Um novo
-    slide ou a pausa pelo botão zeram: ao dar play, a leitura recomeça junto com a barra.
+    slide ou o movimento reduzido zeram: ao retomar, a leitura recomeça junto com a barra.
   */
   const readingElapsedRef = useRef(0);
   const timedCycleRef = useRef(cycle);
@@ -152,23 +150,12 @@ export function useHeroCarousel(slideIds, { readingTime, transitionTime, selectT
   }, [cycle, isReading, isPlaying, isRunning, isReducedMotion, readingTime, transitionTime, selectTransitionTime]);
 
   // Navegar não pausa: o automático segue a partir do escolhido, com a leitura recomeçando.
-  // Pausar é só no botão; clicar no slide que já está aberto não faz nada.
+  // Clicar no slide que já está aberto não faz nada.
   function select(slideId) {
     const isAlreadyOpen = cycle.phase === 'expanded' && cycle.order[0] === slideId;
     if (isAlreadyOpen) return;
 
     setCycle((current) => startRotation(current, slideId, true));
-  }
-
-  function togglePlaying() {
-    if (isPlaying) {
-      setIsPlaying(false);
-      return;
-    }
-
-    // Retomar é uma ação explícita: não espera o foco sair do carrossel.
-    setIsFocused(false);
-    setIsPlaying(true);
   }
 
   const pauseHandlers = {
@@ -206,7 +193,6 @@ export function useHeroCarousel(slideIds, { readingTime, transitionTime, selectT
     isPlaying,
     isRunning,
     select,
-    togglePlaying,
     pauseHandlers,
   };
 }

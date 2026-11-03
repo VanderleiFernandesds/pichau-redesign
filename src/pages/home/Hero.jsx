@@ -71,12 +71,10 @@ export default function Hero({ onFilter, theme, isCovered, children }) {
             <HeroCarouselControls
               slides={HERO_SLIDES}
               shownId={shownId}
-              isPlaying={carousel.isPlaying}
               isProgressShown={carousel.isPlaying && carousel.isReading}
               isProgressPaused={!carousel.isRunning}
               readingTime={carousel.readingTime}
               onSelect={carousel.select}
-              onTogglePlaying={carousel.togglePlaying}
             />
             <HeroCarouselArrows onPrevious={() => selectSibling(-1)} onNext={() => selectSibling(1)} />
           </div>

@@ -2201,7 +2201,9 @@ html[data-theme='light'] .hero-copy h1 {
   .builder-banner {
     --cut: 16px;
     --chamfer-border: var(--card-border);
-    --chamfer-fill: #000;
+    /* O --color-page do tema escuro, fixo: o painel continua escuro também no tema claro. */
+    --builder-black: #121212;
+    --chamfer-fill: var(--builder-black);
   }
 
   /*
@@ -2295,6 +2297,26 @@ html[data-theme='light'] .hero-copy h1 {
       mask-image:
         linear-gradient(to bottom, transparent, #000 18%),
         linear-gradient(to right, transparent, #000 35%);
+    }
+
+    /* Degradê preto atrás do título, com a mesma curva do fundo ampliado do hero (.hero-stage::after). */
+    .builder-art::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(
+        90deg,
+        var(--builder-black) 0%,
+        color-mix(in srgb, var(--builder-black) 96%, transparent) 10%,
+        color-mix(in srgb, var(--builder-black) 86%, transparent) 20%,
+        color-mix(in srgb, var(--builder-black) 68%, transparent) 29%,
+        color-mix(in srgb, var(--builder-black) 46%, transparent) 37%,
+        color-mix(in srgb, var(--builder-black) 26%, transparent) 44%,
+        color-mix(in srgb, var(--builder-black) 11%, transparent) 50%,
+        color-mix(in srgb, var(--builder-black) 3%, transparent) 55%,
+        transparent 59%
+      );
     }
   }
 

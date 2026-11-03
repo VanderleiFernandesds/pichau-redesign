@@ -692,6 +692,13 @@ html[data-theme='light'] .hero-copy h1 {
   initial-value: 0px;
 }
 
+/* Cor da máscara branca dos cards fechados no tema claro; registrada para animar sob o mouse. */
+@property --closed-mask {
+  syntax: '<color>';
+  inherits: false;
+  initial-value: transparent;
+}
+
 /* Seleção manual: a fila e o card que estava aberto mudam de uma vez, sem animação. */
 .hero-panels.is-jumping *,
 .hero-panels.is-jumping *::before,
@@ -1290,12 +1297,29 @@ html[data-theme='light'] .hero-copy h1 {
     transition: opacity calc(var(--carousel-transition) * 0.4) var(--carousel-ease) calc(var(--carousel-transition) * 0.6);
   }
 
-  /* No tema claro o degradê é branco; os logos de texto branco trocam pela versão escura (srcOnLight). */
+  /*
+    No tema claro o degradê é branco; os logos de texto branco trocam pela versão escura (srcOnLight).
+    A máscara branca cobre o card fechado inteiro, abaixo dos objetos: faz o papel do escurecimento do
+    tema escuro e também sai sob o mouse ou com o foco do teclado.
+  */
   html[data-theme='light'] .hero-panel .hero-frame-content::after {
-    background: linear-gradient(180deg, rgb(255 255 255 / 0.55), rgb(255 255 255 / 0.25) 45%, transparent);
+    --closed-mask: rgb(255 255 255 / 0.45);
+    height: 100%;
+    background:
+      linear-gradient(180deg, rgb(255 255 255 / 0.55), rgb(255 255 255 / 0.25) 45%, transparent) top / 100% 70px no-repeat,
+      linear-gradient(var(--closed-mask), var(--closed-mask));
+    transition:
+      opacity calc(var(--carousel-transition) * 0.4) var(--carousel-ease) calc(var(--carousel-transition) * 0.6),
+      --closed-mask var(--carousel-transition) var(--carousel-ease);
   }
 
-  .hero-panel.is-expanded .hero-frame-content::after {
+  html[data-theme='light'] .hero-panel:hover .hero-frame-content::after,
+  html[data-theme='light'] .hero-panel:has(.hero-panel-select:focus-visible) .hero-frame-content::after {
+    --closed-mask: transparent;
+  }
+
+  .hero-panel.is-expanded .hero-frame-content::after,
+  html[data-theme='light'] .hero-panel.is-expanded .hero-frame-content::after {
     opacity: 0;
     transition: opacity calc(var(--carousel-transition) * 0.4) var(--carousel-ease);
   }
